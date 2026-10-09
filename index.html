@@ -2,6 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Storeys</title>
+<meta name="description" content="See how far along your BTO or new-launch condo is, with site photos from people nearby.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -10,26 +11,30 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121A1F;--ink:#E7EEF1;--muted:#93A2AA;--line:#2A363D;--sky:#1B2C35;--sky2:#16232A;--card:#18232A;--scaff:#5C6B73;--hoard:#5FB08A;--good:#5FB08A;--bad:#E07A62}}
 :root[data-theme="dark"]{--paper:#121A1F;--ink:#E7EEF1;--muted:#93A2AA;--line:#2A363D;--sky:#1B2C35;--sky2:#16232A;--card:#18232A;--scaff:#5C6B73;--hoard:#5FB08A;--good:#5FB08A;--bad:#E07A62}
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif}
-.wrap{max-width:560px;margin:0 auto;padding:20px 18px 48px}
-h1,h2,.num{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+h1,h2,h3,.num{font-family:"Bricolage Grotesque",system-ui,sans-serif}
 header h1{font-size:2.4rem;font-weight:800;letter-spacing:-.02em;margin:8px 0 2px;line-height:1}
 header p{margin:0 0 18px;color:var(--muted)}
-input{font:inherit;width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
-input:focus-visible,button:focus-visible{outline:3px solid var(--crane);outline-offset:2px}
+input[type=text]{font:inherit;width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outline:3px solid var(--crane);outline-offset:2px}
 .sugg{list-style:none;margin:6px 0 0;padding:0;background:var(--card);border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
 .sugg:empty{display:none}
 .pick{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--line);padding:12px 14px;cursor:pointer}
 .sugg li:last-child .pick{border-bottom:0}
 .pick:hover{background:var(--sky2)}
 .pick small{display:block;color:var(--muted)}
-.tag{display:inline-block;font-size:.75rem;padding:1px 7px;border-radius:99px;background:var(--sky2);color:var(--muted);margin-left:6px;vertical-align:2px}
+.tag{display:inline-block;font-size:.75rem;padding:1px 7px;border-radius:99px;background:var(--sky2);color:var(--muted);margin-left:6px;vertical-align:2px;font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-weight:400}
 .hint{font-size:.85rem;color:var(--muted);min-height:1.3em;margin:8px 0 18px}
 .site{background:var(--card);border:1.5px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
-.scene{background:linear-gradient(var(--sky2),var(--sky));padding:16px 0 0;display:flex;justify-content:center}
+.scene{background:linear-gradient(var(--sky2),var(--sky));padding:16px 0 0;display:flex;justify-content:center;position:relative}
 .scene svg{display:block;max-width:100%;height:auto}
-.body{padding:16px 18px 18px}
+.scene.photo{padding:0;background:#000;aspect-ratio:4/3}
+.scene.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.scene .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;font-size:.85rem;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.scene .cap b{display:block;font-size:.95rem}
+.linkbtn{font:inherit;font-size:.8rem;background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;padding:4px 0;opacity:.85;white-space:nowrap}
+.body{padding:16px 16px 18px}
 .body h2{font-size:1.45rem;font-weight:800;margin:0;line-height:1.15}
 .addr{color:var(--muted);font-size:.9rem;margin:2px 0 14px}
 .storey{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
@@ -44,9 +49,21 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--crane);outline-
 .verdict.ahead{border-color:var(--good)}.verdict.behind{border-color:var(--bad)}
 .verdict b{display:block}
 .note{font-size:.85rem;color:var(--muted);margin:0}
-.row{display:flex;justify-content:flex-end;margin-top:12px}
-.maplink{font:inherit;color:var(--ink);text-decoration:none;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;margin-right:auto}
-.ghost{font:inherit;cursor:pointer;background:transparent;color:var(--muted);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px}
+.photos{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+.photos h3{font-size:1.05rem;margin:0 0 4px}
+.strip{display:flex;gap:8px;overflow-x:auto;padding:6px 0 4px;scrollbar-width:thin}
+.strip button{flex:0 0 auto;width:78px;padding:0;border:2px solid transparent;border-radius:8px;background:none;cursor:pointer;color:var(--muted);font:inherit;font-size:.7rem;text-align:center}
+.strip button[aria-pressed=true]{border-color:var(--crane)}
+.strip img{width:100%;height:58px;object-fit:cover;border-radius:6px;display:block;background:var(--sky)}
+.add{display:inline-flex;align-items:center;gap:8px;margin-top:10px;font-weight:700;cursor:pointer;background:var(--ink);color:var(--paper);border-radius:10px;padding:11px 16px}
+.add input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.add[aria-disabled=true]{opacity:.5;cursor:default}
+.status{font-size:.85rem;margin:8px 0 0;min-height:1.2em}
+.status.err{color:var(--bad)}
+.status.ok{color:var(--good)}
+.row{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
+.maplink,.ghost{font:inherit;color:var(--ink);text-decoration:none;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:transparent;cursor:pointer}
+.ghost{color:var(--muted)}
 .empty{text-align:center;padding:30px 10px;color:var(--muted)}
 .src{font-size:.8rem;color:var(--muted);margin-top:28px}
 @media (prefers-reduced-motion:no-preference){.fl{animation:rise .45s ease-out both}@keyframes rise{from{opacity:0}}}
@@ -56,32 +73,30 @@ input:focus-visible,button:focus-visible{outline:3px solid var(--crane);outline-
 <input type="text" id="q" placeholder="e.g. Sembawang Brook, Lentor Mansion, 750437" autocomplete="off" aria-label="Project, address or postal code">
 <ul class="sugg" id="sugg"></ul>
 <p class="hint" id="hint"></p>
-<main id="list"></main>
-<p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Refreshed automatically every day, last at <span id="upd">…</span>.</p>
+<main id="list"><div class="empty"><p>Loading projects…</p></div></main>
+<p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>.</p>
 </div>
 <script>
-let P=[],tracked=[];
-fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
-const BTO=D.bto,CONDO=D.condo;
-document.getElementById("upd").textContent=D.updated;
-
-BTO.forEach(r=>P.push({kind:"BTO",name:r[0],launch:r[2],ecd:r[3],delayed:r[4],remark:r[5],roads:r[6]?r[6].split("|"):[],blks:r[7]?r[7].split(" "):[],postals:r[8]?r[8].split(" "):[],addr:""}));
-CONDO.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3]}));
-P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch});
-const KEY="storeys.tracked.v4";
-try{tracked=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(tracked))}catch(e){}}
+const SB="https://dykbqyaftkeiroyfzoqb.supabase.co", SBK="sb_publishable_6zJTBBa74WI7IueK3xdaUg_cvfxMSp2";
+const RADIUS=800, MAXAGE_DAYS=14;
 const $=s=>document.querySelector(s);
 const ym=s=>{if(!s)return null;const a=s.split("-").map(Number);return new Date(a[0],a[1]-1,1)};
 const months=(a,b)=>(b-a)/(864e5*30.44);
 const fmtYM=d=>d?d.toLocaleDateString("en-SG",{month:"short",year:"numeric"}):"Not announced";
+const fmtDay=d=>d.toLocaleDateString("en-SG",{day:"numeric",month:"short",year:"numeric"});
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const title=s=>s.toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase());
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 const PASTELS=["#F2C6B4","#BFD8C9","#F3DFA2","#C7D3EC","#E9C3D3","#CFE3D9"];
 const hash=s=>[...s].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7);
 const norm=s=>s.toUpperCase().replace(/[’']/g,"").replace(/\b(BLK|BLOCK)\b/g," ").replace(/\bAVE\b/g,"AVENUE").replace(/\bST\b/g,"STREET").replace(/\bRD\b/g,"ROAD").replace(/\bDR\b/g,"DRIVE").replace(/\bCRES\b/g,"CRESCENT").replace(/[^A-Z0-9@ ]/g," ").replace(/\s+/g," ").trim();
-P.forEach(p=>{p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
+function ago(d){const days=Math.floor((Date.now()-d)/864e5);return days<=0?"today":days===1?"yesterday":days<31?days+" days ago":fmtDay(d)}
+function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||"null");localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
 
+let P=[],tracked=store("storeys.tracked.v4")||[];
+const saveTracked=()=>store("storeys.tracked.v4",tracked);
+
+/* ---------- Search ---------- */
 function search(q){
   const n=norm(q); if(n.length<2)return[];
   const toks=n.split(" ").filter(t=>t.length>2&&!/^\d+$/.test(t));
@@ -92,22 +107,32 @@ function search(q){
     if(postal&&p.postals.includes(postal))s+=100;
     if(p.nn.startsWith(n))s+=60; else if(p.nn.includes(n))s+=40;
     if(p.roads.some(r=>n.includes(r))){s+=25;if(blk&&p.blks.includes(blk))s+=50;}
-    const words=p.nn.split(" ");
+    const words=p.nn.split(" "),aw=p.na.split(" ");
     s+=toks.filter(t=>words.includes(t)).length*10;
-    s+=toks.filter(t=>p.na.split(" ").includes(t)).length*6;
+    s+=toks.filter(t=>aw.includes(t)).length*6;
     return{p,s};
   }).filter(x=>x.s>=10).sort((a,b)=>b.s-a.s).slice(0,6).map(x=>x.p);
 }
 
+/* ---------- Progress ---------- */
 function stats(p){
   const L=ym(p.launch),E=ym(p.ecd),T=ym(p.delayed||p.ecd),now=new Date();
   if(!L)return{L,E,T,pct:null,rate:null,left:T?Math.max(0,Math.round(months(now,T))):null,delay:0};
   const total=months(L,T);
-  const pct=Math.max(0,Math.min(100,months(L,now)/total*100));
-  return{L,E,T,pct,rate:100/total,left:Math.max(0,Math.round(months(now,T))),delay:p.delayed?Math.round(months(E,T)):0};
+  return{L,E,T,pct:Math.max(0,Math.min(100,months(L,now)/total*100)),rate:100/total,left:Math.max(0,Math.round(months(now,T))),delay:p.delayed?Math.round(months(E,T)):0};
 }
 function stageFor(p){return p==null?"Not started":p<12?"Piling and foundations":p<70?"Superstructure going up":p<92?"Facade and fit-out":p<100?"Final checks before TOP":"Due for completion"}
+function verdict(p,k){
+  if(k.pct==null)return{cls:"",t:"Not launched yet",d:`Expected TOP ${fmtYM(k.T)}. Progress starts counting once it launches.`};
+  if(k.pct>=100)return{cls:"ahead",t:"Due now",d:`Completion date of ${fmtYM(k.T)} has arrived.`};
+  if(k.delay>=1){
+    const why=p.remark?p.remark.replace(/\s*\d{4}-\d{2}-\d{2}$/,"").replace("Covid19:","Covid-19:").replace(/month(s)?\(s\)/,"months")+".":"";
+    return{cls:"behind",t:`About ${k.delay} months behind the original date`,d:`Launched with completion in ${fmtYM(k.E)}, now ${fmtYM(k.T)}. ${why}`};
+  }
+  return{cls:"ahead",t:"On schedule",d:p.kind==="BTO"?`No delay announced by HDB. Completion expected ${fmtYM(k.T)}.`:`Developer's expected TOP is ${fmtYM(k.T)}.`};
+}
 
+/* ---------- Illustration ---------- */
 function building(pct,name){
   const N=20,fh=13,W=150,x0=85,ground=40+N*fh+20,H=ground+26;
   const built=Math.round(N*(pct||0)/100),facade=PASTELS[hash(name)%PASTELS.length];
@@ -129,21 +154,14 @@ function building(pct,name){
   return `<svg viewBox="0 0 320 ${H}" width="320" role="img" aria-label="Illustration of the building about ${Math.round(pct||0)} percent built">${g}</svg>`;
 }
 
-function verdict(p,k){
-  if(k.pct==null)return{cls:"",t:"Not launched yet",d:`Expected TOP ${fmtYM(k.T)}. Progress starts counting once it launches.`};
-  if(k.pct>=100)return{cls:"ahead",t:"Due now",d:`Completion date of ${fmtYM(k.T)} has arrived.`};
-  if(k.delay>=1){
-    const why=p.remark?p.remark.replace(/\s*\d{4}-\d{2}-\d{2}$/,"").replace("Covid19:","Covid-19:").replace(/month(s)?\(s\)/,"months")+".":"";
-    return{cls:"behind",t:`About ${k.delay} months behind the original date`,d:`Launched with completion in ${fmtYM(k.E)}, now ${fmtYM(k.T)}. ${why}`};
-  }
-  return{cls:"ahead",t:"On schedule",d:p.kind==="BTO"?`No delay announced by HDB. Completion expected ${fmtYM(k.T)}.`:`Developer's expected TOP is ${fmtYM(k.T)}.`};
-}
-
+/* ---------- Cards ---------- */
 function card(p){
-  const k=stats(p),v=verdict(p,k);
+  const k=stats(p),v=verdict(p,k),id=slug(p.key);
   let where=p.kind==="BTO"?(p.blks.length?"Blk "+p.blks.slice().sort((a,b)=>parseInt(a)-parseInt(b)||a.localeCompare(b)).join(", ")+", "+p.roads.map(title).join(" / "):"Block numbers not on OneMap yet"):(p.addr||"Address not listed");
   if(where.length>140)where=where.slice(0,137)+"…";
-  return `<section class="site"><div class="scene">${building(k.pct,p.name)}</div><div class="body">
+  return `<section class="site" data-key="${esc(p.key)}" id="c-${id}">
+  <div class="scene" data-pct="${k.pct||0}">${building(k.pct,p.name)}</div>
+  <div class="body">
     <h2>${esc(p.name)}<span class="tag">${p.kind}</span></h2><p class="addr">${esc(where)}</p>
     <div class="storey"><span class="num">${k.pct==null?"—":Math.round(k.pct)+"%"}</span><span>of the way to completion</span></div>
     <div class="bar"><i style="width:${k.pct||0}%"></i></div>
@@ -156,19 +174,147 @@ function card(p){
       <div>Stage now<b>${stageFor(k.pct)}</b></div>
     </div>
     <p class="note">Percentage is time elapsed from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"}.</p>
-    <div class="row"><a class="maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name+(p.kind==="BTO"?" BTO ":" ")+"Singapore")}">See site on Google Maps</a><button class="ghost" type="button" data-del="${esc(p.key)}">Remove</button></div>
+    <div class="photos">
+      <h3>Site photos</h3>
+      <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes.</p>
+      <div class="strip" aria-label="Photo timeline, newest first"></div>
+      ${p.ll?`<label class="add">Add a site photo<input type="file" accept="image/*" data-up="${esc(p.key)}"></label>`:`<p class="note">Photo uploads open once this site is on the map.</p>`}
+      <p class="status" role="status"></p>
+    </div>
+    <div class="row">
+      <a class="maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${p.ll?p.ll.join(","):encodeURIComponent(p.name+" Singapore")}">See on Google Maps</a>
+      <button class="ghost" type="button" data-del="${esc(p.key)}">Remove</button>
+    </div>
   </div></section>`;
 }
 function render(){
   const items=tracked.map(key=>P.find(p=>p.key===key)).filter(Boolean);
   $("#list").innerHTML=items.length?items.map(card).join(""):`<div class="empty"><p>Start typing above and tap your project.</p></div>`;
+  items.forEach(p=>loadPhotos(p.key));
 }
 function pick(i){
   const p=P[i];if(!p)return;
-  tracked=[p.key,...tracked.filter(x=>x!==p.key)];save();render();
+  tracked=[p.key,...tracked.filter(x=>x!==p.key)];saveTracked();render();
   $("#q").value="";$("#sugg").innerHTML="";$("#hint").textContent="";
   $("#list").scrollIntoView({behavior:"smooth",block:"start"});
 }
+
+/* ---------- Photos: read ---------- */
+const H={apikey:SBK,Authorization:"Bearer "+SBK};
+const pub=path=>`${SB}/storage/v1/object/public/photos/${path}`;
+const thumb=path=>pub(path.replace(/\.jpg$/,"_t.jpg"));
+const cache={};
+function cardFor(key){return [...document.querySelectorAll(".site")].find(s=>s.dataset.key===key)}
+async function loadPhotos(key){
+  try{
+    const r=await fetch(`${SB}/rest/v1/photos?select=id,path,taken_at,distance_m&project_key=eq.${encodeURIComponent(key)}&order=taken_at.desc&limit=40`,{headers:H});
+    if(!r.ok)throw 0;
+    cache[key]=await r.json();
+  }catch(e){cache[key]=null}
+  showPhotos(key,0);
+}
+function showPhotos(key,idx){
+  const c=cardFor(key);if(!c)return;
+  const list=cache[key],scene=c.querySelector(".scene"),strip=c.querySelector(".strip");
+  if(!list||!list.length){
+    const p=P.find(x=>x.key===key);
+    if(list&&p&&!p.ll){strip.innerHTML="";return}
+    strip.innerHTML=list===null?`<p class="note">Photos couldn't load right now.</p>`:`<p class="note">No photos yet. Be the first to add one when you pass by.</p>`;
+    return;
+  }
+  const ph=list[idx],when=new Date(ph.taken_at);
+  scene.className="scene photo";
+  scene.innerHTML=`<img src="${pub(ph.path)}" alt="Site photo taken ${esc(fmtDay(when))}"><div class="cap"><div><b>Taken ${esc(ago(when))}</b>${ph.distance_m} m from the site</div><button class="linkbtn" type="button" data-report="${ph.id}" data-k="${esc(key)}">Report photo</button></div>`;
+  strip.innerHTML=list.map((x,i)=>`<button type="button" aria-pressed="${i===idx}" data-show="${i}" data-k="${esc(key)}"><img loading="lazy" src="${thumb(x.path)}" alt="">${esc(fmtDay(new Date(x.taken_at)).replace(/ \d{4}$/,""))}</button>`).join("");
+}
+
+/* ---------- Photos: EXIF (date + GPS) ---------- */
+function readExif(buf){
+  const v=new DataView(buf);
+  if(v.getUint16(0)!==0xFFD8)return{};
+  let o=2;
+  while(o+4<v.byteLength){
+    const m=v.getUint16(o),len=v.getUint16(o+2);
+    if(m===0xFFE1&&v.getUint32(o+4)===0x45786966){return parseTiff(v,o+10)}
+    if((m&0xFF00)!==0xFF00)break;
+    o+=2+len;
+  }
+  return{};
+}
+function parseTiff(v,t){
+  const le=v.getUint16(t)===0x4949,u16=p=>v.getUint16(p,le),u32=p=>v.getUint32(p,le);
+  const out={};
+  function ifd(p){const n=u16(p),e={};for(let i=0;i<n;i++){const q=p+2+i*12;e[u16(q)]={type:u16(q+2),count:u32(q+4),off:q+8}}return e}
+  const ascii=e=>{const p=e.count>4?t+u32(e.off):e.off;let s="";for(let i=0;i<e.count-1;i++)s+=String.fromCharCode(v.getUint8(p+i));return s};
+  const rats=e=>{const p=t+u32(e.off),a=[];for(let i=0;i<e.count;i++)a.push(u32(p+i*8)/u32(p+i*8+4));return a};
+  try{
+    const i0=ifd(t+u32(t+4));
+    if(i0[0x8769]){const ex=ifd(t+u32(i0[0x8769].off));const d=ex[0x9003]||ex[0x9004];if(d){const m=ascii(d).match(/(\d{4}):(\d\d):(\d\d) (\d\d):(\d\d):(\d\d)/);if(m)out.date=new Date(+m[1],m[2]-1,+m[3],+m[4],+m[5],+m[6])}}
+    if(i0[0x8825]){const g=ifd(t+u32(i0[0x8825].off));
+      if(g[2]&&g[4]){const la=rats(g[2]),lo=rats(g[4]);let lat=la[0]+la[1]/60+la[2]/3600,lng=lo[0]+lo[1]/60+lo[2]/3600;
+        if(g[1]&&String.fromCharCode(v.getUint8(g[1].off))==="S")lat=-lat;
+        if(g[3]&&String.fromCharCode(v.getUint8(g[3].off))==="W")lng=-lng;
+        if(lat&&lng)out.gps=[lat,lng]}}
+  }catch(e){}
+  return out;
+}
+function metres(a,b){const R=6371e3,r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]);const h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(h)))}
+function here(){return new Promise((res,rej)=>{if(!navigator.geolocation)return rej(new Error("nogeo"));navigator.geolocation.getCurrentPosition(p=>res([p.coords.latitude,p.coords.longitude]),e=>rej(e),{enableHighAccuracy:true,timeout:20000,maximumAge:60000})})}
+async function shrink(file,max,quality){
+  const bmp=await createImageBitmap(file);
+  const s=Math.min(1,max/Math.max(bmp.width,bmp.height)),c=document.createElement("canvas");
+  c.width=Math.round(bmp.width*s);c.height=Math.round(bmp.height*s);
+  c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+  let q=quality,blob;
+  do{blob=await new Promise(r=>c.toBlob(r,"image/jpeg",q));q-=.12}while(blob.size>950000&&q>.3);
+  return blob;
+}
+
+/* ---------- Photos: upload ---------- */
+async function upload(input){
+  const key=input.dataset.up,p=P.find(x=>x.key===key),c=cardFor(key),st=c.querySelector(".status"),btn=input.closest(".add");
+  const file=input.files[0];input.value="";
+  if(!file||!p)return;
+  const say=(t,cls="")=>{st.textContent=t;st.className="status "+cls};
+  btn.setAttribute("aria-disabled","true");
+  try{
+    say("Checking where the photo was taken…");
+    const ex=readExif(await file.slice(0,262144).arrayBuffer());
+    if(ex.date&&Date.now()-ex.date>MAXAGE_DAYS*864e5)return say(`This photo is from ${fmtDay(ex.date)}. Only photos from the last ${MAXAGE_DAYS} days can be added, so the timeline stays current.`,"err");
+    let spot=ex.gps;
+    if(!spot){
+      try{spot=await here()}catch(e){return say("Storeys needs your location to confirm you're at the site. Allow location for this page and try again.","err")}
+    }
+    const d=metres(spot,p.ll);
+    if(d>RADIUS)return say(`You're about ${d>=1000?(d/1000).toFixed(1)+" km":d+" m"} from ${p.name}. Photos need to be taken within ${RADIUS} m of the site.`,"err");
+    say("Uploading…");
+    const [full,small]=await Promise.all([shrink(file,1600,.82),shrink(file,360,.7)]);
+    const path=`${slug(key)}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
+    for(const [pth,blob] of [[path,full],[path.replace(/\.jpg$/,"_t.jpg"),small]]){
+      const r=await fetch(`${SB}/storage/v1/object/photos/${pth}`,{method:"POST",headers:{...H,"Content-Type":"image/jpeg"},body:blob});
+      if(!r.ok)throw new Error("storage "+r.status);
+    }
+    const taken=(ex.date||new Date()).toISOString();
+    const r=await fetch(`${SB}/rest/v1/photos`,{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({project_key:key,path,taken_at:taken,distance_m:d})});
+    if(!r.ok)throw new Error("row "+r.status);
+    say("Photo added. Thanks for keeping this site up to date.","ok");
+    await loadPhotos(key);
+  }catch(e){
+    say("The upload didn't go through. Check your connection and try again.","err");
+  }finally{btn.removeAttribute("aria-disabled")}
+}
+async function report(id,key,btn){
+  const done=store("storeys.reported")||[];
+  if(done.includes(id)){btn.textContent="Reported";return}
+  if(!confirm("Report this photo as wrong, old or inappropriate? Photos hide after a few reports."))return;
+  try{
+    const r=await fetch(`${SB}/rest/v1/rpc/report_photo`,{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({photo_id:id})});
+    if(!r.ok)throw 0;
+    store("storeys.reported",[...done,id]);btn.textContent="Reported";
+  }catch(e){btn.textContent="Couldn't report, try again"}
+}
+
+/* ---------- Events ---------- */
 const q=$("#q"),sug=$("#sugg");
 q.addEventListener("input",()=>{
   const r=search(q.value);
@@ -177,7 +323,22 @@ q.addEventListener("input",()=>{
 });
 q.addEventListener("keydown",e=>{if(e.key==="Enter"){const b=sug.querySelector(".pick");if(b)pick(+b.dataset.i);}});
 sug.addEventListener("click",e=>{const b=e.target.closest(".pick");if(b)pick(+b.dataset.i);});
-$("#list").addEventListener("click",e=>{const d=e.target.closest("[data-del]");if(d){tracked=tracked.filter(x=>x!==d.dataset.del);save();render();}});
-render();
-}).catch(()=>{document.querySelector("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`;});
+$("#list").addEventListener("click",e=>{
+  const d=e.target.closest("[data-del]");
+  if(d){tracked=tracked.filter(x=>x!==d.dataset.del);saveTracked();render();return}
+  const s=e.target.closest("[data-show]");
+  if(s){showPhotos(s.dataset.k,+s.dataset.show);return}
+  const rp=e.target.closest("[data-report]");
+  if(rp)report(rp.dataset.report,rp.dataset.k,rp);
+});
+$("#list").addEventListener("change",e=>{if(e.target.matches("[data-up]"))upload(e.target)});
+
+/* ---------- Load data ---------- */
+fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
+  $("#upd").textContent=D.updated;
+  D.bto.forEach(r=>P.push({kind:"BTO",name:r[0],launch:r[2],ecd:r[3],delayed:r[4],remark:r[5],roads:r[6]?r[6].split("|"):[],blks:r[7]?r[7].split(" "):[],postals:r[8]?r[8].split(" "):[],ll:r[9]||null,addr:""}));
+  D.condo.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3],ll:r[4]||null}));
+  P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch;p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
+  render();
+}).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
 </script></body></html>
