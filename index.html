@@ -4,78 +4,131 @@
 <title>Storeys</title>
 <meta name="description" content="See how far along your BTO or new-launch condo is, with site photos from people nearby.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  --paper:#F3F6F7;--ink:#1D2830;--muted:#5E6B73;--line:#D3DBDF;--sky:#D6E8EF;--sky2:#EEF6F9;--hoard:#2F6B4F;--crane:#E8862A;--card:#FFFFFF;--scaff:#9AA6AD;--bad:#B4442F;--good:#2F6B4F}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121A1F;--ink:#E7EEF1;--muted:#93A2AA;--line:#2A363D;--sky:#1B2C35;--sky2:#16232A;--card:#18232A;--scaff:#5C6B73;--hoard:#5FB08A;--good:#5FB08A;--bad:#E07A62}}
-:root[data-theme="dark"]{--paper:#121A1F;--ink:#E7EEF1;--muted:#93A2AA;--line:#2A363D;--sky:#1B2C35;--sky2:#16232A;--card:#18232A;--scaff:#5C6B73;--hoard:#5FB08A;--good:#5FB08A;--bad:#E07A62}
+  --sky1:#BFE6FB;--sky2:#E3F6EA;--card:#FFFDF7;--tile:#F3EEE6;--ink:#3A2C26;--muted:#6E5D54;--edge:#3A2C26;
+  --grass:#62C07A;--grass2:#3F9D5C;--sun:#FFC845;--crane:#FFB020;--bto:#BDE8F5;--condo:#FFD3B5;
+  --good:#2E9257;--goodbg:#E2F6E8;--bad:#D9483B;--badbg:#FDE6E2;--neutralbg:#F1ECE4;--focus:#FF8A3D}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--sky1:#12302D;--sky2:#1C3A31;--card:#244339;--tile:#1C382F;--ink:#FFF6E8;--muted:#C8D6C4;--edge:#0A1813;--grass:#5DBF83;--grass2:#3E9563;--sun:#FFE08A;--crane:#FFB84A;--bto:#2F6A78;--condo:#8A5A3A;--good:#8BE6AB;--goodbg:#1E5140;--bad:#FF9A8A;--badbg:#5A2E2A;--neutralbg:#2C4D42}}
+:root[data-theme="dark"]{--sky1:#12302D;--sky2:#1C3A31;--card:#244339;--tile:#1C382F;--ink:#FFF6E8;--muted:#C8D6C4;--edge:#0A1813;--grass:#5DBF83;--grass2:#3E9563;--sun:#FFE08A;--crane:#FFB84A;--bto:#2F6A78;--condo:#8A5A3A;--good:#8BE6AB;--goodbg:#1E5140;--bad:#FF9A8A;--badbg:#5A2E2A;--neutralbg:#2C4D42}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif}
-.wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px}
-h1,h2,h3,.num{font-family:"Bricolage Grotesque",system-ui,sans-serif}
-header h1{font-size:2.4rem;font-weight:800;letter-spacing:-.02em;margin:8px 0 2px;line-height:1}
-header p{margin:0 0 18px;color:var(--muted)}
-input[type=text]{font:inherit;width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
-input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outline:3px solid var(--crane);outline-offset:2px}
-.sugg{list-style:none;margin:6px 0 0;padding:0;background:var(--card);border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
+body{margin:0;min-height:100vh;background:linear-gradient(180deg,var(--sky1) 0,var(--sky2) 520px) fixed var(--sky2);color:var(--ink);font:17px/1.55 "Nunito",system-ui,sans-serif;font-weight:600}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px 56px}
+h1,h2,h3,.num,.fredoka{font-family:"Fredoka","Nunito",system-ui,sans-serif;font-weight:600;letter-spacing:0}
+header{position:relative;padding:14px 0 6px}
+header .clouds{position:absolute;right:-6px;top:4px;width:150px;height:auto;pointer-events:none}
+header h1{display:flex;align-items:center;gap:10px;font-size:2.7rem;font-weight:700;margin:0;line-height:1}
+header h1 svg{flex:0 0 auto}
+header p{margin:8px 0 18px;color:var(--muted);max-width:32ch}
+input[type=text]{font:inherit;font-weight:700;width:100%;padding:14px 16px;border:3px solid var(--edge);border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--edge)}
+input[type=text]::placeholder{color:var(--muted);font-weight:600}
+input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outline:3px solid var(--focus);outline-offset:3px}
+.sugg{list-style:none;margin:12px 0 0;padding:0;background:var(--card);border:3px solid var(--edge);border-radius:16px;overflow:hidden;box-shadow:0 4px 0 var(--edge)}
 .sugg:empty{display:none}
-.pick{display:block;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-bottom:1px solid var(--line);padding:12px 14px;cursor:pointer}
+.pick{display:block;width:100%;text-align:left;font:inherit;font-weight:700;color:var(--ink);background:none;border:0;border-bottom:2px dashed color-mix(in srgb,var(--edge) 25%,transparent);padding:12px 16px;cursor:pointer}
 .sugg li:last-child .pick{border-bottom:0}
-.pick:hover{background:var(--sky2)}
-.pick small{display:block;color:var(--muted)}
-.tag{display:inline-block;font-size:.75rem;padding:1px 7px;border-radius:99px;background:var(--sky2);color:var(--muted);margin-left:6px;vertical-align:2px;font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-weight:400}
-.hint{font-size:.85rem;color:var(--muted);min-height:1.3em;margin:8px 0 18px}
-.site{background:var(--card);border:1.5px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:22px}
-.scene{background:linear-gradient(var(--sky2),var(--sky));padding:16px 0 0;display:flex;justify-content:center;position:relative}
+.pick:hover{background:var(--tile)}
+.pick small{display:block;color:var(--muted);font-weight:600}
+.tag{display:inline-block;font-family:"Nunito",system-ui,sans-serif;font-size:.72rem;font-weight:800;padding:2px 9px;border-radius:99px;border:2px solid var(--edge);background:var(--bto);color:var(--ink);margin-left:8px;vertical-align:3px}
+.tag.Condo{background:var(--condo)}
+.hint{font-size:.9rem;color:var(--muted);min-height:1.3em;margin:10px 0 18px}
+.site{background:var(--card);border:3px solid var(--edge);border-radius:22px;overflow:hidden;margin-bottom:26px;box-shadow:0 6px 0 var(--edge)}
+.scene{background:linear-gradient(180deg,var(--sky1),var(--sky2));padding:12px 0 0;display:flex;justify-content:center;position:relative;border-bottom:3px solid var(--edge)}
 .scene svg{display:block;max-width:100%;height:auto}
 .scene.photo{padding:0;background:#000;aspect-ratio:4/3}
 .scene.photo img{width:100%;height:100%;object-fit:cover;display:block}
-.scene .cap{position:absolute;left:0;right:0;bottom:0;padding:22px 14px 10px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;font-size:.85rem;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
-.scene .cap b{display:block;font-size:.95rem}
-.linkbtn{font:inherit;font-size:.8rem;background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;padding:4px 0;opacity:.85;white-space:nowrap}
-.body{padding:16px 16px 18px}
-.body h2{font-size:1.45rem;font-weight:800;margin:0;line-height:1.15}
-.addr{color:var(--muted);font-size:.9rem;margin:2px 0 14px}
-.storey{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
-.storey .num{font-size:3rem;font-weight:800;line-height:1;letter-spacing:-.03em}
+.scene .cap{position:absolute;left:10px;right:10px;bottom:10px;padding:10px 12px;border-radius:14px;background:rgba(40,28,22,.72);color:#fff;font-size:.85rem;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.scene .cap b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1rem}
+.linkbtn{font:inherit;font-size:.8rem;background:none;border:0;color:inherit;text-decoration:underline;cursor:pointer;padding:4px 0;opacity:.9;white-space:nowrap}
+.body{padding:18px 18px 20px}
+.body h2{font-size:1.55rem;margin:0;line-height:1.15}
+.addr{color:var(--muted);font-size:.9rem;margin:4px 0 16px}
+.storey{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.storey .num{font-size:3.2rem;font-weight:700;line-height:1}
 .storey span{color:var(--muted)}
-.bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin:6px 0 16px}
-.bar i{display:block;height:100%;background:var(--hoard)}
-.facts{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin:0 0 14px}
-.facts div{font-size:.85rem;color:var(--muted)}
-.facts b{display:block;font-size:1.05rem;color:var(--ink)}
-.verdict{padding:12px 14px;border-radius:10px;border-left:5px solid var(--muted);background:var(--sky2);margin-bottom:14px}
-.verdict.ahead{border-color:var(--good)}.verdict.behind{border-color:var(--bad)}
-.verdict b{display:block}
-.note{font-size:.85rem;color:var(--muted);margin:0}
-.photos{border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
-.photos h3{font-size:1.05rem;margin:0 0 4px}
-.strip{display:flex;gap:8px;overflow-x:auto;padding:6px 0 4px;scrollbar-width:thin}
-.strip button{flex:0 0 auto;width:78px;padding:0;border:2px solid transparent;border-radius:8px;background:none;cursor:pointer;color:var(--muted);font:inherit;font-size:.7rem;text-align:center}
-.strip button[aria-pressed=true]{border-color:var(--crane)}
-.strip img{width:100%;height:58px;object-fit:cover;border-radius:6px;display:block;background:var(--sky)}
-.add{display:inline-flex;align-items:center;gap:8px;margin-top:10px;font-weight:700;cursor:pointer;background:var(--ink);color:var(--paper);border-radius:10px;padding:11px 16px}
+.bar{height:22px;border-radius:99px;background:var(--tile);border:3px solid var(--edge);overflow:hidden;margin:6px 0 18px;position:relative}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(-45deg,var(--grass) 0 10px,var(--grass2) 10px 20px);border-right:3px solid var(--edge);box-shadow:inset 0 4px 0 rgba(255,255,255,.35)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}
+.facts div{font-size:.82rem;color:var(--muted);background:var(--tile);border-radius:14px;padding:9px 12px}
+.facts div:last-child{grid-column:1/-1}
+.facts b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.12rem;color:var(--ink)}
+.verdict{padding:12px 14px;border-radius:16px;border:3px solid var(--edge);background:var(--neutralbg);margin-bottom:14px}
+.verdict.ahead{background:var(--goodbg)}.verdict.behind{background:var(--badbg)}
+.verdict b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.1rem}
+.verdict.ahead b{color:var(--good)}.verdict.behind b{color:var(--bad)}
+.note{font-size:.88rem;color:var(--muted);margin:0}
+.photos{border-top:3px dashed color-mix(in srgb,var(--edge) 30%,transparent);margin-top:18px;padding-top:16px}
+.photos h3{font-size:1.2rem;margin:0 0 4px}
+.strip{display:flex;gap:10px;overflow-x:auto;padding:8px 2px 6px;scrollbar-width:thin}
+.strip button{flex:0 0 auto;width:80px;padding:0;border:3px solid var(--edge);border-radius:12px;background:var(--card);cursor:pointer;color:var(--muted);font:inherit;font-size:.72rem;font-weight:700;text-align:center;overflow:hidden}
+.strip button[aria-pressed=true]{border-color:var(--crane);box-shadow:0 0 0 3px var(--crane)}
+.strip img{width:100%;height:56px;object-fit:cover;display:block;background:var(--tile)}
+.add{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.05rem;cursor:pointer;background:var(--crane);color:#2B3654;border:3px solid var(--edge);border-radius:16px;padding:10px 18px;box-shadow:0 4px 0 var(--edge);transition:transform .08s,box-shadow .08s}
+.add:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
 .add input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
-.add[aria-disabled=true]{opacity:.5;cursor:default}
-.status{font-size:.85rem;margin:8px 0 0;min-height:1.2em}
+.add[aria-disabled=true]{opacity:.55;cursor:default}
+.status{font-size:.9rem;margin:10px 0 0;min-height:1.2em}
 .status.err{color:var(--bad)}
 .status.ok{color:var(--good)}
-.row{display:flex;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap}
-.maplink,.ghost{font:inherit;color:var(--ink);text-decoration:none;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;background:transparent;cursor:pointer}
+.row{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.maplink,.ghost{font:inherit;font-weight:700;font-size:.92rem;color:var(--ink);text-decoration:none;border:3px solid var(--edge);border-radius:14px;padding:8px 14px;background:var(--card);cursor:pointer;box-shadow:0 3px 0 var(--edge)}
+.maplink:active,.ghost:active{transform:translateY(2px);box-shadow:0 1px 0 var(--edge)}
 .ghost{color:var(--muted)}
-.empty{text-align:center;padding:30px 10px;color:var(--muted)}
-.src{font-size:.8rem;color:var(--muted);margin-top:28px}
-@media (prefers-reduced-motion:no-preference){.fl{animation:rise .45s ease-out both}@keyframes rise{from{opacity:0}}}
+.empty{text-align:center;padding:16px;color:var(--muted);background:var(--card);border:3px dashed color-mix(in srgb,var(--edge) 35%,transparent);border-radius:22px}
+.src{font-size:.82rem;color:var(--muted);margin-top:28px;font-weight:600}
+@media (prefers-reduced-motion:no-preference){.fl{animation:rise .45s cubic-bezier(.3,1.6,.6,1) both}@keyframes rise{from{opacity:0;transform:translateY(4px)}}
+  .cloud{animation:drift 14s ease-in-out infinite alternate}@keyframes drift{to{transform:translateX(10px)}}}
+#town{margin:10px -16px 18px;line-height:0}
+#town svg{width:100%;height:auto;display:block}
+#explore{margin-top:8px}
+#explore h2{font-size:1.6rem;margin:0}
+#explore .lede{color:var(--muted);margin:2px 0 14px}
+.shelf{background:var(--card);border:3px solid var(--edge);border-radius:22px;box-shadow:0 5px 0 var(--edge);padding:14px 14px 16px;margin-bottom:18px}
+.shelf h3{display:flex;align-items:center;gap:8px;font-size:1.15rem;margin:0 0 2px}
+.shelf h3 i{width:26px;height:26px;border-radius:9px;border:2.5px solid var(--edge);display:inline-grid;place-items:center;font-style:normal;font-size:.9rem}
+.shelf{overflow:hidden}
+.shelf p{margin:0 0 10px;color:var(--muted);font-size:.88rem}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin:0;scrollbar-width:none;scroll-snap-type:x proximity}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap}
+.chip{font:inherit;font-weight:700;font-size:.9rem;color:var(--ink);background:var(--tile);border:2.5px solid var(--edge);border-radius:99px;padding:6px 12px;cursor:pointer;box-shadow:0 3px 0 var(--edge);display:inline-flex;align-items:center;gap:6px}
+.chip:active{transform:translateY(2px);box-shadow:0 1px 0 var(--edge)}
+.chip small{font-family:"Fredoka",sans-serif;font-weight:600;font-size:.82rem;background:var(--card);border-radius:99px;padding:0 7px;color:var(--muted)}
+.sharebtn{margin:2px 0 0}
+#sharebox{border:3px solid var(--edge);border-radius:22px;background:var(--card);color:var(--ink);padding:16px;width:min(92vw,420px);box-shadow:0 6px 0 var(--edge)}
+#sharebox::backdrop{background:rgba(40,28,22,.55)}
+#sharebox h2{margin:0 0 10px;font-size:1.3rem}
+#sb-img{display:block;width:100%;max-height:62vh;object-fit:contain;border-radius:14px;border:3px solid var(--edge);background:var(--tile)}
+.sb-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
+.sb-actions .add{margin:0}
+.sb-actions .ghost{margin-left:auto}
+[hidden]{display:none!important}
 </style></head>
 <body><div class="wrap">
-<header><h1>Storeys</h1><p>Key in your BTO or condo: project name, street, block or postal code.</p></header>
+<header>
+<h1><svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><rect x="9" y="12" width="20" height="28" rx="3" fill="#FFB8A3" stroke="var(--edge)" stroke-width="3"/><rect x="14" y="18" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="21" y="18" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="14" y="26" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="21" y="26" width="4" height="4" rx="1" fill="var(--edge)"/><path d="M35 40V6M24 8h17" stroke="var(--crane)" stroke-width="3.5" stroke-linecap="round"/><path d="M30 8v5" stroke="var(--edge)" stroke-width="2" stroke-linecap="round"/></svg>Storeys</h1>
+<p>Watch your BTO or condo go up, floor by floor. Search a project name, street, block or postal code.</p>
+</header>
+<div id="town" aria-hidden="true"></div>
 <input type="text" id="q" placeholder="e.g. Sembawang Brook, Lentor Mansion, 750437" autocomplete="off" aria-label="Project, address or postal code">
 <ul class="sugg" id="sugg"></ul>
 <p class="hint" id="hint"></p>
 <main id="list"><div class="empty"><p>Loading projects…</p></div></main>
+<section id="explore" aria-labelledby="ex-h"></section>
 <p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>.</p>
 </div>
+<dialog id="sharebox" aria-labelledby="sb-h">
+  <h2 id="sb-h">Your progress card</h2>
+  <img id="sb-img" alt="Progress card preview">
+  <div class="sb-actions">
+    <button type="button" class="add" id="sb-share">Share</button>
+    <a class="maplink" id="sb-save" download="storeys-progress.png">Save image</a>
+    <button type="button" class="ghost" id="sb-close">Close</button>
+  </div>
+  <p class="note" id="sb-note"></p>
+</dialog>
 <script>
 const SB="https://dykbqyaftkeiroyfzoqb.supabase.co", SBK="sb_publishable_6zJTBBa74WI7IueK3xdaUg_cvfxMSp2";
 const RADIUS=800, MAXAGE_DAYS=14;
@@ -87,7 +140,7 @@ const fmtDay=d=>d.toLocaleDateString("en-SG",{day:"numeric",month:"short",year:"
 const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const title=s=>s.toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase());
 const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-const PASTELS=["#F2C6B4","#BFD8C9","#F3DFA2","#C7D3EC","#E9C3D3","#CFE3D9"];
+const PASTELS=["#FFB8A3","#B9E6C6","#FFE08A","#FFD3B5","#CFE8A6","#C9E9F6"];
 const hash=s=>[...s].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7);
 const norm=s=>s.toUpperCase().replace(/[’']/g,"").replace(/\b(BLK|BLOCK)\b/g," ").replace(/\bAVE\b/g,"AVENUE").replace(/\bST\b/g,"STREET").replace(/\bRD\b/g,"ROAD").replace(/\bDR\b/g,"DRIVE").replace(/\bCRES\b/g,"CRESCENT").replace(/[^A-Z0-9@ ]/g," ").replace(/\s+/g," ").trim();
 function ago(d){const days=Math.floor((Date.now()-d)/864e5);return days<=0?"today":days===1?"yesterday":days<31?days+" days ago":fmtDay(d)}
@@ -134,24 +187,57 @@ function verdict(p,k){
 
 /* ---------- Illustration ---------- */
 function building(pct,name){
-  const N=20,fh=13,W=150,x0=85,ground=40+N*fh+20,H=ground+26;
+  const N=18,fh=14,W=150,x0=85,ground=56+N*fh+18,H=ground+30,E="var(--edge)";
   const built=Math.round(N*(pct||0)/100),facade=PASTELS[hash(name)%PASTELS.length];
-  let g=`<rect x="${x0}" y="${ground-N*fh}" width="${W}" height="${N*fh}" fill="none" stroke="var(--scaff)" stroke-dasharray="4 4" stroke-width="1.2"/>`;
-  for(let i=1;i<N;i++)g+=`<line x1="${x0}" x2="${x0+W}" y1="${ground-i*fh}" y2="${ground-i*fh}" stroke="var(--scaff)" stroke-opacity=".35" stroke-dasharray="2 5"/>`;
+  let g=`<circle cx="44" cy="40" r="17" fill="var(--sun)" stroke="${E}" stroke-width="3"/>`;
+  g+=`<g class="cloud" fill="#fff" stroke="${E}" stroke-width="2.5"><path d="M200 46h56a11 11 0 0 0 0-22 15 15 0 0 0-28-5 12 12 0 0 0-28 12 7.5 7.5 0 0 0 0 15z"/></g>`;
+  g+=`<rect x="${x0}" y="${ground-N*fh}" width="${W}" height="${N*fh}" rx="6" fill="none" stroke="${E}" stroke-opacity=".28" stroke-dasharray="5 6" stroke-width="2"/>`;
   for(let i=0;i<built;i++){
-    const y=ground-(i+1)*fh,band=i%6<3?facade:"#FBFBF8";
-    g+=`<g class="fl" style="animation-delay:${i*25}ms"><rect x="${x0}" y="${y}" width="${W}" height="${fh}" fill="${band}" stroke="#00000022" stroke-width=".6"/>`;
-    for(let k=0;k<8;k++)g+=`<rect x="${x0+8+k*17.5}" y="${y+fh*.28}" width="9" height="${fh*.44}" fill="#3E5663" opacity=".55"/>`;
+    const y=ground-(i+1)*fh,band=i%6<3?facade:"#FFFBF2",top=i===built-1;
+    g+=`<g class="fl" style="animation-delay:${i*30}ms"><rect x="${x0}" y="${y}" width="${W}" height="${fh}" fill="${band}" stroke="${E}" stroke-width="2.5"/>`;
+    for(let k=0;k<6;k++)g+=`<rect x="${x0+10+k*23}" y="${y+fh*.25}" width="13" height="${fh*.5}" rx="2.5" fill="#9FD3F2" stroke="${E}" stroke-width="1.5"/>`;
+    if(top&&(pct||0)>=100)g+=`<rect x="${x0-6}" y="${y-8}" width="${W+12}" height="9" rx="4" fill="${facade}" stroke="${E}" stroke-width="2.5"/>`;
     g+=`</g>`;
   }
   if((pct||0)<100){
-    const top=ground-built*fh,cx=x0+W-28,mt=Math.max(14,top-70),hook=Math.min(top-6,mt+50);
-    g+=`<g stroke="var(--crane)" stroke-width="3" fill="none" stroke-linecap="round"><line x1="${cx}" y1="${ground}" x2="${cx}" y2="${mt}"/><line x1="${cx-110}" y1="${mt+6}" x2="${cx+40}" y2="${mt+6}"/><line x1="${cx}" y1="${mt-10}" x2="${cx-110}" y2="${mt+6}" stroke-width="1.5"/><line x1="${cx}" y1="${mt-10}" x2="${cx+40}" y2="${mt+6}" stroke-width="1.5"/><line x1="${cx-80}" y1="${mt+6}" x2="${cx-80}" y2="${hook}" stroke-width="1.2" stroke="var(--ink)"/></g><rect x="${cx+28}" y="${mt+6}" width="14" height="10" fill="var(--crane)"/><rect x="${cx-88}" y="${hook}" width="16" height="6" fill="var(--ink)"/>`;
+    const top=ground-built*fh,cx=x0+W+18,mt=Math.max(30,top-64),hook=Math.min(top-8,mt+48);
+    g+=`<g stroke="${E}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="${cx-4}" y="${mt}" width="8" height="${ground-mt}" fill="var(--crane)"/><rect x="${cx-126}" y="${mt-2}" width="168" height="8" rx="3" fill="var(--crane)"/><rect x="${cx+22}" y="${mt+6}" width="18" height="12" rx="3" fill="#9A8C80"/><line x1="${cx-96}" y1="${mt+6}" x2="${cx-96}" y2="${hook}" fill="none"/><rect x="${cx-107}" y="${hook}" width="22" height="10" rx="2" fill="#FF8FA3"/></g>`;
   }
-  g+=`<rect x="0" y="${ground}" width="320" height="26" fill="var(--hoard)"/>`;
-  for(let k=0;k<11;k++)g+=`<line x1="${k*32}" x2="${k*32}" y1="${ground}" y2="${ground+26}" stroke="#ffffff33"/>`;
-  g+=`<circle cx="40" cy="${ground-14}" r="14" fill="#5E9B6E"/><rect x="38" y="${ground-6}" width="4" height="6" fill="#4B3B2A"/>`;
-  return `<svg viewBox="0 0 320 ${H}" width="320" role="img" aria-label="Illustration of the building about ${Math.round(pct||0)} percent built">${g}</svg>`;
+  g+=`<path d="M0 ${ground} Q80 ${ground-10} 160 ${ground} T320 ${ground} V${H} H0Z" fill="var(--grass)" stroke="${E}" stroke-width="3"/>`;
+  g+=`<g stroke="${E}" stroke-width="2.5"><rect x="40" y="${ground-24}" width="6" height="18" rx="2" fill="#B07A4F"/><circle cx="43" cy="${ground-32}" r="15" fill="#7ED18F"/><circle cx="296" cy="${ground-12}" r="10" fill="#7ED18F"/></g>`;
+  return `<svg viewBox="0 0 320 ${H}" width="320" role="img" aria-label="Drawing of the building about ${Math.round(pct||0)} percent built">${g}</svg>`;
+}
+
+/* ---------- Homepage town ---------- */
+function town(){
+  const E="var(--edge)",G=210;
+  const B=[[12,48,92,1,"#FFB8A3"],[72,42,70,.5,"#FFE08A"],[128,58,140,1,"#B9E6C6"],[200,48,118,.45,"#FFD3B5"],[262,54,104,1,"#C9E9F6"],[324,34,72,.7,"#CFE8A6"]];
+  let g=`<circle cx="190" cy="40" r="16" fill="var(--sun)" stroke="${E}" stroke-width="3"/>`;
+  g+=`<g class="cloud" fill="#fff" stroke="${E}" stroke-width="2.5"><path d="M20 52h50a10 10 0 0 0 0-20 14 14 0 0 0-26-5 11 11 0 0 0-24 11 7 7 0 0 0 0 14z"/><path d="M262 40h40a8 8 0 0 0 0-16 11 11 0 0 0-20-4 9 9 0 0 0-20 9 5.5 5.5 0 0 0 0 11z"/></g>`;
+  for(const [x,w,h,done,c] of B){
+    const top=G-h,bh=h*done;
+    if(done<1)g+=`<rect x="${x}" y="${top}" width="${w}" height="${h}" rx="4" fill="none" stroke="${E}" stroke-opacity=".3" stroke-dasharray="4 5" stroke-width="2"/>`;
+    g+=`<rect x="${x}" y="${G-bh}" width="${w}" height="${bh}" rx="${done<1?2:5}" fill="${c}" stroke="${E}" stroke-width="3"/>`;
+    for(let yy=G-bh+8;yy<G-12;yy+=14)for(let xx=x+7;xx<x+w-10;xx+=13)g+=`<rect x="${xx}" y="${yy}" width="7" height="7" rx="2" fill="#9FD3F2" stroke="${E}" stroke-width="1.5"/>`;
+    if(done<1){const cx=x+w+6,mt=top-14;g+=`<g stroke="${E}" stroke-width="2.5" stroke-linecap="round"><rect x="${cx-3}" y="${mt}" width="6" height="${G-mt}" fill="var(--crane)"/><rect x="${cx-w-6}" y="${mt-2}" width="${w+22}" height="6" rx="2" fill="var(--crane)"/><line x1="${cx-w+8}" y1="${mt+4}" x2="${cx-w+8}" y2="${G-bh-10}"/><rect x="${cx-w+2}" y="${G-bh-10}" width="12" height="7" rx="2" fill="#FF8FA3"/></g>`}
+  }
+  g+=`<path d="M0 ${G} Q90 ${G-14} 180 ${G} T360 ${G} V236 H0Z" fill="var(--grass)" stroke="${E}" stroke-width="3"/>`;
+  for(const tx of [66,190,316])g+=`<g stroke="${E}" stroke-width="2.5"><rect x="${tx-2.5}" y="${G-18}" width="5" height="14" rx="2" fill="#B07A4F"/><circle cx="${tx}" cy="${G-24}" r="11" fill="#7ED18F"/></g>`;
+  $("#town").innerHTML=`<svg viewBox="0 14 360 222" preserveAspectRatio="xMidYMax meet">${g}</svg>`;
+}
+
+/* ---------- Explore shelves ---------- */
+function explore(){
+  const nb=P.filter(p=>p.kind==="BTO").length,nc=P.length-nb;
+  const withK=P.map(p=>({p,k:stats(p)}));
+  const shelves=[
+    ["Almost there","🏁","Nearly at the finish line.",withK.filter(x=>x.k.pct!=null&&x.k.pct>=85&&x.k.pct<100).sort((a,b)=>b.k.pct-a.k.pct)],
+    ["Just launched","🌱","Fresh sites, foundations going in.",withK.filter(x=>x.p.launch).sort((a,b)=>b.p.launch.localeCompare(a.p.launch))],
+    ["Running late","🐢","HDB has pushed back the date.",withK.filter(x=>x.k.delay>=3&&x.k.pct<100).sort((a,b)=>b.k.delay-a.k.delay)]
+  ];
+  const chip=x=>`<button type="button" class="chip" data-i="${x.p.i}">${esc(x.p.name.replace(/ \((\w+ \d{4}) launch\)$/," ($1)"))}<small>${x.k.pct==null?"soon":Math.round(x.k.pct)+"%"}</small></button>`;
+  $("#explore").innerHTML=`<h2 id="ex-h">Explore</h2><p class="lede">Watching ${nb} BTOs and ${nc} condos across Singapore. Swipe the rows, tap one to add it.</p>`+
+    shelves.filter(s=>s[3].length).map(([t,ic,sub,list])=>`<div class="shelf"><h3><i aria-hidden="true">${ic}</i>${t}</h3><p>${sub}</p><div class="chips">${list.slice(0,6).map(chip).join("")}</div></div>`).join("");
 }
 
 /* ---------- Cards ---------- */
@@ -162,7 +248,7 @@ function card(p){
   return `<section class="site" data-key="${esc(p.key)}" id="c-${id}">
   <div class="scene" data-pct="${k.pct||0}">${building(k.pct,p.name)}</div>
   <div class="body">
-    <h2>${esc(p.name)}<span class="tag">${p.kind}</span></h2><p class="addr">${esc(where)}</p>
+    <h2>${esc(p.name)}<span class="tag ${p.kind}">${p.kind}</span></h2><p class="addr">${esc(where)}</p>
     <div class="storey"><span class="num">${k.pct==null?"—":Math.round(k.pct)+"%"}</span><span>of the way to completion</span></div>
     <div class="bar"><i style="width:${k.pct||0}%"></i></div>
     <div class="verdict ${v.cls}"><b>${esc(v.t)}</b>${esc(v.d)}</div>
@@ -173,7 +259,8 @@ function card(p){
       <div>${p.kind==="BTO"?"Completion":"Expected TOP"}<b>${fmtYM(k.T)}</b></div>
       <div>Stage now<b>${stageFor(k.pct)}</b></div>
     </div>
-    <p class="note">Percentage is time elapsed from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"}.</p>
+    <button type="button" class="add sharebtn" data-share="${esc(p.key)}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Share progress card</button>
+    <p class="note" style="margin-top:14px">Percentage is time elapsed from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"}.</p>
     <div class="photos">
       <h3>Site photos</h3>
       <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes.</p>
@@ -189,7 +276,7 @@ function card(p){
 }
 function render(){
   const items=tracked.map(key=>P.find(p=>p.key===key)).filter(Boolean);
-  $("#list").innerHTML=items.length?items.map(card).join(""):`<div class="empty"><p>Start typing above and tap your project.</p></div>`;
+  $("#list").innerHTML=items.length?items.map(card).join(""):`<div class="empty"><p><b class="fredoka" style="font-size:1.15rem;color:var(--ink)">Your watchlist is empty</b><br>Search above, or tap a project below to start watching it grow.</p></div>`;
   items.forEach(p=>loadPhotos(p.key));
 }
 function pick(i){
@@ -314,11 +401,95 @@ async function report(id,key,btn){
   }catch(e){btn.textContent="Couldn't report, try again"}
 }
 
+
+/* ---------- Share card ---------- */
+const DAY={"--edge":"#3A2C26","--sun":"#FFC845","--crane":"#FFB020","--grass":"#62C07A","--grass2":"#3F9D5C","--sky1":"#BFE6FB","--sky2":"#E3F6EA"};
+function svgImage(markup,w,h){
+  let m=markup.replace(/var\((--[a-z0-9]+)\)/g,(_,v)=>DAY[v]||"#888").replace(/ class="[^"]*"/g,"").replace(/ style="[^"]*"/g,"");
+  const head=m.slice(0,m.indexOf(">")+1),vb=(head.match(/viewBox="([^"]+)"/)||[])[1];
+  if(vb){const a=vb.split(/\s+/).map(Number);h=Math.round(w*a[3]/a[2])}
+  m=head.replace(/\s(width|height|xmlns)="[^"]*"/g,"").replace("<svg",`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"`)+m.slice(head.length);
+  return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(m)});
+}
+function rrect(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function wrap(c,text,maxW){const words=text.split(" "),lines=[];let l="";for(const w of words){const t=l?l+" "+w:w;if(c.measureText(t).width>maxW&&l){lines.push(l);l=w}else l=t}lines.push(l);return lines}
+function lines2(t,f){const c=document.createElement("canvas").getContext("2d");c.font=f;return Math.min(2,wrap(c,t,840).length)}
+async function makeCard(p){
+  const k=stats(p),v=verdict(p,k),W=1080,Hh=1920,ink="#3A2C26",muted="#6E5D54";
+  await Promise.all(["700 120px Fredoka","600 60px Fredoka","700 40px Nunito","800 30px Nunito"].map(f=>document.fonts.load(f).catch(()=>{})));
+  const cv=document.createElement("canvas");cv.width=W;cv.height=Hh;const c=cv.getContext("2d");
+  const bg=c.createLinearGradient(0,0,0,Hh);bg.addColorStop(0,"#BFE6FB");bg.addColorStop(.55,"#E3F6EA");bg.addColorStop(1,"#E3F6EA");c.fillStyle=bg;c.fillRect(0,0,W,Hh);
+  // header
+  c.fillStyle=ink;c.font="700 64px Fredoka, sans-serif";c.textBaseline="alphabetic";c.fillText("Storeys",150,150);
+  const logo=await svgImage(document.querySelector("header h1 svg").outerHTML,88,88);c.drawImage(logo,52,82);
+  // card panel
+  const px=60,py=210,pw=W-120,ph=Hh-210-170;
+  c.fillStyle=ink;rrect(c,px,py+14,pw,ph,56);c.fill();
+  c.fillStyle="#FFFDF7";rrect(c,px,py,pw,ph,56);c.fill();c.lineWidth=8;c.strokeStyle=ink;c.stroke();
+  // illustration
+  const IH=780-82*(lines2(p.name,"600 72px Fredoka, sans-serif")-1)-64*(lines2(v.t,"600 54px Fredoka, sans-serif")-1);c.save();rrect(c,px+4,py+4,pw-8,IH,52);c.clip();
+  const sk=c.createLinearGradient(0,py,0,py+IH);sk.addColorStop(0,"#BFE6FB");sk.addColorStop(1,"#E3F6EA");c.fillStyle=sk;c.fillRect(px,py,pw,IH);
+  const art=await svgImage(building(k.pct,p.name),640,0);const ar=art.height/art.width||1.2;const aw=Math.min(860,(IH-50)/ar);
+  const ax=px+(pw-aw)/2,gy=py+IH-aw*ar*30/356;
+  c.fillStyle="#62C07A";c.fillRect(px,gy,pw,py+IH-gy);c.beginPath();c.moveTo(px,gy);c.lineTo(ax+4,gy);c.moveTo(ax+aw-4,gy);c.lineTo(px+pw,gy);c.lineWidth=7;c.strokeStyle=ink;c.stroke();
+  c.drawImage(art,ax,py+IH-aw*ar,aw,aw*ar);c.fillStyle="#62C07A";c.fillRect(px,gy+4,pw,py+IH-gy);c.restore();
+  c.beginPath();c.moveTo(px,py+IH);c.lineTo(px+pw,py+IH);c.lineWidth=8;c.strokeStyle=ink;c.stroke();
+  // name + tag
+  let y=py+IH+100;c.fillStyle=ink;c.font="600 72px Fredoka, sans-serif";
+  const lines=wrap(c,p.name,pw-120).slice(0,2);for(const ln of lines){c.fillText(ln,px+60,y);y+=82}
+  c.font="800 30px Nunito, sans-serif";const tw=c.measureText(p.kind).width+44;
+  c.fillStyle=p.kind==="BTO"?"#BDE8F5":"#FFD3B5";rrect(c,px+60,y-34,tw,54,27);c.fill();c.lineWidth=5;c.strokeStyle=ink;c.stroke();
+  c.fillStyle=ink;c.textBaseline="middle";c.fillText(p.kind,px+82,y-6);c.textBaseline="alphabetic";
+  y+=200;
+  // big percent
+  c.font="700 200px Fredoka, sans-serif";const pct=k.pct==null?"Soon":Math.round(k.pct)+"%";c.fillText(pct,px+56,y);
+  const pw2=c.measureText(pct).width;c.font="700 40px Nunito, sans-serif";c.fillStyle=muted;
+  if(k.pct!=null){c.fillText("of the way",px+80+pw2,y-80);c.fillText("to completion",px+80+pw2,y-30)}
+  y+=50;
+  // bar
+  const bx=px+60,bw=pw-120,bh=64;c.fillStyle="#F3EEE6";rrect(c,bx,y,bw,bh,32);c.fill();
+  if(k.pct){c.save();rrect(c,bx,y,bw,bh,32);c.clip();const fw=bw*Math.min(1,k.pct/100);c.fillStyle="#62C07A";c.fillRect(bx,y,fw,bh);c.strokeStyle="#3F9D5C";c.lineWidth=16;for(let sx=bx-bh;sx<bx+fw;sx+=40){c.beginPath();c.moveTo(sx,y+bh);c.lineTo(sx+bh,y);c.stroke()}c.fillStyle="rgba(255,255,255,.35)";c.fillRect(bx,y,fw,12);c.restore()}
+  rrect(c,bx,y,bw,bh,32);c.lineWidth=8;c.strokeStyle=ink;c.stroke();
+  y+=140;
+  // verdict + date
+  c.font="600 54px Fredoka, sans-serif";c.fillStyle=v.cls==="behind"?"#D9483B":v.cls==="ahead"?"#2E9257":ink;
+  for(const ln of wrap(c,v.t,pw-120).slice(0,2)){c.fillText(ln,px+60,y);y+=64}
+  c.font="700 40px Nunito, sans-serif";c.fillStyle=muted;
+  for(const ln of [(p.kind==="BTO"?"Completion ":"Expected TOP ")+fmtYM(k.T),k.left?`About ${k.left} months to go`:""].filter(Boolean)){c.fillText(ln,px+60,y+6);y+=52}
+  // footer
+  c.fillStyle=ink;c.font="800 38px Nunito, sans-serif";c.textAlign="center";
+  c.fillText("Track yours at "+location.host+location.pathname.replace(/\/$/,""),W/2,Hh-70);c.textAlign="left";
+  return new Promise(r=>cv.toBlob(r,"image/png"));
+}
+let shareFile=null,shareUrl=null;
+async function openShare(key,btn){
+  const p=P.find(x=>x.key===key);if(!p)return;
+  const label=btn.lastChild.textContent;btn.lastChild.textContent="Drawing your card…";btn.setAttribute("aria-disabled","true");
+  try{
+    const blob=await makeCard(p);
+    if(shareUrl)URL.revokeObjectURL(shareUrl);
+    shareUrl=URL.createObjectURL(blob);
+    shareFile=new File([blob],"storeys-"+slug(p.name)+".png",{type:"image/png"});
+    $("#sb-img").src=shareUrl;$("#sb-save").href=shareUrl;$("#sb-save").download=shareFile.name;
+    const can=navigator.canShare&&navigator.canShare({files:[shareFile]});
+    $("#sb-share").hidden=!can;
+    $("#sb-note").textContent=can?"":"Save the image, then post it from your photos.";
+    $("#sb-share").dataset.name=p.name;
+    $("#sharebox").showModal();
+  }catch(e){alert("Couldn't draw the card. Try again.")}
+  finally{btn.lastChild.textContent=label;btn.removeAttribute("aria-disabled")}
+}
+$("#sb-share").addEventListener("click",async()=>{
+  try{await navigator.share({files:[shareFile],text:`${$("#sb-share").dataset.name} on Storeys: ${location.href.split("?")[0]}`})}catch(e){}
+});
+$("#sb-close").addEventListener("click",()=>$("#sharebox").close());
+$("#sharebox").addEventListener("click",e=>{if(e.target.id==="sharebox")$("#sharebox").close()});
+
 /* ---------- Events ---------- */
 const q=$("#q"),sug=$("#sugg");
 q.addEventListener("input",()=>{
   const r=search(q.value);
-  sug.innerHTML=r.map(p=>`<li><button type="button" class="pick" data-i="${p.i}">${esc(p.name)}<span class="tag">${p.kind}</span><small>${esc(p.kind==="BTO"?(p.roads.map(title).join(" / ")||"Completion "+fmtYM(ym(p.delayed||p.ecd))):(p.addr?p.addr.slice(0,60):"Expected TOP "+fmtYM(ym(p.ecd))))}</small></button></li>`).join("");
+  sug.innerHTML=r.map(p=>`<li><button type="button" class="pick" data-i="${p.i}">${esc(p.name)}<span class="tag ${p.kind}">${p.kind}</span><small>${esc(p.kind==="BTO"?(p.roads.map(title).join(" / ")||"Completion "+fmtYM(ym(p.delayed||p.ecd))):(p.addr?p.addr.slice(0,60):"Expected TOP "+fmtYM(ym(p.ecd))))}</small></button></li>`).join("");
   $("#hint").textContent=q.value.trim().length>3&&!r.length?"No match. Try the project name. Covers BTOs launched since Nov 2020 and condos with a published expected TOP.":"";
 });
 q.addEventListener("keydown",e=>{if(e.key==="Enter"){const b=sug.querySelector(".pick");if(b)pick(+b.dataset.i);}});
@@ -326,19 +497,23 @@ sug.addEventListener("click",e=>{const b=e.target.closest(".pick");if(b)pick(+b.
 $("#list").addEventListener("click",e=>{
   const d=e.target.closest("[data-del]");
   if(d){tracked=tracked.filter(x=>x!==d.dataset.del);saveTracked();render();return}
+  const sh=e.target.closest("[data-share]");
+  if(sh){openShare(sh.dataset.share,sh);return}
   const s=e.target.closest("[data-show]");
   if(s){showPhotos(s.dataset.k,+s.dataset.show);return}
   const rp=e.target.closest("[data-report]");
   if(rp)report(rp.dataset.report,rp.dataset.k,rp);
 });
+$("#explore").addEventListener("click",e=>{const c=e.target.closest(".chip");if(c)pick(+c.dataset.i)});
 $("#list").addEventListener("change",e=>{if(e.target.matches("[data-up]"))upload(e.target)});
 
 /* ---------- Load data ---------- */
+town();
 fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   $("#upd").textContent=D.updated;
   D.bto.forEach(r=>P.push({kind:"BTO",name:r[0],launch:r[2],ecd:r[3],delayed:r[4],remark:r[5],roads:r[6]?r[6].split("|"):[],blks:r[7]?r[7].split(" "):[],postals:r[8]?r[8].split(" "):[],ll:r[9]||null,addr:""}));
   D.condo.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3],ll:r[4]||null}));
   P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch;p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
-  render();
+  render();explore();
 }).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
 </script></body></html>
