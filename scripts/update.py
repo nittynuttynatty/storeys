@@ -58,6 +58,25 @@ def onemap(name):
         time.sleep(0.2)
     return "|".join(roads), " ".join(blks), " ".join(postals), ll
 
+def point(name, addr=""):
+    """Best-effort map point for a project: name variants, then postal code, then street."""
+    base = re.sub(r"\(.*?\)", "", name).replace("’", "'").strip()
+    plain = re.sub(r"\s+I\s*&\s*II", "", base)
+    cands = [base, plain, plain.split("@")[0].strip(), plain.split("@")[0].strip() + " I"]
+    cands += re.findall(r"\b\d{6}\b", addr)[:1]
+    m = re.search(r"([A-Za-z][A-Za-z ']+(Road|Rd|Drive|Dr|Avenue|Ave|Street|St|Lane|Close|Way|Walk|Link|Central|Crescent|Rise|Green|Gardens|Grove|View|Place|Promenade|Vista|Circle|Boulevard))", addr)
+    if m: cands.append(m.group(1))
+    for c in cands:
+        s = get("https://www.onemap.gov.sg/api/common/elastic/search?searchVal=" + urllib.parse.quote(c) + "&returnGeom=Y&getAddrDetails=N&pageNum=1")
+        try:
+            r = json.loads(s).get("results") or []
+        except Exception:
+            r = []
+        if r:
+            return [round(float(r[0]["LATITUDE"]), 4), round(float(r[0]["LONGITUDE"]), 4)]
+        time.sleep(0.2)
+    return None
+
 bto = []
 if len(raw) >= 0.7 * len(old["bto"]):
     names = [(x["PROJECT_DISPLAY_NAME"] or x["PROJECT_NAME"].replace("-", " ")).strip() for x in raw]
@@ -73,6 +92,8 @@ if len(raw) >= 0.7 * len(old["bto"]):
             roads, blks, postals, ll = onemap(name)
             if not blks and prev:
                 roads, blks, postals, ll = prev[6], prev[7], prev[8], prev[9] or ll
+        if not ll:
+            ll = (prev[9] if prev else None) or point(name)
         bto.append([label, x["PROJECT_TYPE"], x["LAUNCH_DATE"][:7], (x["ESTIMATED_TOP"] or "")[:7],
                     (x["ESTIMATED_DELAYED_TOP"] or "")[:7], x["REMARKS"] or "", roads, blks, postals, ll])
 else:
@@ -130,7 +151,9 @@ for n in cand:
     if launch and mnum(top) - mnum(launch) < 18:
         continue
     addr = html.unescape(got[2].encode().decode("unicode_escape", "ignore") if "\\u" in got[2] else got[2]).strip()
-    condo.append([n, launch, top, addr])
+    prev = old_condo.get(n)
+    ll = (prev[4] if prev and len(prev) > 4 else None) or point(n, addr)
+    condo.append([n, launch, top, addr, ll])
 if len(condo) < 0.7 * len(old["condo"]):
     print("Condo source looks broken, keeping previous data")
     condo = old["condo"]
