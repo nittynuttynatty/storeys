@@ -254,7 +254,8 @@ input[type=text]{font-weight:400;border-radius:999px}
 .shelf{border-radius:20px}
 .shelf h3 i{border:0;background:var(--tile)}
 /* see around me */
-#locate{width:auto;height:auto;right:12px;bottom:196px;border-radius:999px;padding:10px 16px 10px 12px;display:flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);font:600 .9rem/1 "Figtree",system-ui,sans-serif;border:0;box-shadow:var(--sh)}
+#locate{width:auto;height:auto;right:12px;bottom:166px;border-radius:999px;padding:7px 12px 7px 9px;display:flex;align-items:center;gap:6px;background:var(--accent);color:var(--accent-ink);font:600 .8rem/1 "Figtree",system-ui,sans-serif;border:0;box-shadow:var(--sh)}
+#locate svg{width:16px;height:16px}
 #locate svg{width:20px;height:20px}
 .me{width:22px;height:22px;border-radius:50%;background:#3A8DDE;border:3px solid #fff;box-shadow:0 0 0 0 rgba(58,141,222,.5);animation:ping 1.8s ease-out infinite}
 @keyframes ping{to{box-shadow:0 0 0 18px rgba(58,141,222,0)}}
@@ -280,6 +281,9 @@ input[type=text]{font-weight:400;border-radius:999px}
 .sect{font-size:1.25rem;margin:8px 0 4px}
 #sheet .grab{padding:4px 0 10px}
 .xbtn{position:absolute;right:6px;top:2px;width:34px;height:34px;border-radius:50%;border:0;background:var(--card);color:var(--ink);display:grid;place-items:center;box-shadow:var(--sh-press);cursor:pointer}
+.nearlabel{color:#2B2420;text-shadow:0 0 6px rgba(255,253,248,.95),0 1px 1px rgba(255,253,248,.9)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ncard .go{color:var(--accent)}}
+:root[data-theme="dark"] .ncard .go{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -304,7 +308,7 @@ input[type=text]{font-weight:400;border-radius:999px}
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search projects"><ul class="sugg" id="sugg"></ul></div>
     <div class="found" title="Sites you've flown past"><b id="wfound">0</b>/<span id="wtotal">0</span> found</div>
   </div>
-  <button type="button" id="locate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>See what's around me</button>
+  <button type="button" id="locate" aria-label="See what's around me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Around me</button>
   <div class="toast" id="toast" role="status"></div>
   <div class="nearwrap"><p class="nearlabel">Around you</p><div id="nearby" role="list"></div></div>
 </section>
@@ -377,15 +381,47 @@ async function loadFeed(){
   }catch(e){box.innerHTML=`<p class="note" style="grid-column:1/-1">Photos couldn't load right now.</p>`}
 }
 $("#feed").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openSheet(+b.dataset.open)});
-$("#snapbtn").addEventListener("click",async()=>{
-  const btn=$("#snapbtn");btn.textContent="Finding your site…";
-  try{
-    const pos=await here();const near=P.filter(p=>p.ll).map(p=>({p,d:metres(pos,p.ll)})).sort((a,b)=>a.d-b.d)[0];
-    if(!near||near.d>RADIUS){alert(`The nearest site is ${near?distTxt(near.d):"far"} away. Photos need to be taken within ${RADIUS} m of a site.`);return}
-    openSheet(near.p.i);setTimeout(()=>{const ph=$("#sheet .photos");if(ph)ph.scrollIntoView({behavior:"smooth",block:"start"})},250);
-  }catch(e){alert("Allow location so Storeys can find the site you're at.")}
-  finally{btn.textContent="Snap a site"}
+
+let SNAPFILE=null;
+async function matchPhoto(file){
+  const box=$("#snapmatch");box.innerHTML=`<p class="note">Reading where this photo was taken…</p>`;
+  const ex=readExif(await file.slice(0,262144).arrayBuffer());
+  if(ex.date&&Date.now()-ex.date>MAXAGE_DAYS*864e5){box.innerHTML=`<p class="status err">This photo is from ${fmtDay(ex.date)}. Only photos from the last ${MAXAGE_DAYS} days can be added, so everyone sees how the site looks now.</p>`;return}
+  if(!ex.gps){box.innerHTML=`<p class="status err">This photo doesn't have its location saved, so Storeys can't tell which site it is. If you're at the site now, pick it below and add the photo there. Otherwise, take a new one with location turned on for your camera.</p>`;return}
+  const best=P.filter(p=>p.ll).map(p=>({p,d:metres(ex.gps,p.ll)})).sort((a,b)=>a.d-b.d)[0];
+  if(!best||best.d>RADIUS){box.innerHTML=`<p class="status err">This photo was taken ${best?distTxt(best.d)+" from "+esc(best.p.name)+", the nearest site we track":"far from any site we track"}. Photos need to be within ${RADIUS} m of a site.</p>`;return}
+  SNAPFILE=file;
+  box.innerHTML=`<div class="verdict ahead" style="margin:10px 0 0"><b>Looks like ${esc(best.p.name)}</b>Taken ${distTxt(best.d)} from the site${ex.date?", on "+esc(fmtDay(ex.date)):""}.<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button type="button" class="add" data-snapadd="${best.p.i}">Add it there</button><button type="button" class="ghost" data-snapno>Not this one</button></div></div>`;
+}
+$("#sheet").addEventListener("click",e=>{
+  const a=e.target.closest("[data-snapadd]");
+  if(a&&SNAPFILE){const i=+a.dataset.snapadd,f=SNAPFILE;SNAPFILE=null;openSheet(i);setTimeout(()=>{const ph=$("#sheet .photos");if(ph)ph.scrollIntoView({behavior:"smooth",block:"start"});uploadFile(P[i].key,f)},250);return}
+  if(e.target.closest("[data-snapno]")){SNAPFILE=null;$("#snapmatch").innerHTML=`<p class="note">No problem. Pick the right project below.</p>`}
 });
+
+function snapList(list,note){
+  return (note?`<p class="note" style="margin:4px 2px 8px">${note}</p>`:"")+list.map(x=>`<li><button type="button" class="pick" data-snap="${x.p.i}">${esc(x.p.name)}<span class="tag ${x.p.kind}">${x.p.kind}</span><small>${x.d!=null?distTxt(x.d)+" from you":esc(x.p.kind==="BTO"?x.p.roads.map(title).join(" / "):x.p.addr.slice(0,50))}</small></button></li>`).join("");
+}
+$("#snapbtn").addEventListener("click",()=>{
+  SHEETKEY=null;
+  $("#sheetbody").innerHTML=`<div class="site" style="padding:6px 16px 18px"><h2 style="margin:4px 0 2px">Snap a site</h2><p class="note" style="margin:0 0 14px">Choose a photo and Storeys works out which project it's of. Photos need to be from the last ${MAXAGE_DAYS} days, taken within ${RADIUS} m of the site.</p>
+    <label class="add" style="display:inline-flex;gap:8px;align-items:center;margin:0 0 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>Choose a photo<input type="file" accept="image/*" id="snapfile" style="position:absolute;width:1px;height:1px;opacity:0"></label>
+    <div id="snapmatch" role="status"></div>
+    <h3 style="font-size:1.05rem;margin:18px 0 6px">Or pick the project</h3>
+    <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="snapq" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search the project you're at"></div>
+    <ul class="sugg" id="snaplist" style="margin-top:10px"><li><span class="pick" style="cursor:default">Finding sites near you…</span></li></ul>
+    <button type="button" class="maplink" id="snapmap" style="margin-top:12px">Can't remember the name? Find it on the map</button></div>`;
+  $("#snapfile").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)matchPhoto(f)});
+  $("#snapmap").addEventListener("click",()=>{closeSheet();setTab("map");toast("Fly to where you took it, then tap the building")});
+  $("#sheet").hidden=false;
+  const show=()=>{const v=$("#snapq").value;if(v.trim().length>=2){const r=search(v);$("#snaplist").innerHTML=r.length?snapList(r.map(p=>({p,d:null}))):`<li><span class="pick" style="cursor:default">No match. Try the project name.</span></li>`;return true}return false};
+  $("#snapq").addEventListener("input",()=>{if(!show())nearDefault()});
+  let nearHTML="";
+  const nearDefault=()=>{if(nearHTML)$("#snaplist").innerHTML=nearHTML};
+  here().then(pos=>{const n=P.filter(p=>p.ll).map(p=>({p,d:metres(pos,p.ll)})).sort((a,b)=>a.d-b.d).slice(0,5);nearHTML=snapList(n,"Closest to you");if(!$("#snapq")||$("#snapq").value.trim().length<2)nearDefault()})
+   .catch(()=>{const w=tracked.map(k=>P.find(p=>p.key===k)).filter(Boolean).slice(0,5).map(p=>({p,d:null}));nearHTML=w.length?snapList(w,"From your watchlist"):`<li><span class="pick" style="cursor:default">Search for the project you're at.</span></li>`;nearDefault()});
+});
+$("#sheet").addEventListener("click",e=>{const b=e.target.closest("[data-snap]");if(!b)return;openSheet(+b.dataset.snap);setTimeout(()=>{const ph=$("#sheet .photos");if(ph)ph.scrollIntoView({behavior:"smooth",block:"start"})},250)});
 let ME=null;
 function showMe(pos){if(!MAP)return;if(!ME){const el=document.createElement("div");el.className="me";el.setAttribute("aria-label","You are here");ME=new maplibregl.Marker({element:el}).setLngLat([pos[1],pos[0]]).addTo(MAP)}else ME.setLngLat([pos[1],pos[0]])}
 
@@ -604,12 +640,12 @@ async function shrink(file,max,quality){
 }
 
 /* ---------- Photos: upload ---------- */
-async function upload(input){
-  const key=input.dataset.up,p=P.find(x=>x.key===key),c=cardFor(key),st=c.querySelector(".status"),btn=input.closest(".add");
-  const file=input.files[0];input.value="";
-  if(!file||!p)return;
+async function upload(input){const f=input.files[0];input.value="";if(f)uploadFile(input.dataset.up,f)}
+async function uploadFile(key,file){
+  const p=P.find(x=>x.key===key),c=cardFor(key);if(!file||!p||!c)return;
+  const st=c.querySelector(".status"),btn=c.querySelector(".photos .add");
   const say=(t,cls="")=>{st.textContent=t;st.className="status "+cls};
-  btn.setAttribute("aria-disabled","true");
+  if(btn)btn.setAttribute("aria-disabled","true");
   try{
     say("Checking where the photo was taken…");
     const ex=readExif(await file.slice(0,262144).arrayBuffer());
@@ -634,7 +670,7 @@ async function upload(input){
     await loadPhotos(key);
   }catch(e){
     say("The upload didn't go through. Check your connection and try again.","err");
-  }finally{btn.removeAttribute("aria-disabled")}
+  }finally{if(btn)btn.removeAttribute("aria-disabled")}
 }
 async function report(id,key,btn){
   const done=store("storeys.reported")||[];
@@ -667,7 +703,8 @@ async function makeCard(p){
   const bg=c.createLinearGradient(0,0,0,Hh);bg.addColorStop(0,"#BFE6FB");bg.addColorStop(.55,"#E3F6EA");bg.addColorStop(1,"#E3F6EA");c.fillStyle=bg;c.fillRect(0,0,W,Hh);
   // header
   c.fillStyle=ink;c.font="500 64px Fraunces, Georgia, serif";c.textBaseline="alphabetic";c.fillText("Storeys",150,150);
-  const logo=await svgImage(document.querySelector("header h1 svg").outerHTML,88,88);c.drawImage(logo,52,82);
+  const LOGO='<svg viewBox="0 0 44 44"><rect x="9" y="12" width="20" height="28" rx="3" fill="#FFB8A3" stroke="#3A2C26" stroke-width="1.8"/><rect x="14" y="18" width="4" height="4" rx="1" fill="#3A2C26"/><rect x="21" y="18" width="4" height="4" rx="1" fill="#3A2C26"/><rect x="14" y="26" width="4" height="4" rx="1" fill="#3A2C26"/><rect x="21" y="26" width="4" height="4" rx="1" fill="#3A2C26"/><path d="M35 40V6M24 8h17" stroke="#FFB020" stroke-width="3.5" stroke-linecap="round"/></svg>';
+  try{const logo=await svgImage(LOGO,88,88);c.drawImage(logo,52,82)}catch(e){}
   // card panel
   const px=60,py=210,pw=W-120,ph=Hh-210-170;
   c.save();c.shadowColor="rgba(43,36,32,.18)";c.shadowBlur=40;c.shadowOffsetY=14;c.fillStyle="#FFFDF7";rrect(c,px,py,pw,ph,56);c.fill();c.restore();
