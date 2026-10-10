@@ -36,9 +36,9 @@ for kind, name, launch, ecd, delayed in rows:
     pct = None
     if L and T and T > L:
         pct = max(0, min(100, round((today - L).days / (T - L).days * 100)))
-        desc = f"{pct}% of the estimated timeline has elapsed (a time-based estimate, not measured progress). {'Est. completion' if kind == 'BTO' else 'Expected TOP'}: {fmt(T)}. See site photos from people nearby."
+        desc = f"{pct}% of the estimated timeline has elapsed (a time-based estimate, not measured progress). {'Est. completion' if kind == 'BTO' else 'Expected TOP'}: {fmt(T)}. Real, recent site photos from people nearby. No ads."
     else:
-        desc = f"Expected {'completion' if kind == 'BTO' else 'TOP'}: {fmt(T)}. See site photos from people nearby."
+        desc = f"Expected {'completion' if kind == 'BTO' else 'TOP'}: {fmt(T)}. Real, recent site photos from people nearby. No ads."
     title = f"{name} ({kind}) · {APP}"
     url = f"{SITE}p/{s}/"
     e = html.escape
