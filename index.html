@@ -150,7 +150,7 @@ body{background:var(--sky2)}
 #bird .b{position:absolute;inset:0;transition:transform .25s ease-out;animation:hover 1.6s ease-in-out infinite alternate}
 #bird .wing{transform-origin:30px 30px;animation:flap .5s ease-in-out infinite alternate}
 #bird.moving .wing{animation-duration:.16s}
-#bird.left .flip{transform:scaleX(-1);transform-origin:32px 32px}
+#bird.left .flip{transform:scaleX(-1);transform-origin:36px 36px}
 @keyframes hover{to{transform:translateY(-6px)}}
 @keyframes flap{from{transform:rotate(-28deg)}to{transform:rotate(18deg)}}
 @media (prefers-reduced-motion:reduce){#bird .b,#bird .wing{animation:none}}
@@ -260,12 +260,12 @@ input[type=text]{font-weight:400;border-radius:999px}
 .me{width:22px;height:22px;border-radius:50%;background:#3A8DDE;border:3px solid #fff;box-shadow:0 0 0 0 rgba(58,141,222,.5);animation:ping 1.8s ease-out infinite}
 @keyframes ping{to{box-shadow:0 0 0 18px rgba(58,141,222,0)}}
 /* the fly */
-#bird{width:72px;height:72px;margin:-80px 0 0 -36px}
-#bird .shadow{left:22px;top:104px;width:28px;height:8px;background:rgba(43,36,32,.18)}
+#bird{width:60px;height:60px;margin:-70px 0 0 -30px}
+#bird .shadow{left:18px;top:92px;width:24px;height:7px;background:rgba(43,36,32,.18)}
 #bird .b{animation:hover 1.2s ease-in-out infinite alternate,wobble 3.2s ease-in-out infinite}
 @keyframes wobble{0%,100%{rotate:0deg;translate:0 0}25%{rotate:-4deg;translate:-2px 1px}50%{rotate:3deg;translate:2px -1px}75%{rotate:-2deg;translate:1px 2px}}
 #bird .wingL,#bird .wingR{transform-box:fill-box;animation:buzz .06s linear infinite alternate}
-#bird .wingL{transform-origin:100% 100%}#bird .wingR{transform-origin:0% 100%}
+#bird .wingL{transform-origin:100% 0%}#bird .wingR{transform-origin:0% 0%}
 @keyframes buzz{from{transform:rotate(-14deg) scaleY(1)}to{transform:rotate(10deg) scaleY(.82)}}
 #bird.moving .b{animation-duration:.6s,1.4s}
 @media (prefers-reduced-motion:reduce){#bird .wingL,#bird .wingR{animation:none}}
@@ -333,21 +333,17 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
   <div id="map" role="application" aria-label="Map of Singapore. Drag to fly around."></div>
   <div class="mvignette" aria-hidden="true"></div>
   <div id="edges" aria-label="Projects just out of view"></div>
-  <div id="bird" aria-hidden="true"><div class="shadow"></div><div class="b"><svg viewBox="0 0 72 72" width="72" height="72"><defs><radialGradient id="flyeye" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#C8584E"/><stop offset=".5" stop-color="#8C2832"/><stop offset="1" stop-color="#4A0E1C"/></radialGradient><linearGradient id="flywing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6FBFF" stop-opacity=".9"/><stop offset=".6" stop-color="#DCE8F5" stop-opacity=".55"/><stop offset="1" stop-color="#CDBDF2" stop-opacity=".5"/></linearGradient><radialGradient id="flybody" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#A9ADB7"/><stop offset="1" stop-color="#6F737E"/></radialGradient></defs><g class="flip">
-<g class="wingL"><path d="M31 26C24 19 12 9 5 10 1 11 2 17 8 21 15 25 25 28 31 28Z" fill="url(#flywing)" stroke="#8F9DB4" stroke-width=".7"/><path d="M30 27C22 22 13 15 7 13M28 27.5C21 25 13 21 9 18M24 26C20 22 17 16 15 12" stroke="#8F9DB4" stroke-width=".5" fill="none" opacity=".8"/></g>
-<g class="wingR"><path d="M41 26C48 19 60 9 67 10 71 11 70 17 64 21 57 25 47 28 41 28Z" fill="url(#flywing)" stroke="#8F9DB4" stroke-width=".7"/><path d="M42 27C50 22 59 15 65 13M44 27.5C51 25 59 21 63 18M48 26C52 22 55 16 57 12" stroke="#8F9DB4" stroke-width=".5" fill="none" opacity=".8"/></g>
-<g stroke="#2A2830" stroke-width="1.3" stroke-linecap="round" fill="none"><path d="M27 34q-8 2-11 9l-2 2M45 34q8 2 11 9l2 2M29 38q-6 5-7 12l-1.5 2M43 38q6 5 7 12l1.5 2"/></g>
-<ellipse cx="36" cy="16" rx="8.5" ry="8.5" fill="#4E4954"/><path d="M28.5 14q7.5 2.6 15 0M28.4 18.4q7.6 2.6 15.2 0" stroke="#2E2A33" stroke-width="1.2" fill="none"/><ellipse cx="29.6" cy="16" rx="2.2" ry="4.4" fill="#D2AE68" opacity=".55"/><ellipse cx="42.4" cy="16" rx="2.2" ry="4.4" fill="#D2AE68" opacity=".55"/>
-<ellipse cx="36" cy="28.5" rx="12.5" ry="10" fill="url(#flybody)"/><g stroke="#2F3139" stroke-width="1.8" stroke-linecap="round" fill="none"><path d="M30.6 21.5q-1.2 7 .4 14M34.4 20.5v15M37.6 20.5v15M41.4 21.5q1.2 7-.4 14"/></g><g stroke="#2A2830" stroke-width=".8" stroke-linecap="round"><path d="M26 23l-2.2-2M28 20.8l-1-2.6M46 23l2.2-2M44 20.8l1-2.6"/></g>
-<ellipse cx="36" cy="45.5" rx="12.5" ry="10.5" fill="#57535E"/>
-<ellipse cx="27.2" cy="43.5" rx="8.2" ry="9.6" fill="url(#flyeye)"/><ellipse cx="44.8" cy="43.5" rx="8.2" ry="9.6" fill="url(#flyeye)"/>
-<path d="M21.5 40.5a7 8 0 0 1 6-6" stroke="#fff" stroke-width="1" opacity=".35" fill="none" stroke-linecap="round"/><path d="M39.1 40.5a7 8 0 0 1 6-6" stroke="#fff" stroke-width="1" opacity=".35" fill="none" stroke-linecap="round"/>
-<ellipse cx="25" cy="40.2" rx="2.9" ry="3.4" fill="#fff"/><ellipse cx="42.6" cy="40.2" rx="2.9" ry="3.4" fill="#fff"/><circle cx="29.4" cy="47" r="1.25" fill="#fff" opacity=".9"/><circle cx="47" cy="47" r="1.25" fill="#fff" opacity=".9"/>
-<path d="M34.6 36.6q-.6-2.6-2.8-3.6M37.4 36.6q.6-2.6 2.8-3.6" stroke="#2A2830" stroke-width="1" fill="none" stroke-linecap="round"/>
-<path d="M33.6 51q2.4 2.2 4.8 0" stroke="#2A2830" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-<ellipse cx="22.2" cy="52.6" rx="2.6" ry="1.5" fill="#FF8FA6" opacity=".8"/><ellipse cx="49.8" cy="52.6" rx="2.6" ry="1.5" fill="#FF8FA6" opacity=".8"/>
-<g stroke="#2A2830" stroke-width="1.3" stroke-linecap="round" fill="none"><g class="hl"><path d="M29 54.5q-1.5 5 4.6 7.4"/><circle cx="34.4" cy="62.2" r="1.3" fill="#2A2830" stroke="none"/></g><g class="hr"><path d="M43 54.5q1.5 5-4.6 7.4"/><circle cx="37.6" cy="62.2" r="1.3" fill="#2A2830" stroke="none"/></g></g>
-<path d="M35 55.2q1 2.2 2 0" stroke="#9A7466" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <div id="bird" aria-hidden="true"><div class="shadow"></div><div class="b"><svg viewBox="0 0 72 72" width="60" height="60"><defs><radialGradient id="flyeye" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="#C9584E"/><stop offset=".55" stop-color="#8A2631"/><stop offset="1" stop-color="#4A0E1C"/></radialGradient><linearGradient id="flywing" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6FBFF" stop-opacity=".85"/><stop offset="1" stop-color="#CFC3F2" stop-opacity=".45"/></linearGradient><radialGradient id="flybody" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#A6AAB4"/><stop offset="1" stop-color="#6C707B"/></radialGradient></defs><g class="flip">
+<g stroke="#2A2830" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M30 31l-8-2-4-4M42 31l8-2 4-4M30 35l-9 4-3 6M42 35l9 4 3 6M32 38l-5 9-1 7M40 38l5 9 1 7"/></g>
+<g class="hl" stroke="#2A2830" stroke-width="1.1" stroke-linecap="round" fill="none"><path d="M31 23l-3-7 5-5"/></g><g class="hr" stroke="#2A2830" stroke-width="1.1" stroke-linecap="round" fill="none"><path d="M41 23l3-7-5-5"/></g>
+<path d="M36 36c-6 0-8.5 6-8.5 11 0 7 4.5 12 8.5 13 4-1 8.5-6 8.5-13 0-5-2.5-11-8.5-11z" fill="#57525C"/><path d="M28.6 44q7.4 2.4 14.8 0M28.6 49.5q7.4 2.4 14.8 0M30 55q6 2 12 0" stroke="#34303A" stroke-width="1" fill="none"/><ellipse cx="30.6" cy="46" rx="1.6" ry="4" fill="#D2AE68" opacity=".5"/><ellipse cx="41.4" cy="46" rx="1.6" ry="4" fill="#D2AE68" opacity=".5"/>
+<g class="wingL"><path d="M34 33C30 38 23 49 22 58c-.5 4 3 4.5 5 2 4-6 7-17 8-26z" fill="url(#flywing)" stroke="#8F9DB4" stroke-width=".6"/><path d="M33.5 35C30 42 26 51 24 58M34.5 36C32 44 29 52 27 58" stroke="#8F9DB4" stroke-width=".45" fill="none"/></g>
+<g class="wingR"><path d="M38 33C42 38 49 49 50 58c.5 4-3 4.5-5 2-4-6-7-17-8-26z" fill="url(#flywing)" stroke="#8F9DB4" stroke-width=".6"/><path d="M38.5 35C42 42 46 51 48 58M37.5 36C40 44 43 52 45 58" stroke="#8F9DB4" stroke-width=".45" fill="none"/></g>
+<ellipse cx="36" cy="30" rx="7.2" ry="7.6" fill="url(#flybody)"/><g stroke="#2F3139" stroke-width="1.3" stroke-linecap="round" fill="none"><path d="M32.4 24.5q-.8 5.5.3 11M35 23.4v13M37 23.4v13M39.6 24.5q.8 5.5-.3 11"/></g>
+<ellipse cx="36" cy="19.5" rx="7" ry="5.2" fill="#3E3A44"/>
+<ellipse cx="30.4" cy="18.4" rx="4.6" ry="5.4" fill="url(#flyeye)" transform="rotate(-18 30.4 18.4)"/><ellipse cx="41.6" cy="18.4" rx="4.6" ry="5.4" fill="url(#flyeye)" transform="rotate(18 41.6 18.4)"/>
+<ellipse cx="29" cy="16.2" rx="1.6" ry="1.9" fill="#fff"/><ellipse cx="40.2" cy="16.2" rx="1.6" ry="1.9" fill="#fff"/><circle cx="31.6" cy="20.6" r=".7" fill="#fff" opacity=".9"/><circle cx="42.8" cy="20.6" r=".7" fill="#fff" opacity=".9"/>
+<path d="M35 14.6l-1.2-2.4M37 14.6l1.2-2.4" stroke="#2A2830" stroke-width=".9" stroke-linecap="round"/>
 </g></svg></div></div>
   <div class="mtop">
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search projects"><ul class="sugg" id="sugg"></ul></div>
