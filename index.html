@@ -181,6 +181,8 @@ body{background:var(--sky2)}
 .ncard .go{display:inline-block;margin-top:6px;font-weight:600;font-size:.8rem;color:var(--ink);background:var(--crane);border:1px solid var(--line);border-radius:99px;padding:1px 10px}
 .toast{position:absolute;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translate(-50%,-10px);z-index:40;background:var(--crane);color:#3A2C26;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-weight:600;box-shadow:var(--sh);opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.toast{width:max-content;max-width:min(92vw,420px);text-align:center;line-height:1.35}
+.toast.long{white-space:normal;border-radius:16px;padding:10px 14px}
 .nomap{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
 /* watchlist rows */
 #list{display:grid;gap:12px}
@@ -599,7 +601,7 @@ $("#snapbtn").addEventListener("click",()=>{
   if(wl.length){nearHTML=snapList(wl,"From your watchlist");nearDefault()}
   $("#snapnear").addEventListener("click",e=>{const b=e.currentTarget;b.textContent="Finding sites near you…";
     here().then(pos=>{MYPOS=pos;const n=P.filter(p=>p.ll).map(p=>({p,d:metres(pos,p.ll)})).sort((a,b)=>a.d-b.d).slice(0,5);nearHTML=snapList(n,"Closest to you");b.hidden=true;if(!$("#snapq")||$("#snapq").value.trim().length<2)nearDefault()})
-     .catch(()=>{b.textContent="Show sites near me";toast("Location is off. Search for the project instead.")})});
+     .catch(e=>{b.textContent="Show sites near me";toast(geoMsg(e)+" Or search for the project instead.")})});
 });
 $("#sheet").addEventListener("click",e=>{const b=e.target.closest("[data-snap]");if(!b)return;openSheet(+b.dataset.snap);setTimeout(()=>{const ph=$("#sheet .photos");if(ph)ph.scrollIntoView({behavior:"smooth",block:"start"})},250)});
 let ME=null,MYPOS=null;
@@ -1009,7 +1011,15 @@ function parseTiff(v,t){
   return out;
 }
 function metres(a,b){const R=6371e3,r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]);const h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(h)))}
-function here(){return new Promise((res,rej)=>{if(!navigator.geolocation)return rej(new Error("nogeo"));navigator.geolocation.getCurrentPosition(p=>res([p.coords.latitude,p.coords.longitude]),e=>rej(e),{enableHighAccuracy:true,timeout:20000,maximumAge:60000})})}
+function geo(o){return new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(p=>res([p.coords.latitude,p.coords.longitude]),rej,o))}
+async function here(){if(!navigator.geolocation)throw {code:9};
+  try{return await geo({enableHighAccuracy:true,timeout:12000,maximumAge:60000})}
+  catch(e){if(e&&e.code===1)throw e;return await geo({enableHighAccuracy:false,timeout:15000,maximumAge:300000})}}
+const IOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+function geoMsg(e){const c=e&&e.code;
+  if(c===1)return IOS?"Location is blocked by your iPhone. Go to Settings → Privacy & Security → Location Services → Safari Websites, and pick “While Using the App”.":"Location is blocked for this site. Allow it in your browser's site settings, then try again.";
+  if(c===9)return "This browser can't share your location.";
+  return "Couldn't find your location just now. Check Location Services is on and try again."}
 async function shrink(file,max,quality){
   const bmp=await createImageBitmap(file);
   const s=Math.min(1,max/Math.max(bmp.width,bmp.height)),c=document.createElement("canvas");
@@ -1037,7 +1047,7 @@ async function uploadFile(key,file){
       const ok=await new Promise(res=>{const b=document.createElement("button");b.type="button";b.className="ghost";b.textContent="Use my current location";b.style.marginTop="8px";const n=document.createElement("button");n.type="button";n.className="linkbtn";n.textContent="Cancel";n.style.marginLeft="10px";st.append(document.createElement("br"),b,n);b.onclick=()=>res(true);n.onclick=()=>res(false)});
       if(!ok)return say("No problem. Photos taken with your camera's location on can be added anytime.");
       say("Checking your location…");
-      try{spot=await here()}catch(e){return say("Location wasn't allowed, so we can't confirm you're at the site. Turn on location for this site in your browser settings, or take a new photo with your camera's location on.","err")}
+      try{spot=await here()}catch(e){return say("We couldn't get your location, so we can't confirm you're at the site. "+geoMsg(e)+" Or take a new photo with your camera's location on.","err")}
     }
     const d=metres(spot,p.ll);
     if(d>RADIUS)return say(`You're about ${d>=1000?(d/1000).toFixed(1)+" km":d+" m"} from ${p.name}. Photos need to be taken within ${RADIUS} m of the site.`,"err");
@@ -1326,7 +1336,7 @@ setInterval(()=>applyLight(false),60000);
 /* ---------- Map home ---------- */
 let MAP=null,MARKS=[],LASTNEAR="";
 const found=new Set(store(FOUND_KEY)||[]);
-function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),2200)}
+function toast(t,ms){const el=$("#toast");el.textContent=t;el.classList.toggle("long",t.length>50);el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),ms||Math.max(2200,t.length*55))}
 function distTxt(m){return m<1000?Math.round(m/10)*10+" m":(m/1000).toFixed(m<10000?1:0)+" km"}
 function centre(){const c=MAP.getCenter();return [c.lat,c.lng]}
 function initMap(){
@@ -1396,8 +1406,9 @@ function flyTo(i,open){
   if(open)MAP.once("moveend",()=>openSheet(i));
 }
 $("#locate").addEventListener("click",async()=>{
-  try{const pos=await here();if(!(pos[0]>1.12&&pos[0]<1.52&&pos[1]>103.5&&pos[1]<104.15))return toast("You seem to be outside Singapore");MYPOS=pos;showMe(pos);MAP&&MAP.flyTo({center:[pos[1],pos[0]],zoom:16.4,speed:1.2,essential:false})}
-  catch(e){toast("Allow location to fly to where you are")}
+  toast("Finding you…",15000);
+  try{const pos=await here();if(!(pos[0]>1.12&&pos[0]<1.52&&pos[1]>103.5&&pos[1]<104.15))return toast("You seem to be outside Singapore");MYPOS=pos;showMe(pos);MAP&&MAP.flyTo({center:[pos[1],pos[0]],zoom:16.4,speed:1.2,essential:false});$("#toast").classList.remove("show")}
+  catch(e){toast(geoMsg(e))}
 });
 
 /* ---------- Search ---------- */
