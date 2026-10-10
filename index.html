@@ -2,6 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Storeys</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -81,7 +82,7 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 .status{font-size:.9rem;margin:10px 0 0;min-height:1.2em}
 .status.err{color:var(--bad)}
 .status.ok{color:var(--good)}
-.row{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.row{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
 .maplink,.ghost{font:inherit;font-weight:700;font-size:.92rem;color:var(--ink);text-decoration:none;border:3px solid var(--edge);border-radius:14px;padding:8px 14px;background:var(--card);cursor:pointer;box-shadow:0 3px 0 var(--edge)}
 .maplink:active,.ghost:active{transform:translateY(2px);box-shadow:0 1px 0 var(--edge)}
 .ghost{color:var(--muted)}
@@ -116,10 +117,31 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 [hidden]{display:none!important}
 .mapbox{margin-top:18px}
 .mapbox h3{font-size:1.2rem;margin:0 0 8px}
-.mapbox a{display:block;border:3px solid var(--edge);border-radius:16px;overflow:hidden;box-shadow:0 4px 0 var(--edge);background:var(--tile)}
+.mapbox .mapjump{display:block;width:100%;padding:0;cursor:pointer;border:3px solid var(--edge);border-radius:16px;overflow:hidden;box-shadow:0 4px 0 var(--edge);background:var(--tile)}
 .mapbox img{display:block;width:100%;height:auto;aspect-ratio:512/300}
 .mapbox .note{margin-top:10px}
-.impress{display:inline-block;margin-top:12px}
+#mapsec{margin:6px 0 26px}
+#mapsec h2{font-size:1.6rem;margin:0}
+#mapsec .lede{color:var(--muted);margin:2px 0 12px}
+.mapfilters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip.on{background:var(--crane);color:#3A2C26}
+#bigmap{height:min(62vh,440px);border:3px solid var(--edge);border-radius:22px;box-shadow:0 5px 0 var(--edge);overflow:hidden;background:var(--tile);z-index:0}
+#bigmap .leaflet-tile-pane{filter:saturate(1.15) sepia(.12) contrast(.97)}
+.pin{width:30px;height:36px}
+.pin svg{display:block;filter:drop-shadow(0 2px 0 rgba(58,44,38,.45))}
+.leaflet-popup-content-wrapper{border:3px solid var(--edge);border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--edge)}
+.leaflet-popup-tip{background:var(--card);border:3px solid var(--edge)}
+.leaflet-popup-content{margin:12px 14px;font-family:"Nunito",sans-serif;font-weight:600;font-size:.92rem;line-height:1.4}
+.leaflet-popup-content b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.08rem}
+.leaflet-popup-content .pbar{height:10px;border:2px solid var(--edge);border-radius:9px;background:var(--tile);overflow:hidden;margin:6px 0}
+.leaflet-popup-content .pbar i{display:block;height:100%;background:var(--grass)}
+.leaflet-popup-content button{margin-top:8px;font-size:.92rem;padding:7px 12px}
+.leaflet-container{font-family:"Nunito",sans-serif}
+.leaflet-control-attribution{font-size:10px}
+.leaflet-bar a{color:var(--ink)!important}
+#tourbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+#tourbar[hidden]{display:none}
+#tlabel{font-weight:700;text-align:center;flex:1}
 </style></head>
 <body><div class="wrap">
 <header>
@@ -131,6 +153,18 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 <ul class="sugg" id="sugg"></ul>
 <p class="hint" id="hint"></p>
 <main id="list"><div class="empty"><p>Loading projects…</p></div></main>
+<section id="mapsec" aria-labelledby="map-h">
+  <h2 id="map-h">The map</h2>
+  <p class="lede">Every BTO and new launch we track. Pinch to zoom, tap a pin to peek.</p>
+  <div class="mapfilters" role="group" aria-label="Show on map">
+    <button type="button" class="chip on" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" class="chip" data-filter="BTO" aria-pressed="false">BTOs</button>
+    <button type="button" class="chip" data-filter="Condo" aria-pressed="false">Condos</button>
+    <button type="button" class="chip tourbtn" id="tour" aria-pressed="false">Take a stroll</button>
+  </div>
+  <div id="bigmap" role="region" aria-label="Map of Singapore with project pins"></div>
+  <div id="tourbar" hidden><button type="button" class="ghost" id="tprev">Back</button><span id="tlabel"></span><button type="button" class="ghost" id="tnext">Next stop</button></div>
+</section>
 <section id="explore" aria-labelledby="ex-h"></section>
 <p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>.</p>
 </div>
@@ -144,6 +178,7 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
   </div>
   <p class="note" id="sb-note"></p>
 </dialog>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 const SB="https://dykbqyaftkeiroyfzoqb.supabase.co", SBK="sb_publishable_6zJTBBa74WI7IueK3xdaUg_cvfxMSp2";
 const RADIUS=800, MAXAGE_DAYS=14;
@@ -261,10 +296,6 @@ function siteMap(ll){
   const pin=encodeURIComponent(`[${ll[0]},${ll[1]},"255,176,32"]`);
   return `https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=${darkMode()?"night":"default"}&latitude=${ll[0]}&longitude=${ll[1]}&zoom=17&width=512&height=300&points=${pin}`;
 }
-function impressions(p){
-  const name=p.name.replace(/\s*\(.*?\)\s*/g," ").trim();
-  return "https://www.google.com/search?tbm=isch&q="+encodeURIComponent(p.kind==="BTO"?`"${name}" HDB BTO artist impression`:`"${name}" condo artist impression`);
-}
 
 /* ---------- Cards ---------- */
 function card(p){
@@ -289,10 +320,9 @@ function card(p){
     <p class="note" style="margin-top:14px">Percentage is time elapsed from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"}.</p>
     ${p.ll?`<div class="mapbox">
       <h3>Where it is</h3>
-      <a href="https://www.google.com/maps/search/?api=1&query=${p.ll.join(",")}" target="_blank" rel="noopener" aria-label="Open ${esc(p.name)} in Google Maps"><img loading="lazy" width="512" height="300" src="${siteMap(p.ll)}" alt="Map of the area around ${esc(p.name)}, with the site marked"></a>
-      <p class="note">Live map from OneMap. New blocks show up once they're mapped, marked (U/C) while under construction. Tap to open in Google Maps.</p>
+      <button type="button" class="mapjump" data-focus="${p.i}" aria-label="Show ${esc(p.name)} on the big map"><img loading="lazy" width="512" height="300" src="${siteMap(p.ll)}" alt="Map of the area around ${esc(p.name)}, with the site marked"></button>
+      <p class="note">Live map from OneMap. New blocks show up once they're mapped, marked (U/C) while under construction. Tap to see it on the big map with everything nearby.</p>
     </div>`:""}
-    <a class="maplink impress" target="_blank" rel="noopener" href="${impressions(p)}">Find official artist impressions</a>
     <div class="photos">
       <h3>Site photos</h3>
       <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes.</p>
@@ -301,7 +331,6 @@ function card(p){
       <p class="status" role="status"></p>
     </div>
     <div class="row">
-      <a class="maplink" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${p.ll?p.ll.join(","):encodeURIComponent(p.name+" Singapore")}">See on Google Maps</a>
       <button class="ghost" type="button" data-del="${esc(p.key)}">Remove</button>
     </div>
   </div></section>`;
@@ -517,6 +546,54 @@ $("#sb-share").addEventListener("click",async()=>{
 $("#sb-close").addEventListener("click",()=>$("#sharebox").close());
 $("#sharebox").addEventListener("click",e=>{if(e.target.id==="sharebox")$("#sharebox").close()});
 
+
+/* ---------- Big map ---------- */
+let MAP=null,PINS=[],FILTER="all",TOUR=null;
+function pinIcon(p,pct){
+  const c=p.kind==="BTO"?"#BDE8F5":"#FFD3B5",done=pct!=null&&pct>=100,h=Math.round(8+10*Math.min(1,(pct||0)/100));
+  return L.divIcon({className:"pin",iconSize:[30,36],iconAnchor:[15,34],popupAnchor:[0,-30],html:
+   `<svg width="30" height="36" viewBox="0 0 30 36"><path d="M15 34 C15 34 3 22 3 13 a12 12 0 0 1 24 0 c0 9-12 21-12 21z" fill="${c}" stroke="#3A2C26" stroke-width="2.5"/><rect x="10" y="${20-h}" width="10" height="${h}" rx="1.5" fill="${done?"#62C07A":"#FFFDF7"}" stroke="#3A2C26" stroke-width="2"/></svg>`});
+}
+function popupHtml(p){
+  const k=stats(p);
+  return `<b>${esc(p.name)}</b>${p.kind}${k.pct!=null?`, ${Math.round(k.pct)}% there`:", not launched yet"}<div class="pbar"><i style="width:${k.pct||0}%"></i></div>${p.kind==="BTO"?"Completion":"Expected TOP"} ${fmtYM(k.T)}<br><button type="button" class="add" data-watch="${p.i}">${tracked.includes(p.key)?"Watching":"Watch this"}</button>`;
+}
+function initMap(){
+  if(!window.L||MAP)return;
+  const sg=L.latLngBounds([1.16,103.58],[1.48,104.1]);
+  MAP=L.map("bigmap",{zoomControl:true,attributionControl:true,minZoom:11,maxZoom:18,maxBounds:sg.pad(.05),scrollWheelZoom:false}).fitBounds(sg);
+  const layer=()=>darkMode()?"Night":"Default";
+  L.tileLayer("https://www.onemap.gov.sg/maps/tiles/"+layer()+"/{z}/{x}/{y}.png",{detectRetina:true,maxZoom:18,minZoom:11,
+    attribution:'<img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:14px;width:14px;vertical-align:-2px" alt=""> <a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener">OneMap</a> &copy; contributors | <a href="https://www.sla.gov.sg/" target="_blank" rel="noopener">Singapore Land Authority</a>'}).addTo(MAP);
+  PINS=P.filter(p=>p.ll).map(p=>{const m=L.marker(p.ll,{icon:pinIcon(p,stats(p).pct),title:p.name,keyboard:true});m.bindPopup(()=>popupHtml(p));m.p=p;return m});
+  drawPins();
+  MAP.on("popupopen",e=>{const b=e.popup.getElement().querySelector("[data-watch]");if(b)b.onclick=()=>{const p=P[+b.dataset.watch];if(!tracked.includes(p.key)){tracked=[p.key,...tracked];saveTracked();render()}b.textContent="Watching"}});
+}
+function drawPins(){if(!MAP)return;PINS.forEach(m=>{const show=FILTER==="all"||m.p.kind===FILTER;if(show&&!MAP.hasLayer(m))m.addTo(MAP);if(!show&&MAP.hasLayer(m))MAP.removeLayer(m)})}
+function focusOn(i){
+  const m=PINS.find(x=>x.p.i===i);if(!MAP||!m)return;
+  if(!MAP.hasLayer(m)){FILTER="all";setFilterUI();drawPins()}
+  $("#mapsec").scrollIntoView({behavior:"smooth",block:"start"});
+  setTimeout(()=>{MAP.flyTo(m.getLatLng(),16,{duration:1.2});MAP.once("moveend",()=>m.openPopup())},350);
+}
+function setFilterUI(){document.querySelectorAll("[data-filter]").forEach(b=>{const on=b.dataset.filter===FILTER;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)})}
+document.querySelector(".mapfilters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;FILTER=b.dataset.filter;setFilterUI();drawPins();if(TOUR)stopTour()});
+/* A stroll: hop between projects, north to south, nearest-next */
+function buildTour(){
+  let left=PINS.filter(m=>MAP.hasLayer(m)),route=[];if(!left.length)return route;
+  let cur=left.reduce((a,b)=>a.getLatLng().lat>b.getLatLng().lat?a:b);
+  while(cur&&route.length<12){route.push(cur);left=left.filter(m=>m!==cur);if(!left.length)break;const here=cur.getLatLng();cur=left.reduce((a,b)=>here.distanceTo(a.getLatLng())<here.distanceTo(b.getLatLng())?a:b)}
+  return route;
+}
+function tourGo(d){if(!TOUR)return;TOUR.at=Math.max(0,Math.min(TOUR.route.length-1,TOUR.at+d));const m=TOUR.route[TOUR.at];
+  $("#tlabel").textContent=`Stop ${TOUR.at+1} of ${TOUR.route.length}`;$("#tprev").disabled=TOUR.at===0;$("#tnext").textContent=TOUR.at===TOUR.route.length-1?"Finish":"Next stop";
+  MAP.closePopup();MAP.flyTo(m.getLatLng(),16,{duration:1.6});MAP.once("moveend",()=>m.openPopup())}
+function stopTour(){TOUR=null;$("#tourbar").hidden=true;$("#tour").classList.remove("on");$("#tour").setAttribute("aria-pressed","false");$("#tour").textContent="Take a stroll"}
+$("#tour").addEventListener("click",()=>{if(TOUR){stopTour();return}if(!MAP)return;TOUR={route:buildTour(),at:0};if(!TOUR.route.length)return stopTour();
+  $("#tourbar").hidden=false;$("#tour").classList.add("on");$("#tour").setAttribute("aria-pressed","true");$("#tour").textContent="End stroll";tourGo(0)});
+$("#tprev").addEventListener("click",()=>tourGo(-1));
+$("#tnext").addEventListener("click",()=>{if(TOUR&&TOUR.at===TOUR.route.length-1){stopTour();MAP.closePopup();return}tourGo(1)});
+
 /* ---------- Events ---------- */
 const q=$("#q"),sug=$("#sugg");
 q.addEventListener("input",()=>{
@@ -529,6 +606,8 @@ sug.addEventListener("click",e=>{const b=e.target.closest(".pick");if(b)pick(+b.
 $("#list").addEventListener("click",e=>{
   const d=e.target.closest("[data-del]");
   if(d){tracked=tracked.filter(x=>x!==d.dataset.del);saveTracked();render();return}
+  const fo=e.target.closest("[data-focus]");
+  if(fo){focusOn(+fo.dataset.focus);return}
   const sh=e.target.closest("[data-share]");
   if(sh){openShare(sh.dataset.share,sh);return}
   const s=e.target.closest("[data-show]");
@@ -546,6 +625,6 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   D.bto.forEach(r=>P.push({kind:"BTO",name:r[0],launch:r[2],ecd:r[3],delayed:r[4],remark:r[5],roads:r[6]?r[6].split("|"):[],blks:r[7]?r[7].split(" "):[],postals:r[8]?r[8].split(" "):[],ll:r[9]||null,addr:""}));
   D.condo.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3],ll:r[4]||null}));
   P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch;p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
-  render();explore();
+  render();explore();initMap();
 }).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
 </script></body></html>
