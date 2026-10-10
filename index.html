@@ -305,6 +305,26 @@ input[type=text]{font-weight:400;border-radius:999px}
 .nearhead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:0 14px 6px 16px}
 .nearhead .nearlabel{margin:0}
 #locate{position:static;right:auto;bottom:auto}
+/* light switch + night skin */
+.lightbtn{flex:0 0 auto;position:relative;display:grid;place-items:center;width:40px;height:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0;font:600 .78rem/1 "Figtree",system-ui,sans-serif;color:var(--ink);box-shadow:var(--sh);cursor:pointer}
+.lightbtn svg{width:22px;height:22px}
+.lightbtn.auto::after{content:"A";position:absolute;right:-3px;bottom:-3px;width:15px;height:15px;border-radius:50%;background:var(--ink);color:var(--card);font:700 9px/15px "Figtree",system-ui,sans-serif;text-align:center}
+html[data-ph=night] #v-map{background:#262C52}
+html[data-ph=night] .mvignette{background:radial-gradient(ellipse at center,transparent 50%,rgba(12,14,40,.45))}
+html[data-ph=golden] .mvignette{background:radial-gradient(ellipse at center,transparent 55%,rgba(200,110,60,.2))}
+html[data-ph=night] #bird .shadow{background:rgba(0,0,0,.35)}
+html[data-ph=night] .bldg .lbl{background:rgba(38,44,82,.92);color:#F7EFE2;border-color:#F7EFE2}
+html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
+.scene:not(.photo){padding:0;background:none}
+.scene svg{width:100%}
+@media (prefers-reduced-motion:no-preference){
+ .scene .tw{animation:tw 2.4s ease-in-out infinite alternate}@keyframes tw{to{opacity:.25}}
+ .scene .blink{animation:blink 1.6s steps(2) infinite}@keyframes blink{50%{opacity:.15}}
+ .scene .hook{animation:hookb 3s ease-in-out infinite alternate}@keyframes hookb{to{transform:translateY(5px)}}
+ #bird .hl{animation:rubl .22s ease-in-out infinite alternate}#bird .hr{animation:rubr .22s ease-in-out infinite alternate}
+ @keyframes rubl{to{transform:translate(1.4px,-.6px)}}@keyframes rubr{to{transform:translate(-1.4px,.6px)}}
+ #bird.moving .hl,#bird.moving .hr{animation:none}
+}
 </style>
 </head>
 <body>
@@ -312,22 +332,26 @@ input[type=text]{font-weight:400;border-radius:999px}
   <div id="map" role="application" aria-label="Map of Singapore. Drag to fly around."></div>
   <div class="mvignette" aria-hidden="true"></div>
   <div id="edges" aria-label="Projects just out of view"></div>
-  <div id="bird" aria-hidden="true"><div class="shadow"></div><div class="b"><svg viewBox="0 0 72 72" width="72" height="72"><g class="flip">
-<g transform="rotate(-25 24 22)"><ellipse class="wingL" cx="24" cy="22" rx="12" ry="17" fill="rgba(220,238,255,.7)" stroke="rgba(110,140,170,.45)" stroke-width="1"/></g>
-<g transform="rotate(25 44 22)"><ellipse class="wingR" cx="44" cy="22" rx="12" ry="17" fill="rgba(220,238,255,.7)" stroke="rgba(110,140,170,.45)" stroke-width="1"/></g>
-<g stroke="#2B2420" stroke-width="1.6" stroke-linecap="round"><path d="M27 50l-4 7M36 52v8M45 50l4 7" fill="none"/></g>
-<ellipse cx="36" cy="42" rx="17" ry="14" fill="#4A4F5C"/><ellipse cx="36" cy="46" rx="11" ry="7" fill="#5E6473"/>
-<path d="M27 38q9 4 18 0" stroke="#6E7585" stroke-width="2" fill="none" stroke-linecap="round"/>
-<circle cx="36" cy="30" r="13" fill="#4A4F5C"/>
-<ellipse cx="28.5" cy="29" rx="8" ry="9" fill="#D4524A"/><ellipse cx="43.5" cy="29" rx="8" ry="9" fill="#D4524A"/>
-<ellipse cx="29.5" cy="30" rx="4.6" ry="5.4" fill="#2B2420"/><ellipse cx="42.5" cy="30" rx="4.6" ry="5.4" fill="#2B2420"/><ellipse cx="28" cy="27.6" rx="2" ry="2.3" fill="#fff"/><ellipse cx="41" cy="27.6" rx="2" ry="2.3" fill="#fff"/>
-<circle cx="31" cy="32.4" r="1" fill="#fff" opacity=".8"/><circle cx="44" cy="32.4" r="1" fill="#fff" opacity=".8"/><path d="M31 18q-3-6-7-6M41 18q3-6 7-6" stroke="#2B2420" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="24" cy="12" r="1.8" fill="#2B2420"/><circle cx="48" cy="12" r="1.8" fill="#2B2420"/>
-<path d="M33.5 37.5q2.5 2 5 0" stroke="#FFD6CF" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-<ellipse cx="24" cy="36" rx="2.6" ry="1.6" fill="#FF9DB0" opacity=".7"/><ellipse cx="48" cy="36" rx="2.6" ry="1.6" fill="#FF9DB0" opacity=".7"/>
+  <div id="bird" aria-hidden="true"><div class="shadow"></div><div class="b"><svg viewBox="0 0 72 72" width="72" height="72"><defs><radialGradient id="flyeye" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#C8584E"/><stop offset=".5" stop-color="#8C2832"/><stop offset="1" stop-color="#4A0E1C"/></radialGradient><linearGradient id="flywing" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6FBFF" stop-opacity=".9"/><stop offset=".6" stop-color="#DCE8F5" stop-opacity=".55"/><stop offset="1" stop-color="#CDBDF2" stop-opacity=".5"/></linearGradient><radialGradient id="flybody" cx=".4" cy=".3" r=".8"><stop offset="0" stop-color="#A9ADB7"/><stop offset="1" stop-color="#6F737E"/></radialGradient></defs><g class="flip">
+<g class="wingL"><path d="M31 26C24 19 12 9 5 10 1 11 2 17 8 21 15 25 25 28 31 28Z" fill="url(#flywing)" stroke="#8F9DB4" stroke-width=".7"/><path d="M30 27C22 22 13 15 7 13M28 27.5C21 25 13 21 9 18M24 26C20 22 17 16 15 12" stroke="#8F9DB4" stroke-width=".5" fill="none" opacity=".8"/></g>
+<g class="wingR"><path d="M41 26C48 19 60 9 67 10 71 11 70 17 64 21 57 25 47 28 41 28Z" fill="url(#flywing)" stroke="#8F9DB4" stroke-width=".7"/><path d="M42 27C50 22 59 15 65 13M44 27.5C51 25 59 21 63 18M48 26C52 22 55 16 57 12" stroke="#8F9DB4" stroke-width=".5" fill="none" opacity=".8"/></g>
+<g stroke="#2A2830" stroke-width="1.3" stroke-linecap="round" fill="none"><path d="M27 34q-8 2-11 9l-2 2M45 34q8 2 11 9l2 2M29 38q-6 5-7 12l-1.5 2M43 38q6 5 7 12l1.5 2"/></g>
+<ellipse cx="36" cy="16" rx="8.5" ry="8.5" fill="#4E4954"/><path d="M28.5 14q7.5 2.6 15 0M28.4 18.4q7.6 2.6 15.2 0" stroke="#2E2A33" stroke-width="1.2" fill="none"/><ellipse cx="29.6" cy="16" rx="2.2" ry="4.4" fill="#D2AE68" opacity=".55"/><ellipse cx="42.4" cy="16" rx="2.2" ry="4.4" fill="#D2AE68" opacity=".55"/>
+<ellipse cx="36" cy="28.5" rx="12.5" ry="10" fill="url(#flybody)"/><g stroke="#2F3139" stroke-width="1.8" stroke-linecap="round" fill="none"><path d="M30.6 21.5q-1.2 7 .4 14M34.4 20.5v15M37.6 20.5v15M41.4 21.5q1.2 7-.4 14"/></g><g stroke="#2A2830" stroke-width=".8" stroke-linecap="round"><path d="M26 23l-2.2-2M28 20.8l-1-2.6M46 23l2.2-2M44 20.8l1-2.6"/></g>
+<ellipse cx="36" cy="45.5" rx="12.5" ry="10.5" fill="#57535E"/>
+<ellipse cx="27.2" cy="43.5" rx="8.2" ry="9.6" fill="url(#flyeye)"/><ellipse cx="44.8" cy="43.5" rx="8.2" ry="9.6" fill="url(#flyeye)"/>
+<path d="M21.5 40.5a7 8 0 0 1 6-6" stroke="#fff" stroke-width="1" opacity=".35" fill="none" stroke-linecap="round"/><path d="M39.1 40.5a7 8 0 0 1 6-6" stroke="#fff" stroke-width="1" opacity=".35" fill="none" stroke-linecap="round"/>
+<ellipse cx="25" cy="40.2" rx="2.9" ry="3.4" fill="#fff"/><ellipse cx="42.6" cy="40.2" rx="2.9" ry="3.4" fill="#fff"/><circle cx="29.4" cy="47" r="1.25" fill="#fff" opacity=".9"/><circle cx="47" cy="47" r="1.25" fill="#fff" opacity=".9"/>
+<path d="M34.6 36.6q-.6-2.6-2.8-3.6M37.4 36.6q.6-2.6 2.8-3.6" stroke="#2A2830" stroke-width="1" fill="none" stroke-linecap="round"/>
+<path d="M33.6 51q2.4 2.2 4.8 0" stroke="#2A2830" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+<ellipse cx="22.2" cy="52.6" rx="2.6" ry="1.5" fill="#FF8FA6" opacity=".8"/><ellipse cx="49.8" cy="52.6" rx="2.6" ry="1.5" fill="#FF8FA6" opacity=".8"/>
+<g stroke="#2A2830" stroke-width="1.3" stroke-linecap="round" fill="none"><g class="hl"><path d="M29 54.5q-1.5 5 4.6 7.4"/><circle cx="34.4" cy="62.2" r="1.3" fill="#2A2830" stroke="none"/></g><g class="hr"><path d="M43 54.5q1.5 5-4.6 7.4"/><circle cx="37.6" cy="62.2" r="1.3" fill="#2A2830" stroke="none"/></g></g>
+<path d="M35 55.2q1 2.2 2 0" stroke="#9A7466" stroke-width="1.6" fill="none" stroke-linecap="round"/>
 </g></svg></div></div>
   <div class="mtop">
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search projects"><ul class="sugg" id="sugg"></ul></div>
     <div class="found" title="Sites you've flown past"><b id="wfound">0</b>/<span id="wtotal">0</span> found</div>
+    <button type="button" id="lightbtn" class="lightbtn" aria-label="Day or night"></button>
   </div>
   <div class="toast" id="toast" role="status"></div>
   <div class="nearwrap"><div class="nearhead"><p class="nearlabel" id="nearlabel">Near here</p><button type="button" id="locate" aria-label="See what's around me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Around me</button></div><div id="nearby" role="list"></div></div>
@@ -491,26 +515,113 @@ function verdict(p,k){
 }
 
 /* ---------- Illustration ---------- */
+/* ---------- Light: real Singapore time, or the person's pick ---------- */
+function sgHour(){const d=new Date(Date.now()+8*36e5);return d.getUTCHours()+d.getUTCMinutes()/60}
+function autoPhase(){const h=sgHour();return h>=19.3||h<6.8?"night":(h>=17.4||h<7.8)?"golden":"day"}
+let LIGHT=(()=>{try{return localStorage.getItem("storeys.light")||"auto"}catch(e){return "auto"}})();
+function phase(){return LIGHT==="auto"?autoPhase():LIGHT}
+function mix(a,b,t){const p=h=>(h.length==4&&(h="#"+h[1]+h[1]+h[2]+h[2]+h[3]+h[3]),[1,3,5].map(i=>parseInt(h.slice(i,i+2),16))),A=p(a),B=p(b);return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join("")}
+const FACADES=[["#F4C6B0","#D9A08A","#E58F73"],["#CDE3C6","#A3C39C","#6FA374"],["#F5E1A6","#D8BD7B","#D9A23F"],["#CCE2F2","#9FC0DA","#5E95C4"],["#F1CFD9","#D3A3B4","#C9738F"],["#EEE5D5","#CFBEA2","#B48E62"]];
+function tint(c,ph){return ph==="night"?mix(c,"#232A57",.62):ph==="golden"?mix(c,"#FF9E66",.16):c}
+function rnd(s){const x=Math.sin(hash(s)%100000+1)*43758.5453;return x-Math.floor(x)}
 function building(pct,name){
-  const N=18,fh=14,W=150,x0=85,ground=56+N*fh+18,H=ground+30,E="var(--edge)";
-  const built=Math.round(N*(pct||0)/100),facade=PASTELS[hash(name)%PASTELS.length];
-  let g=`<circle cx="44" cy="40" r="17" fill="var(--sun)" stroke="${E}" stroke-width="1.8"/>`;
-  g+=`<g class="cloud" fill="#fff" stroke="${E}" stroke-width="1.5"><path d="M200 46h56a11 11 0 0 0 0-22 15 15 0 0 0-28-5 12 12 0 0 0-28 12 7.5 7.5 0 0 0 0 15z"/></g>`;
-  g+=`<rect x="${x0}" y="${ground-N*fh}" width="${W}" height="${N*fh}" rx="6" fill="none" stroke="${E}" stroke-opacity=".28" stroke-dasharray="5 6" stroke-width="2"/>`;
+  pct=pct||0;const ph=phase(),NI=ph==="night",GO=ph==="golden";
+  const W=360,H=290,G=246,N=16,fh=11,fx=112,fw=112,dx=40,dy=-20,top=G-N*fh;
+  const built=pct>0?Math.max(1,Math.round(N*Math.min(pct,100)/100)):0,done=pct>=100,yb=G-built*fh;
+  const F=FACADES[hash(name)%FACADES.length],cf=tint(F[0],ph),cs=tint(F[1],ph),ca=tint(F[2],ph);
+  const u="b"+hash(name+ph)%99999;
+  const sky=NI?["#151A44","#2C2C66","#5B4A85"]:GO?["#E99A86","#F6C49A","#FCE3BC"]:["#8CCDF0","#C2E5F6","#EEF7EE"];
+  const glass=NI?["#46518C","#2B3466"]:GO?["#FBD7AE","#C9A6B8"]:["#D6EFFA","#86BEE0"];
+  let d=`<defs><linearGradient id="${u}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset=".62" stop-color="${sky[1]}"/><stop offset="1" stop-color="${sky[2]}"/></linearGradient>`+
+    `<linearGradient id="${u}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${glass[0]}"/><stop offset="1" stop-color="${glass[1]}"/></linearGradient>`+
+    `<linearGradient id="${u}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${mix(cf,"#FFFFFF",NI?0:.18)}"/><stop offset="1" stop-color="${cf}"/></linearGradient>`+
+    `<radialGradient id="${u}l"><stop offset="0" stop-color="#FFD98A" stop-opacity=".9"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient>`+
+    `<pattern id="${u}n" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="${NI?"#2F6B52":"#5FB27C"}" fill-opacity=".72"/><path d="M0 0L5 5M5 0L0 5" stroke="${NI?"#1E4A38":"#3C8A57"}" stroke-width=".6"/></pattern></defs>`;
+  let g=`<rect width="${W}" height="${H}" fill="url(#${u}s)"/>`;
+  // sky things
+  if(NI){
+    for(let i=0;i<26;i++){const x=rnd(name+"x"+i)*W,y=rnd(name+"y"+i)*150,r=.6+rnd(name+"r"+i)*1.1;g+=`<circle class="tw" style="animation-delay:${(i%7)*.4}s" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="#FFF6DA"/>`}
+    g+=`<circle cx="58" cy="50" r="26" fill="#FFF3C8" opacity=".12"/><circle cx="58" cy="50" r="15" fill="#FFF0C2"/><circle cx="65" cy="45" r="13" fill="${sky[0]}"/>`;
+  }else if(GO){
+    g+=`<circle cx="62" cy="${G-34}" r="46" fill="#FFE2A8" opacity=".35"/><circle cx="62" cy="${G-34}" r="24" fill="#FFD27A"/>`;
+  }else{
+    g+=`<circle cx="52" cy="46" r="30" fill="#FFF4C4" opacity=".45"/><circle cx="52" cy="46" r="17" fill="#FFE07A"/>`;
+  }
+  if(!NI)g+=`<g class="cloud" fill="#fff" opacity="${GO?.55:.9}"><ellipse cx="300" cy="120" rx="30" ry="9"/><ellipse cx="312" cy="113" rx="16" ry="11"/><ellipse cx="290" cy="115" rx="11" ry="8"/><ellipse cx="96" cy="88" rx="22" ry="6.5"/><ellipse cx="105" cy="82" rx="11" ry="8"/></g>`;
+  // hazy skyline behind
+  const hz=NI?"#2A2F63":GO?"#E8B9A0":"#CFE2EC",hz2=NI?"#323873":GO?"#EDC7AC":"#DBEAF0";
+  for(const [x,w,h,c] of [[6,34,74,hz2],[36,26,104,hz],[258,30,92,hz],[290,40,62,hz2],[322,30,118,hz],[70,22,54,hz2]]){
+    g+=`<rect x="${x}" y="${G-h}" width="${w}" height="${h}" fill="${c}"/>`;
+    if(NI)for(let yy=G-h+8;yy<G-6;yy+=9)for(let xx=x+4;xx<x+w-4;xx+=7)if(rnd(name+xx+"_"+yy)>.72)g+=`<rect x="${xx}" y="${yy}" width="3" height="3" fill="#FFD98A" opacity=".7"/>`;
+  }
+  // ground
+  const grass=NI?"#2B4B47":GO?"#B9C987":"#A6D98F",grass2=NI?"#24403D":GO?"#A5B877":"#92CB7E";
+  g+=`<rect y="${G}" width="${W}" height="${H-G}" fill="${grass}"/><path d="M0 ${G+16} L${W} ${G+4} V${G+18} L0 ${G+30}Z" fill="${NI?"#3A3F5C":GO?"#E5CFA7":"#F3E6CC"}"/>`;
+  g+=`<path d="M${fx-18} ${G+6} L${fx+fw+dx+20} ${G+6+dy*.3} L${fx+fw+dx+20} ${G-4+dy*.3} L${fx-18} ${G-4}Z" fill="${grass2}"/>`;
+  if(!NI&&built)g+=`<path d="M${fx} ${G} L${fx-Math.min(150,built*fh*.55)} ${G+12} L${fx-Math.min(150,built*fh*.55)+fw*.7} ${G+18} L${fx+fw} ${G}Z" fill="#2A2350" opacity="${GO?.16:.09}"/>`;
+  // ghost of the finished tower
+  g+=`<g fill="none" stroke="${NI?"#C9C3F0":"#3A2C26"}" stroke-opacity="${NI?.28:.2}" stroke-dasharray="4 5" stroke-width="1.2"><rect x="${fx}" y="${top}" width="${fw}" height="${N*fh}"/><path d="M${fx+fw} ${top}l${dx} ${dy}V${G+dy}M${fx} ${top}l${dx} ${dy}h${fw}"/></g>`;
+  // floors
+  const lit=(i,k)=>NI&&done&&rnd(name+"w"+i+"_"+k)>.48;
   for(let i=0;i<built;i++){
-    const y=ground-(i+1)*fh,band=i%6<3?facade:"#FFFBF2",top=i===built-1;
-    g+=`<g class="fl" style="animation-delay:${i*30}ms"><rect x="${x0}" y="${y}" width="${W}" height="${fh}" fill="${band}" stroke="${E}" stroke-width="1.5"/>`;
-    for(let k=0;k<6;k++)g+=`<rect x="${x0+10+k*23}" y="${y+fh*.25}" width="13" height="${fh*.5}" rx="2.5" fill="#9FD3F2" stroke="${E}" stroke-width="1.5"/>`;
-    if(top&&(pct||0)>=100)g+=`<rect x="${x0-6}" y="${y-8}" width="${W+12}" height="9" rx="4" fill="${facade}" stroke="${E}" stroke-width="1.5"/>`;
+    const y=G-(i+1)*fh;
+    g+=`<g class="fl" style="animation-delay:${i*35}ms">`;
+    g+=`<rect x="${fx}" y="${y}" width="${fw}" height="${fh+.6}" fill="${i===0?mix(cf,"#000",.12):`url(#${u}f)`}"/>`;
+    g+=`<path d="M${fx+fw} ${y}l${dx} ${dy}v${fh+.6}l${-dx} ${-dy}Z" fill="${i===0?mix(cs,"#000",.12):cs}"/>`;
+    if(i===0){ // HDB-style void deck
+      g+=`<rect x="${fx+4}" y="${y+2}" width="${fw-8}" height="${fh-2}" fill="${NI?"#FFCF7A":mix(cf,"#3A2C26",.35)}" opacity="${NI?.55:.5}"/>`;
+      for(let k=0;k<6;k++)g+=`<rect x="${fx+4+k*(fw-12)/5}" y="${y+1}" width="4" height="${fh}" fill="${cf}"/>`;
+    }else{
+      g+=`<rect x="${fx}" y="${y+fh-1.8}" width="${fw}" height="1.8" fill="#fff" opacity="${NI?.12:.55}"/>`;
+      g+=`<path d="M${fx+fw} ${y+fh-1.8}l${dx} ${dy}v1.8l${-dx} ${-dy}Z" fill="#fff" opacity="${NI?.08:.35}"/>`;
+      for(let k=0;k<4;k++){const wx=fx+13+k*25,on=lit(i,k);
+        g+=`<rect x="${wx}" y="${y+2.4}" width="14" height="5.6" rx="1" fill="${on?"#FFD98A":`url(#${u}g)`}"/>`;
+        if(!NI)g+=`<path d="M${wx+3} ${y+8}l4.4 -5.6h2.4l-4.4 5.6z" fill="#fff" opacity=".55"/>`;
+        if(k%2===0&&i%2===0)g+=`<rect x="${wx-1}" y="${y+7.6}" width="16" height="1.6" fill="${NI?"#3E7A5E":"#7CC48A"}"/>`;
+      }
+      for(let k=0;k<2;k++){const sx=fx+fw+9+k*16,sy=y+2.4+(9+k*16)*dy/dx,on=lit(i,"s"+k);
+        g+=`<path d="M${sx} ${sy}l9 ${9*dy/dx}v5.6l-9 ${-9*dy/dx}Z" fill="${on?"#F2C273":`url(#${u}g)`}" opacity=".9"/>`}
+    }
+    g+=`<rect x="${fx}" y="${y}" width="5" height="${fh+.6}" fill="${ca}" opacity=".9"/>`;
     g+=`</g>`;
   }
-  if((pct||0)<100){
-    const top=ground-built*fh,cx=x0+W+18,mt=Math.max(30,top-64),hook=Math.min(top-8,mt+48);
-    g+=`<g stroke="${E}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="${cx-4}" y="${mt}" width="8" height="${ground-mt}" fill="var(--crane)"/><rect x="${cx-126}" y="${mt-2}" width="168" height="8" rx="3" fill="var(--crane)"/><rect x="${cx+22}" y="${mt+6}" width="18" height="12" rx="3" fill="#9A8C80"/><line x1="${cx-96}" y1="${mt+6}" x2="${cx-96}" y2="${hook}" fill="none"/><rect x="${cx-107}" y="${hook}" width="22" height="10" rx="2" fill="#FF8FA3"/></g>`;
+  if(built){
+    const roof=done?mix(cf,"#fff",NI?.05:.35):(NI?"#585C80":"#DAD3C8");
+    g+=`<path d="M${fx} ${yb}l${dx} ${dy}h${fw}l${-dx} ${-dy}Z" fill="${roof}"/>`;
+    if(done){
+      g+=`<path d="M${fx-3} ${yb-3}h${fw+6}v4h${-fw-6}Z" fill="${ca}"/><path d="M${fx+fw+3} ${yb-3}l${dx} ${dy}v4l${-dx} ${-dy}Z" fill="${mix(ca,"#000",.15)}"/>`;
+      g+=`<rect x="${fx+fw*.55}" y="${yb-17}" width="20" height="12" rx="2" fill="${cs}"/><path d="M${fx+fw*.55} ${yb-17}l8 -4h20l-8 4z" fill="${cf}"/>`;
+      for(const [tx,r] of [[fx+20,5],[fx+32,4],[fx+fw-10,4.5]])g+=`<circle cx="${tx+12}" cy="${yb-5+dy*.5}" r="${r}" fill="${NI?"#3E7A5E":"#7CC48A"}"/>`;
+    }else{
+      // formwork, rebar and green safety net on the top two floors
+      const nf=Math.min(2,built),ny=G-built*fh;
+      g+=`<rect x="${fx-2}" y="${ny}" width="${fw+4}" height="${nf*fh}" fill="url(#${u}n)"/><path d="M${fx+fw+2} ${ny}l${dx} ${dy}v${nf*fh}l${-dx} ${-dy}Z" fill="url(#${u}n)"/>`;
+      g+=`<g stroke="${NI?"#9A9CC0":"#8B7B6B"}" stroke-width="1">`;for(let k=0;k<7;k++){const rx=fx+6+k*17;g+=`<path d="M${rx} ${yb}v-7M${rx+dx*.6} ${yb+dy*.6}v-7"/>`}g+=`</g>`;
+      g+=`<rect x="${fx-6}" y="${yb-1.5}" width="${fw+12}" height="2.4" fill="#E98A3C"/>`;
+    }
   }
-  g+=`<path d="M0 ${ground} Q80 ${ground-10} 160 ${ground} T320 ${ground} V${H} H0Z" fill="var(--grass)" stroke="${E}" stroke-width="1.8"/>`;
-  g+=`<g stroke="${E}" stroke-width="1.5"><rect x="40" y="${ground-24}" width="6" height="18" rx="2" fill="#B07A4F"/><circle cx="43" cy="${ground-32}" r="15" fill="#7ED18F"/><circle cx="296" cy="${ground-12}" r="10" fill="#7ED18F"/></g>`;
-  return `<svg viewBox="0 0 320 ${H}" width="320" role="img" aria-label="Drawing of the building about ${Math.round(pct||0)} percent built">${g}</svg>`;
+  // tower crane
+  if(!done){
+    const cx=fx+fw+dx+26,base=G+dy*.4,mt=Math.max(30,Math.min(top-4,yb-52)),jl=cx-176,jr=cx+46,C=NI?"#E6B34E":"#F2B33D",K=NI?"#7A5A1E":"#9C7124";
+    const hookX=fx+fw*.42,hookY=Math.max(mt+30,yb-26);
+    g+=`<g stroke="${K}" stroke-width=".9" fill="none" stroke-linejoin="round">`;
+    g+=`<path d="M${cx-3.5} ${base}V${mt}M${cx+3.5} ${base}V${mt}" stroke="${C}" stroke-width="2.2"/>`;
+    let z=`M${cx-3.5} ${base}`;for(let y=base;y>mt+7;y-=7)z+=`L${cx+3.5} ${y-3.5}L${cx-3.5} ${y-7}`;g+=`<path d="${z}" stroke="${C}" stroke-width="1"/>`;
+    g+=`<path d="M${jl} ${mt}H${jr}M${jl+6} ${mt+6}H${cx}" stroke="${C}" stroke-width="2"/>`;
+    let j=`M${jl+6} ${mt+6}`;for(let x=jl+6;x<cx-6;x+=9)j+=`L${x+4.5} ${mt}L${x+9} ${mt+6}`;g+=`<path d="${j}" stroke="${C}"/>`;
+    g+=`<path d="M${cx} ${mt-18}L${jl+20} ${mt}M${cx} ${mt-18}L${jr-4} ${mt}M${cx-3.5} ${mt}L${cx} ${mt-18}L${cx+3.5} ${mt}" stroke="${K}" stroke-width=".8"/>`;
+    g+=`</g><rect x="${jr-16}" y="${mt+1}" width="14" height="9" rx="1" fill="${NI?"#6E6F8E":"#9A9086"}"/><rect x="${cx+3}" y="${mt+2}" width="9" height="8" rx="1.5" fill="${NI?"#FFD98A":"#E9F5FB"}" stroke="${C}" stroke-width="1.2"/>`;
+    g+=`<g class="hook"><path d="M${hookX} ${mt+1}V${hookY}" stroke="${NI?"#9A9CC0":"#6E5D54"}" stroke-width=".8"/><rect x="${hookX-3}" y="${mt-1}" width="6" height="3" fill="${K}"/><rect x="${hookX-13}" y="${hookY}" width="26" height="5" rx="1" fill="${NI?"#C9849A":"#F29AAE"}"/><rect x="${hookX-13}" y="${hookY+5}" width="26" height="4" rx="1" fill="${NI?"#9C6B82":"#E07C93"}"/></g>`;
+    g+=`<circle class="blink" cx="${cx}" cy="${mt-19}" r="2.2" fill="#FF5A4E"/>`;
+    if(NI)g+=`<path d="M${cx-4} ${mt+10}L${fx-10} ${G}H${fx+fw+30}Z" fill="#FFE3A3" opacity=".08"/>`;
+    // hoarding
+    g+=`<path d="M${fx-26} ${G+8}h${fw+dx+68}v-11h${-fw-dx-68}z" fill="${NI?"#3C5A66":"#D7EDE3"}"/><path d="M${fx-26} ${G-3}h${fw+dx+68}v2.4h${-fw-dx-68}z" fill="${NI?"#4D8A6F":"#6DBB8A"}"/>`;
+  }
+  // trees and lamps
+  const tree=(x,y,s)=>`<rect x="${x-1.5}" y="${y-10*s}" width="3" height="${10*s}" rx="1" fill="${NI?"#5B4A48":"#A47B57"}"/><circle cx="${x}" cy="${y-15*s}" r="${9*s}" fill="${NI?"#2F6150":"#6FBF7F"}"/><circle cx="${x-2.5*s}" cy="${y-17.5*s}" r="${5.5*s}" fill="${NI?"#3A7660":"#8FD39A"}"/>`;
+  g+=tree(36,G+20,1.1)+tree(70,G+24,.85)+tree(326,G+16,1)+tree(296,G+26,.75);
+  if(NI)for(const x of [96,272]){g+=`<rect x="${x-1}" y="${G-6}" width="2" height="30" fill="#6E6B8E"/><circle cx="${x}" cy="${G-6}" r="16" fill="url(#${u}l)"/><circle cx="${x}" cy="${G-6}" r="2.4" fill="#FFE7B0"/>`}
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" role="img" aria-label="Drawing of the building about ${Math.round(pct)} percent built">${d}${g}</svg>`;
 }
 
 /* ---------- Homepage town ---------- */
@@ -740,11 +851,8 @@ async function makeCard(p){
   c.fillStyle="#FFFDF7";rrect(c,px,py,pw,ph,56);c.fill();c.lineWidth=3;c.strokeStyle=ink;c.stroke();
   // illustration
   const IH=780-82*(lines2(p.name,"600 72px Fraunces, Georgia, serif")-1)-64*(lines2(v.t,"600 54px Fraunces, Georgia, serif")-1);c.save();rrect(c,px+4,py+4,pw-8,IH,52);c.clip();
-  const sk=c.createLinearGradient(0,py,0,py+IH);sk.addColorStop(0,"#BFE6FB");sk.addColorStop(1,"#E3F6EA");c.fillStyle=sk;c.fillRect(px,py,pw,IH);
-  const art=await svgImage(building(k.pct,p.name),640,0);const ar=art.height/art.width||1.2;const aw=Math.min(860,(IH-50)/ar);
-  const ax=px+(pw-aw)/2,gy=py+IH-aw*ar*30/356;
-  c.fillStyle="#62C07A";c.fillRect(px,gy,pw,py+IH-gy);c.beginPath();c.moveTo(px,gy);c.lineTo(ax+4,gy);c.moveTo(ax+aw-4,gy);c.lineTo(px+pw,gy);c.lineWidth=3;c.strokeStyle=ink;c.stroke();
-  c.drawImage(art,ax,py+IH-aw*ar,aw,aw*ar);c.fillStyle="#62C07A";c.fillRect(px,gy+4,pw,py+IH-gy);c.restore();
+  const art=await svgImage(building(k.pct,p.name),720,0);const sc=Math.max(pw/art.width,IH/art.height),aw=art.width*sc,ah=art.height*sc;
+  c.drawImage(art,px+(pw-aw)/2,py+IH-ah,aw,ah);c.restore();
   c.beginPath();c.moveTo(px,py+IH);c.lineTo(px+pw,py+IH);c.lineWidth=3;c.strokeStyle=ink;c.stroke();
   // name + tag
   let y=py+IH+100;c.fillStyle=ink;c.font="500 72px Fraunces, Georgia, serif";
@@ -800,27 +908,70 @@ $("#sharebox").addEventListener("click",e=>{if(e.target.id==="sharebox")$("#shar
 
 const FOUND_KEY="storeys.found.v1";
 function bldgSvg(p){
-  const k=stats(p),pct=k.pct||0,floors=6,built=Math.max(1,Math.round(floors*pct/100)),c=PASTELS[hash(p.name)%PASTELS.length],E="#3A2C26";
-  let g=`<ellipse cx="28" cy="66" rx="22" ry="4" fill="rgba(58,44,38,.25)"/>`;
-  g+=`<rect x="14" y="${64-floors*8}" width="28" height="${floors*8}" rx="2" fill="none" stroke="${E}" stroke-opacity=".3" stroke-dasharray="3 3"/>`;
-  for(let i=0;i<built;i++){const y=64-(i+1)*8;g+=`<rect x="14" y="${y}" width="28" height="8" fill="${i%2?"#FFFBF2":c}" stroke="${E}" stroke-width="1.6"/><rect x="18" y="${y+2.5}" width="5" height="3" rx="1" fill="#9FD3F2"/><rect x="26" y="${y+2.5}" width="5" height="3" rx="1" fill="#9FD3F2"/><rect x="34" y="${y+2.5}" width="5" height="3" rx="1" fill="#9FD3F2"/>`}
-  if(pct<100){const top=64-built*8;g+=`<g stroke="${E}" stroke-width="1.6"><rect x="45" y="${top-16}" width="3.5" height="${80-top}" fill="#FFB020"/><rect x="24" y="${top-18}" width="30" height="4" rx="1.5" fill="#FFB020"/></g>`}
-  else g+=`<rect x="12" y="${64-floors*8-4}" width="32" height="5" rx="2" fill="${c}" stroke="${E}" stroke-width="1.6"/>`;
+  const k=stats(p),pct=k.pct||0,N=7,fh=7,fx=12,fw=24,dx=12,dy=-6,G=64,built=Math.max(1,Math.round(N*Math.min(pct,100)/100)),done=pct>=100,yb=G-built*fh;
+  const F=FACADES[hash(p.name)%FACADES.length];
+  let g=`<ellipse cx="30" cy="65" rx="22" ry="4.5" fill="rgba(43,36,32,.22)"/>`;
+  g+=`<g fill="none" stroke="#3A2C26" stroke-opacity=".28" stroke-dasharray="2 2"><rect x="${fx}" y="${G-N*fh}" width="${fw}" height="${N*fh}"/><path d="M${fx+fw} ${G-N*fh}l${dx} ${dy}V${G+dy}"/></g>`;
+  g+=`<rect x="${fx}" y="${yb}" width="${fw}" height="${built*fh}" fill="${F[0]}"/><path d="M${fx+fw} ${yb}l${dx} ${dy}V${G+dy}l${-dx} ${-dy}Z" fill="${F[1]}"/><rect x="${fx}" y="${yb}" width="3" height="${built*fh}" fill="${F[2]}"/>`;
+  for(let i=1;i<built;i++){const y=G-(i+1)*fh;g+=`<rect x="${fx+5}" y="${y+2}" width="7" height="3" rx=".6" fill="#9FD0EE"/><rect x="${fx+14.5}" y="${y+2}" width="7" height="3" rx=".6" fill="#9FD0EE"/><path d="M${fx+fw+3} ${y+.5}l6 -3v3l-6 3z" fill="#86B7D8" opacity=".9"/>`}
+  g+=`<path d="M${fx} ${yb}l${dx} ${dy}h${fw}l${-dx} ${-dy}Z" fill="${done?mix(F[0],"#fff",.4):"#E3DCD0"}"/>`;
+  if(!done){const cx=fx+fw+dx+6,mt=Math.max(4,yb-16);g+=`<g stroke="#C98F1E" stroke-width="1.6" fill="none"><path d="M${cx} ${G-2}V${mt}M${cx-30} ${mt}H${cx+8}"/><path d="M${cx-18} ${mt}V${yb-4}" stroke-width=".8"/></g><rect x="${cx-21}" y="${yb-5}" width="7" height="3" fill="#F29AAE"/><rect x="${fx-1}" y="${yb}" width="${fw+2}" height="${Math.min(2,built)*fh}" fill="#5FB27C" opacity=".65"/>`}
   const short=p.name.replace(/\s*\(.*?\)/,"");
   return `<svg width="112" height="140" viewBox="0 0 56 70" style="overflow:visible">${g}</svg><span class="spark" aria-hidden="true"></span><span class="lbl">${esc(short.length>22?short.slice(0,21)+"…":short)}</span>`;
 }
-const WORLD_STYLE={version:8,sources:{o:{type:"vector",url:"https://tiles.openfreemap.org/planet"}},layers:[
- {id:"bg",type:"background",paint:{"background-color":"#F4E9D4"}},
- {id:"lu",type:"fill",source:"o","source-layer":"landuse",paint:{"fill-color":["match",["get","class"],"residential","#F1E3CB","school","#F6DCC6","commercial","#F3DCCB","#EFE2CC"]}},
- {id:"park",type:"fill",source:"o","source-layer":"park",paint:{"fill-color":"#A9DA93"}},
- {id:"lc",type:"fill",source:"o","source-layer":"landcover",paint:{"fill-color":["match",["get","class"],"wood","#8CCB7C","grass","#B5E2A0","sand","#F3E3B0","#B5E2A0"]}},
- {id:"water",type:"fill",source:"o","source-layer":"water",paint:{"fill-color":"#86CBE8"}},
- {id:"ww",type:"line",source:"o","source-layer":"waterway",paint:{"line-color":"#86CBE8","line-width":4}},
- {id:"rcase",type:"line",source:"o","source-layer":"transportation",filter:["!in","class","path","rail","transit"],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#C9A97E","line-width":["interpolate",["exponential",1.6],["zoom"],14,3,18,["match",["get","class"],"motorway",46,"trunk",40,"primary",34,"secondary",28,"tertiary",24,16]]}},
- {id:"road",type:"line",source:"o","source-layer":"transportation",filter:["!in","class","path","rail","transit"],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#FFF8EA","line-width":["interpolate",["exponential",1.6],["zoom"],14,1.8,18,["match",["get","class"],"motorway",38,"trunk",33,"primary",28,"secondary",23,"tertiary",19,12]]}},
- {id:"path",type:"line",source:"o","source-layer":"transportation",filter:["==","class","path"],paint:{"line-color":"#E2C79A","line-width":2,"line-dasharray":[2,1.5]}},
- {id:"bld",type:"fill-extrusion",source:"o","source-layer":"building",paint:{"fill-extrusion-color":["match",["%",["to-number",["coalesce",["get","render_height"],10]],5],0,"#FFD3C2",1,"#FFF1C9",2,"#D7EEF9",3,"#E2F2D2",4,"#F9E0EC","#FFF1C9"],"fill-extrusion-height":["min",["*",["coalesce",["get","render_height"],10],0.55],26],"fill-extrusion-base":["min",["*",["coalesce",["get","render_min_height"],0],0.55],26],"fill-extrusion-opacity":0.95,"fill-extrusion-vertical-gradient":true}}
-]};
+/* ---------- Map world: day, golden hour and night ---------- */
+function worldStyle(ph){
+  const N=ph==="night",GO=ph==="golden";
+  const C=N?{bg:"#262C52",res:"#2A3158",retail:"#45305E",comm:"#36325C",school:"#3D3858",hosp:"#3E3152",ind:"#2C3152",park:"#26493F",wood:"#214238",grass:"#2B5146",water:"#1C3B62",rcase:"#1C2140",road:"#CF9C5C",minor:"#6F6476",path:"#6E6488",rail:"#A08FE0",
+      house:["#B7826C","#A87763","#C2907A"],mid:["#6A6496","#776A9C","#62709A"],tower:["#525A92","#5E5C96","#4F6690","#615F8E"],
+      label:"#F7EFE2",halo:"#1C2140",sub:"#B9B2D8",sky:"#141A3E",hor:"#43397A",fog:"#262C52",light:["#C9C2FF",.34]}
+    :{bg:"#F4E9D4",res:"#F1E3CB",retail:"#F8D2DE",comm:"#F3DCCB",school:"#F7E6B4",hosp:"#F6D3D3",ind:"#E7E1D7",park:"#A9DA93",wood:"#8CCB7C",grass:"#B5E2A0",water:"#86CBE8",rcase:"#C9A97E",road:"#FFF8EA",minor:"#FFF8EA",path:"#E2C79A",rail:"#B79AE0",
+      house:["#F0BCA4","#F4CDA8","#EAB39A"],mid:["#E9D8F2","#FBE3C4","#DDEBD0"],tower:["#FFD3C2","#FFF1C9","#D7EEF9","#E2F2D2","#F9E0EC"].slice(0,4),
+      label:"#3A2C26",halo:"#FFFBF2",sub:"#8A776B",sky:GO?"#F2B18E":"#9FD8F5",hor:GO?"#FBD9B0":"#F6E7D2",fog:GO?"#F6DCC0":"#F4E9D4",light:GO?["#FFD6AE",.24]:["#FFF6E6",.18]};
+  if(GO){C.bg="#F3E2C8";C.road="#FFF1DC"}
+  const ht=["coalesce",["get","render_height"],10],v=["%",["to-number",ht],3],v4=["%",["to-number",ht],4];
+  const pick=(a,e)=>["match",e,0,a[0],1,a[1],2,a[2],a[3]||a[0]];
+  const roadW=(a,b,c,d,e,f)=>["interpolate",["exponential",1.6],["zoom"],14,a,18,["match",["get","class"],"motorway",b,"trunk",c,"primary",d,"secondary",e,"tertiary",e*.85,f]];
+  const RD=["!in","class","path","rail","transit"];
+  const isMall=["in",["get","subclass"],["literal",["mall","department_store"]]],isFood=["==",["get","subclass"],"food_court"],isMrt=["all",["==",["get","class"],"railway"],["in",["get","subclass"],["literal",["station","subway","halt"]]]],isSch=["in",["get","subclass"],["literal",["school","college","university"]]],isHosp=["==",["get","subclass"],"hospital"];
+  const L=[
+   {id:"bg",type:"background",paint:{"background-color":C.bg}},
+   {id:"lu",type:"fill",source:"o","source-layer":"landuse",paint:{"fill-color":["match",["get","class"],"residential",C.res,"retail",C.retail,"commercial",C.comm,["school","college","university","kindergarten"],C.school,"hospital",C.hosp,"industrial",C.ind,C.res]}},
+   {id:"park",type:"fill",source:"o","source-layer":"park",paint:{"fill-color":C.park}},
+   {id:"lc",type:"fill",source:"o","source-layer":"landcover",paint:{"fill-color":["match",["get","class"],"wood",C.wood,"grass",C.grass,"sand",N?"#4A4A5E":"#F3E3B0",C.grass]}},
+   {id:"water",type:"fill",source:"o","source-layer":"water",paint:{"fill-color":C.water}},
+   {id:"ww",type:"line",source:"o","source-layer":"waterway",paint:{"line-color":C.water,"line-width":4}},
+   {id:"rail",type:"line",source:"o","source-layer":"transportation",filter:["in","class","transit","rail"],layout:{"line-cap":"round"},paint:{"line-color":C.rail,"line-width":["interpolate",["linear"],["zoom"],12,1.2,18,6],"line-opacity":.85}},
+   ...(N?[{id:"glow",type:"line",source:"o","source-layer":"transportation",filter:["in","class","motorway","trunk","primary","secondary","tertiary"],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#F2B866","line-opacity":.22,"line-blur":8,"line-width":roadW(6,64,56,48,40,24)}}]:[]),
+   {id:"rcase",type:"line",source:"o","source-layer":"transportation",filter:RD,layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":C.rcase,"line-width":roadW(3,46,40,34,28,16)}},
+   {id:"road",type:"line",source:"o","source-layer":"transportation",filter:RD,layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":["match",["get","class"],["minor","service","track"],C.minor,C.road],"line-width":roadW(1.8,38,33,28,23,12)}},
+   {id:"path",type:"line",source:"o","source-layer":"transportation",filter:["==","class","path"],paint:{"line-color":C.path,"line-width":2,"line-dasharray":[2,1.5]}},
+   {id:"bld",type:"fill-extrusion",source:"o","source-layer":"building",paint:{
+     "fill-extrusion-color":["case",["<=",["to-number",ht],12],pick(C.house,v),["<=",["to-number",ht],36],pick(C.mid,v),pick(C.tower,v4)],
+     "fill-extrusion-height":["min",["*",ht,.55],26],"fill-extrusion-base":["min",["*",["coalesce",["get","render_min_height"],0],.55],26],"fill-extrusion-opacity":.96,"fill-extrusion-vertical-gradient":true}},
+   {id:"town",type:"symbol",source:"o","source-layer":"place",minzoom:11,maxzoom:15.5,filter:["in","class","suburb","quarter","neighbourhood","town"],
+    layout:{"text-field":["upcase",["get","name"]],"text-font":["Noto Sans Bold"],"text-size":["interpolate",["linear"],["zoom"],11,10,15,13],"text-letter-spacing":.18,"text-max-width":8},
+    paint:{"text-color":C.sub,"text-halo-color":C.halo,"text-halo-width":1.4,"text-opacity":.9}},
+   {id:"poi",type:"symbol",source:"o","source-layer":"poi",minzoom:14.2,filter:["any",isMall,isFood,isMrt,isSch,isHosp],
+    layout:{"icon-image":["case",isMall,"i-mall",isFood,"i-food",isMrt,"i-mrt",isSch,"i-school","i-hosp"],"icon-size":["interpolate",["linear"],["zoom"],14,.8,17,1.05],"icon-allow-overlap":false,"icon-padding":2,
+      "text-field":["step",["zoom"],["case",["any",isMall,isMrt],["get","name"],""],15.6,["get","name"]],"text-font":["Noto Sans Bold"],"text-size":11.5,"text-offset":[0,1.35],"text-anchor":"top","text-max-width":9,"text-optional":true,
+      "symbol-sort-key":["case",isMrt,0,isMall,1,isFood,2,3]},
+    paint:{"text-color":C.label,"text-halo-color":C.halo,"text-halo-width":1.6}}
+  ];
+  return {version:8,glyphs:"https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",sources:{o:{type:"vector",url:"https://tiles.openfreemap.org/planet"}},
+    sky:{"sky-color":C.sky,"horizon-color":C.hor,"fog-color":C.fog,"sky-horizon-blend":.7,"horizon-fog-blend":.7,"fog-ground-blend":.35},
+    light:{anchor:"map",color:C.light[0],intensity:C.light[1],position:[1.3,200,40]},layers:L};
+}
+/* little badge icons for malls, hawker centres, MRT, schools and hospitals */
+const POI_ICONS={"i-mall":["#E86A9A",x=>{x.beginPath();x.roundRect(-6,-3,12,10,2);x.fill();x.beginPath();x.arc(0,-3,3.6,Math.PI,0);x.stroke()}],
+  "i-food":["#F08A3E",x=>{x.beginPath();x.arc(0,0,7,0,Math.PI);x.closePath();x.fill();x.beginPath();x.moveTo(-1,-1);x.lineTo(4,-9);x.moveTo(2,-1);x.lineTo(7,-8);x.stroke()}],
+  "i-mrt":["#7A63D6",x=>{x.beginPath();x.roundRect(-6,-8,12,13,3);x.fill();x.fillStyle=x._bg;x.fillRect(-4,-5.5,8,4);x.beginPath();x.arc(-3,2,1.2,0,7);x.arc(3,2,1.2,0,7);x.fill();x.fillStyle="#fff";x.beginPath();x.moveTo(-4,6);x.lineTo(-6,9);x.moveTo(4,6);x.lineTo(6,9);x.stroke()}],
+  "i-school":["#D9A31E",x=>{x.beginPath();x.moveTo(-8,-2);x.lineTo(0,-6);x.lineTo(8,-2);x.lineTo(0,2);x.closePath();x.fill();x.beginPath();x.moveTo(-4.5,0);x.lineTo(-4.5,4);x.quadraticCurveTo(0,7,4.5,4);x.lineTo(4.5,0);x.fill()}],
+  "i-hosp":["#E05A5A",x=>{x.fillRect(-2.2,-7,4.4,14);x.fillRect(-7,-2.2,14,4.4)}]};
+function poiIcon(id){const d=POI_ICONS[id];if(!d)return null;const s=2,c=document.createElement("canvas");c.width=c.height=30*s;const x=c.getContext("2d");if(!x.roundRect)x.roundRect=(a,b,w,h)=>x.rect(a,b,w,h);x.scale(s,s);x.translate(15,15);
+  x.shadowColor="rgba(40,30,60,.3)";x.shadowBlur=3;x.shadowOffsetY=1;x.fillStyle="#FFFBF2";x.beginPath();x.arc(0,0,13,0,7);x.fill();x.shadowColor="transparent";
+  x.fillStyle=d[0];x.beginPath();x.arc(0,0,11,0,7);x.fill();x._bg=d[0];x.fillStyle="#fff";x.strokeStyle="#fff";x.lineWidth=1.8;x.lineCap="round";d[1](x);
+  return {width:c.width,height:c.height,data:x.getImageData(0,0,c.width,c.height).data}}
 
 
 /* ---------- Photo viewer ---------- */
@@ -884,6 +1035,25 @@ addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)closeShe
 $("#list").addEventListener("click",e=>{const r=e.target.closest("[data-open]");if(r)openSheet(+r.dataset.open)});
 $("#explore").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;const p=P[+c.dataset.i];setTab("map");if(p.ll)flyTo(p.i,true);else openSheet(p.i)});
 
+/* ---------- Day and night ---------- */
+const LIGHT_ICON={day:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="#FFC845" stroke="#C98F1E"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="#E0A23A"/></svg>',
+  golden:'<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round"><path d="M4 16a8 8 0 0 1 16 0" fill="#FFB86B" stroke="#E07A3A" stroke-width="2"/><path d="M2.5 19.5h19" stroke="#E07A3A" stroke-width="2"/></svg>',
+  night:'<svg viewBox="0 0 24 24"><path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1z" fill="#FFE9A8" stroke="#8C7AD8" stroke-width="1.6" stroke-linejoin="round"/><circle cx="18" cy="5" r="1.1" fill="#8C7AD8"/></svg>'};
+let CURPH=phase();
+function applyLight(force){
+  const ph=phase(),changed=ph!==CURPH;CURPH=ph;
+  document.documentElement.dataset.ph=ph;
+  const b=$("#lightbtn");if(b){b.innerHTML=LIGHT_ICON[ph];b.classList.toggle("auto",LIGHT==="auto");b.setAttribute("aria-label",`Lighting: ${LIGHT==="auto"?"follows Singapore time, now "+ph:ph}. Tap to change.`)}
+  if(MAP&&(changed||force))MAP.setStyle(worldStyle(ph),{diff:true});
+  if(changed||force)document.querySelectorAll("#sheet .scene:not(.photo)").forEach(sc=>{const p=P.find(q=>q.key===SHEETKEY);if(p)sc.innerHTML=building(stats(p).pct,p.name)});
+}
+$("#lightbtn").addEventListener("click",()=>{
+  LIGHT=LIGHT==="auto"?(autoPhase()==="night"?"day":"night"):LIGHT==="night"?"day":"auto";
+  try{localStorage.setItem("storeys.light",LIGHT)}catch(e){}
+  applyLight(true);toast(LIGHT==="auto"?"Lighting follows Singapore time":LIGHT==="night"?"Night mode":"Daytime");
+});
+setInterval(()=>applyLight(false),60000);
+
 /* ---------- Map home ---------- */
 let MAP=null,MARKS=[],LASTNEAR="";
 const found=new Set(store(FOUND_KEY)||[]);
@@ -894,12 +1064,12 @@ function initMap(){
   if(!window.maplibregl){$("#map").innerHTML=`<div class="nomap"><p>The map couldn't load. Check your connection, or browse projects in Discover.</p></div>`;return}
   try{
     const startP=tracked.map(k=>P.find(p=>p.key===k)).find(p=>p&&p.ll);
-    MAP=new maplibregl.Map({container:"map",style:WORLD_STYLE,center:startP?[startP.ll[1],startP.ll[0]-0.002]:[103.8198,1.3521],zoom:startP?16.2:13.2,pitch:48,bearing:-12,minZoom:11,maxZoom:18.5,maxPitch:60,dragRotate:false,attributionControl:false,maxBounds:[[103.5,1.12],[104.15,1.52]]});
+    MAP=new maplibregl.Map({container:"map",style:worldStyle(phase()),center:startP?[startP.ll[1],startP.ll[0]-0.002]:[103.8198,1.3521],zoom:startP?16.2:13.2,pitch:48,bearing:-12,minZoom:11,maxZoom:18.5,maxPitch:60,dragRotate:false,attributionControl:false,maxBounds:[[103.5,1.12],[104.15,1.52]]});
   }catch(e){$("#map").innerHTML=`<div class="nomap"><p>Your browser can't show the 3D map. Try Safari or Chrome on a newer phone, or browse projects in Discover.</p></div>`;return}
   MAP.touchZoomRotate.disableRotation();
   MAP.addControl(new maplibregl.AttributionControl({compact:true}),"bottom-right");
   MAP.once("idle",()=>{const a=document.querySelector("#map .maplibregl-ctrl-attrib");if(a)a.classList.remove("maplibregl-compact-show")});
-  MAP.on("load",()=>MAP.setLight({anchor:"map",color:"#FFF6E6",intensity:0.18,position:[1.3,200,40]}));
+  MAP.on("styleimagemissing",e=>{const im=poiIcon(e.id);if(im&&!MAP.hasImage(e.id))MAP.addImage(e.id,im,{pixelRatio:2})});
   const here=P.filter(p=>p.ll);$("#wtotal").textContent=here.length;
   MARKS=here.map(p=>{const el=document.createElement("div");el.className="bldg"+(found.has(p.key)?" seen":"");el.innerHTML=`<div class="inner">${bldgSvg(p)}</div>`;el.setAttribute("role","button");el.setAttribute("aria-label",p.name);
     el.addEventListener("click",e=>{e.stopPropagation();openSheet(p.i)});
@@ -974,6 +1144,6 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   D.bto.forEach(r=>P.push({kind:"BTO",name:r[0],launch:r[2],ecd:r[3],delayed:r[4],remark:r[5],roads:r[6]?r[6].split("|"):[],blks:r[7]?r[7].split(" "):[],postals:r[8]?r[8].split(" "):[],ll:r[9]||null,addr:""}));
   D.condo.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3],ll:r[4]||null}));
   P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch;p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
-  render();explore();badge();initMap();loadFeed();
+  render();explore();badge();initMap();applyLight(false);loadFeed();
 }).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
 </script></body></html>
