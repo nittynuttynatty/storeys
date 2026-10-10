@@ -728,7 +728,7 @@ function render(){
 /* ---------- Photos: read ---------- */
 const H={apikey:SBK,Authorization:"Bearer "+SBK};
 /* ---------- Tip jar: paste your Ko-fi or Buy Me a Coffee link here ---------- */
-const TIP_URL="";
+const TIP_URL="https://ko-fi.com/topalready";
 function tipHTML(big){return TIP_URL?(big?`<div class="tipcard"><p><b>Keep TOP Already? going</b>It's free, ad-free and made by one person in Singapore. If it's helped you, a kopi keeps it running.</p><a class="add" href="${TIP_URL}" target="_blank" rel="noopener" data-tip>☕ Buy me a kopi</a></div>`:`<p class="tipline">Finding this useful? <a href="${TIP_URL}" target="_blank" rel="noopener" data-tip>Buy me a kopi ☕</a></p>`):""}
 document.addEventListener("click",e=>{if(e.target.closest("[data-tip]"))track("tip")});
 /* ---------- Links and anonymous counts ---------- */
