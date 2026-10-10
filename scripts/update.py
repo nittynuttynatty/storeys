@@ -163,7 +163,13 @@ if len(condo) < 0.7 * len(old["condo"]):
     print("Condo source looks broken, keeping previous data")
     condo = old["condo"]
 
-out = {"updated": datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M"),
-       "bto": bto, "condo": condo}
+now_sg = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y-%m-%d %H:%M")
+# "checked" = last time each source was read successfully (kept from before when a source fails)
+checked = dict(old.get("checked") or {})
+if bto is not old["bto"]:
+    checked["bto"] = now_sg
+if condo is not old["condo"]:
+    checked["condo"] = now_sg
+out = {"updated": now_sg, "checked": checked, "bto": bto, "condo": condo}
 json.dump(out, open(DATA, "w"), ensure_ascii=False, separators=(",", ":"))
 print("saved", len(bto), "BTO,", len(condo), "condos")

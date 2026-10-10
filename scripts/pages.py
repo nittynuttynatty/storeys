@@ -36,7 +36,7 @@ for kind, name, launch, ecd, delayed in rows:
     pct = None
     if L and T and T > L:
         pct = max(0, min(100, round((today - L).days / (T - L).days * 100)))
-        desc = f"{pct}% of the wait to keys is over. Expected {'completion' if kind == 'BTO' else 'TOP'}: {fmt(T)}. See site photos from people nearby."
+        desc = f"{pct}% of the estimated timeline has elapsed (a time-based estimate, not measured progress). {'Est. completion' if kind == 'BTO' else 'Expected TOP'}: {fmt(T)}. See site photos from people nearby."
     else:
         desc = f"Expected {'completion' if kind == 'BTO' else 'TOP'}: {fmt(T)}. See site photos from people nearby."
     title = f"{name} ({kind}) · {APP}"
@@ -46,7 +46,7 @@ for kind, name, launch, ecd, delayed in rows:
     img = f"{SITE}icon-512.png"
     if card:
         try:
-            card(os.path.join(ROOT, "p", s, "card.png"), name, kind, pct, f"Expected {'completion' if kind == 'BTO' else 'TOP'}: {fmt(T)}")
+            card(os.path.join(ROOT, "p", s, "card.png"), name, kind, pct, f"{'Est. completion' if kind == 'BTO' else 'Expected TOP'}: {fmt(T)}")
             img = f"{url}card.png"
         except Exception as e:
             print("card failed", name, e)
@@ -56,7 +56,7 @@ for kind, name, launch, ecd, delayed in rows:
 <meta name="description" content="{e(desc)}">
 <link rel="canonical" href="{e(url)}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="{APP}">
-<meta property="og:title" content="{e(name)}: how far along is it?">
+<meta property="og:title" content="{e(name)}: estimated timeline and site photos">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{e(url)}">
 <meta property="og:image" content="{img}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">

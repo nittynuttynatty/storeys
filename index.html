@@ -382,6 +382,31 @@ input[type=text]{font-weight:400;border-radius:999px}
 .bldg.got .stamp{display:block}
 .bldg.got .spark{display:none}
 #colchip{cursor:pointer;font:inherit;font-weight:600;font-size:.8rem;color:var(--ink)}
+.explain{margin:4px 0 10px;font-size:.84rem;color:var(--muted)}
+.facts small{display:block;font-size:.72rem;color:var(--muted);font-weight:500;margin-top:2px}
+.wpct small{display:block;font-family:"Figtree",system-ui,sans-serif;font-size:.72rem;font-weight:600;color:var(--muted)}
+.scene .artnote{position:absolute;left:10px;bottom:8px;font-size:.7rem;font-weight:600;color:#3A2C26;background:rgba(255,253,247,.85);border-radius:99px;padding:2px 9px}
+.scene.photo .artnote{display:none}
+.sources{margin:16px 0 0;border:1px solid var(--line);border-radius:16px;padding:10px 14px;background:var(--tile)}
+.sources summary{cursor:pointer;font-weight:600;font-size:.9rem;min-height:28px;display:flex;align-items:center}
+.sources dl{margin:8px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:.84rem}
+.sources dt{font-weight:600}.sources dd{margin:0;color:var(--muted)}
+.sources p{margin:8px 0 0;font-size:.84rem}
+@media (max-width:420px){.sources dl{grid-template-columns:1fr}.sources dt{margin-top:4px}}
+.welcome .wsmall{font-size:.85rem;margin:-4px 0 10px}
+.wbtns{display:flex;gap:8px;flex-wrap:wrap}
+.welcome .wghost{background:none;border:1px solid var(--line);color:var(--ink)}
+/* bigger touch targets, clearer focus, calmer motion */
+.xbtn{width:44px;height:44px;top:-2px}
+.lightbtn{width:44px;height:44px}
+.found{min-height:44px;display:inline-flex;align-items:center;gap:4px}
+.edge{font-size:.8rem;min-height:32px}
+.ncard .meta{font-size:.82rem}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.coltile:focus-visible,.chip:focus-visible,.ncard:focus-visible,.wrow:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){#sheet .panel,#sheet .back,.toast,.view{animation:none!important;transition:none!important}.bldg .spark{animation:none}}
+#map .maplibregl-ctrl-bottom-right{bottom:var(--nearh,200px)}
+#map .maplibregl-ctrl-attrib{font-size:11px}
 /* light switch + night skin */
 .lightbtn{flex:0 0 auto;position:relative;display:grid;place-items:center;width:40px;height:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0;font:600 .78rem/1 "Figtree",system-ui,sans-serif;color:var(--ink);box-shadow:var(--sh);cursor:pointer}
 .lightbtn svg{width:22px;height:22px}
@@ -425,10 +450,10 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
 </g></svg></div></div>
   <div class="mtop">
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search projects"><ul class="sugg" id="sugg"></ul></div>
-    <button type="button" class="found" id="colchip" title="Sites you've photographed"><span aria-hidden="true">📸</span> <b id="wfound">0</b>/<span id="wtotal">0</span></button>
+    <button type="button" class="found" id="colchip" title="Sites you've photographed" aria-label="Your photo collection: sites you've photographed"><span aria-hidden="true">📸</span> <b id="wfound">0</b>/<span id="wtotal">0</span></button>
     <button type="button" id="lightbtn" class="lightbtn" aria-label="Day or night"></button>
   </div>
-  <div class="welcome" id="welcome" hidden><b>Welcome to TOP Already?</b><p>Search your BTO or condo to see how far along it is, or drag the map to fly around. Tap any building for its progress and fresh site photos.</p><button type="button" id="welcomeok">Got it</button></div>
+  <div class="welcome" id="welcome" hidden><b>Waiting for your BTO or condo?</b><p>Search for your project to see its estimated timeline, any announced delays and fresh site photos from people nearby. Or drag the map to explore.</p><p class="wsmall"><span aria-hidden="true">📸</span> at the top counts the sites you've photographed.</p><div class="wbtns"><button type="button" id="welcomesearch">Find my project</button><button type="button" id="welcomeok" class="wghost">Explore the map</button></div></div>
   <div class="toast" id="toast" role="status"></div>
   <div class="nearwrap"><div class="nearhead"><p class="nearlabel" id="nearlabel">Near here</p><button type="button" id="locate" aria-label="See what's around me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Around me</button></div><div id="nearby" role="list"></div></div>
 </section>
@@ -436,6 +461,7 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
 <section id="v-watch" class="view" aria-label="Watchlist"><div class="pagewrap">
   <h1>Watchlist <small class="tag" id="wcount" style="font-size:.8rem"></small></h1>
   <p class="lede">The projects you're keeping an eye on. Tap one for the full story.</p>
+  <p class="note" style="margin:-8px 0 14px">Saved on this phone and browser only, with no account needed. Clearing your browser data or switching phones starts a fresh list.</p>
   <div id="list"><div class="empty"><p>Loading projects…</p></div></div>
 </div></section>
 
@@ -443,12 +469,13 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
   <h1><img src="icon-192.png" width="36" height="36" alt="" style="border-radius:10px">Community</h1>
   <p class="lede">Fresh photos from building sites around Singapore, shared by people passing by.</p>
   <div class="snap"><p><b>Passing a site? Collect it!</b>Snap any BTO or condo under construction to add it to your collection and help everyone watching it grow.</p><button type="button" class="add" id="snapbtn">Snap a site</button></div>
-  <div id="reporter"></div>
+  <h2 class="sect">Latest from the sites</h2>
+  <div class="feed" id="feed"><p class="note">Loading photos…</p></div>
   <h2 class="sect">Wanted: fresh photos</h2>
   <p class="note" style="margin:-4px 0 10px">These sites haven't had a photo in a while. Passing by one? Be its reporter.</p>
   <div class="chips wanted" id="wanted"></div>
-  <h2 class="sect">Latest from the sites</h2>
-  <div class="feed" id="feed"><p class="note">Loading photos…</p></div>
+  <h2 class="sect">Your collection</h2>
+  <div id="reporter"></div>
   <h2 class="sect">Worth a look</h2>
   <section id="explore" aria-label="Project shelves"></section>
   <div id="tipslot"></div>
@@ -512,9 +539,9 @@ async function loadFeed(){
     const r=await fetch(`${SB}/rest/v1/photos?select=id,path,taken_at,project_key,storeys&order=taken_at.desc&limit=40`,{headers:H});
     if(!r.ok)throw 0;
     const rows=(await r.json()).map(x=>({...x,p:P.find(p=>p.key===x.project_key)})).filter(x=>x.p);FEED=rows;
-    box.innerHTML=rows.length?rows.map((x,j)=>`<button type="button" class="ph" data-feed="${j}"><img loading="lazy" src="${thumb(x.path)}" alt="${esc(x.p.name)}, ${esc(fmtDay(new Date(x.taken_at)))}"><span><b>${esc(x.p.name.replace(/\s*\(.*?\)/,""))}</b>${esc(ago(new Date(x.taken_at)))}</span></button>`).join(""):
-      `<p class="note" style="grid-column:1/-1">No photos yet. The first one shows up here the moment someone snaps a site.</p>`;
-  }catch(e){box.innerHTML=`<p class="note" style="grid-column:1/-1">Photos couldn't load right now.</p>`}
+    box.innerHTML=rows.length?rows.map((x,j)=>`<button type="button" class="ph" data-feed="${j}"><img loading="lazy" src="${thumb(x.path)}" alt="${esc(x.p.name)}, ${esc(fmtDay(new Date(x.taken_at)))}"><span><b>${esc(x.p.name.replace(/\s*\(.*?\)/,""))}</b>Taken ${esc(fmtDay(new Date(x.taken_at)).replace(/ \d{4}$/,""))} · ${esc(ago(new Date(x.taken_at)))}</span></button>`).join(""):
+      `<div class="empty" style="grid-column:1/-1"><p><b>No site photos yet</b><br>Be the first: next time you pass a BTO or condo under construction, tap Snap a site. Your photo shows up here for everyone.</p></div>`;
+  }catch(e){box.innerHTML=`<p class="note" style="grid-column:1/-1">Photos couldn't load right now. Check your connection and open this tab again.</p>`}
 }
 $("#feed").addEventListener("click",e=>{const b=e.target.closest("[data-feed]");if(b)openLightbox(FEED,+b.dataset.feed,true)});
 
@@ -540,22 +567,27 @@ function snapList(list,note){
 }
 $("#snapbtn").addEventListener("click",()=>{
   SHEETKEY=null;
-  $("#sheetbody").innerHTML=`<div class="site" style="padding:6px 16px 18px"><h2 style="margin:4px 0 2px">Snap a site</h2><p class="note" style="margin:0 0 14px">Choose a photo and we'll work out which project it's of. Photos need to be from the last ${MAXAGE_DAYS} days, taken within ${RADIUS} m of the site.</p>
+  $("#sheetbody").innerHTML=`<div class="site" style="padding:6px 16px 18px"><h2 style="margin:4px 0 2px">Snap a site</h2><p class="note" style="margin:0 0 14px">Choose a photo you took at a BTO or condo site and we'll work out which project it is from the location saved in the photo. It must be from the last ${MAXAGE_DAYS} days and taken within ${RADIUS} m of the site. Once added, it appears for everyone straight away.</p>
     <label class="add" style="display:inline-flex;gap:8px;align-items:center;margin:0 0 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>Choose a photo<input type="file" accept="image/*" id="snapfile" style="position:absolute;width:1px;height:1px;opacity:0"></label>
     <div id="snapmatch" role="status"></div>
     <h3 style="font-size:1.05rem;margin:18px 0 6px">Or pick the project</h3>
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="snapq" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search the project you're at"></div>
-    <ul class="sugg" id="snaplist" style="margin-top:10px"><li><span class="pick" style="cursor:default">Finding sites near you…</span></li></ul>
+    <button type="button" class="ghost" id="snapnear" style="margin-top:10px">Show sites near me</button>
+    <p class="note" style="margin:4px 0 0">Uses your location once to list the closest sites. It isn't saved.</p>
+    <ul class="sugg" id="snaplist" style="margin-top:10px"></ul>
     <button type="button" class="maplink" id="snapmap" style="margin-top:12px">Can't remember the name? Find it on the map</button></div>`;
   $("#snapfile").addEventListener("change",e=>{const f=e.target.files[0];e.target.value="";if(f)matchPhoto(f)});
   $("#snapmap").addEventListener("click",()=>{closeSheet();setTab("map");toast("Fly to where you took it, then tap the building")});
-  $("#sheet").hidden=false;
+  sheetShown(location.pathname);
   const show=()=>{const v=$("#snapq").value;if(v.trim().length>=2){const r=search(v);$("#snaplist").innerHTML=r.length?snapList(r.map(p=>({p,d:null}))):`<li><span class="pick" style="cursor:default">No match. Try the project name.</span></li>`;return true}return false};
   $("#snapq").addEventListener("input",()=>{if(!show())nearDefault()});
   let nearHTML="";
   const nearDefault=()=>{if(nearHTML)$("#snaplist").innerHTML=nearHTML};
-  here().then(pos=>{const n=P.filter(p=>p.ll).map(p=>({p,d:metres(pos,p.ll)})).sort((a,b)=>a.d-b.d).slice(0,5);nearHTML=snapList(n,"Closest to you");if(!$("#snapq")||$("#snapq").value.trim().length<2)nearDefault()})
-   .catch(()=>{const w=tracked.map(k=>P.find(p=>p.key===k)).filter(Boolean).slice(0,5).map(p=>({p,d:null}));nearHTML=w.length?snapList(w,"From your watchlist"):`<li><span class="pick" style="cursor:default">Search for the project you're at.</span></li>`;nearDefault()});
+  const wl=tracked.map(k=>P.find(p=>p.key===k)).filter(Boolean).slice(0,5).map(p=>({p,d:null}));
+  if(wl.length){nearHTML=snapList(wl,"From your watchlist");nearDefault()}
+  $("#snapnear").addEventListener("click",e=>{const b=e.currentTarget;b.textContent="Finding sites near you…";
+    here().then(pos=>{MYPOS=pos;const n=P.filter(p=>p.ll).map(p=>({p,d:metres(pos,p.ll)})).sort((a,b)=>a.d-b.d).slice(0,5);nearHTML=snapList(n,"Closest to you");b.hidden=true;if(!$("#snapq")||$("#snapq").value.trim().length<2)nearDefault()})
+     .catch(()=>{b.textContent="Show sites near me";toast("Location is off. Search for the project instead.")})});
 });
 $("#sheet").addEventListener("click",e=>{const b=e.target.closest("[data-snap]");if(!b)return;openSheet(+b.dataset.snap);setTimeout(()=>{const ph=$("#sheet .photos");if(ph)ph.scrollIntoView({behavior:"smooth",block:"start"})},250)});
 let ME=null,MYPOS=null;
@@ -586,13 +618,18 @@ function stats(p){
   const total=months(L,T);
   return{L,E,T,pct:Math.max(0,Math.min(100,months(L,now)/total*100)),rate:100/total,left:Math.max(0,Math.round(months(now,T))),delay:p.delayed?Math.round(months(E,T)):0};
 }
-function stageFor(p){return p==null?"Not started":p<12?"Piling and foundations":p<70?"Superstructure going up":p<92?"Facade and fit-out":p<100?"Final checks before TOP":"Due for completion"}
+function stageFor(p){return p==null?"Not launched":p<12?"Piling and foundations":p<70?"Structure going up":p<92?"Facade and fit-out":p<100?"Final works":"Estimated date reached"}
+const PCT_WORDS="of estimated timeline elapsed";
+const pctShort=k=>k.pct==null?"Not launched":Math.round(k.pct)+"%";
+const dateLabel=p=>p.kind==="BTO"?"Est. completion":"Expected TOP";
+const srcName=p=>p.kind==="BTO"?"HDB's estimate":"the developer's estimate";
+let DATAINFO={updated:"",checked:{}};
 function verdict(p,k){
-  if(k.pct==null)return{cls:"",t:"Not launched yet",d:`Expected TOP ${fmtYM(k.T)}. Progress starts counting once it launches.`};
-  if(k.pct>=100)return{cls:"ahead",t:"Due now",d:`Completion date of ${fmtYM(k.T)} has arrived.`};
+  if(k.pct==null)return{cls:"",t:"Not launched yet",d:`${dateLabel(p)} ${fmtYM(k.T)}. The timeline starts once it launches.`};
+  if(k.pct>=100)return{cls:"",t:"Estimated date reached",d:`${p.kind==="BTO"?"HDB's estimated completion date":"The developer's expected TOP date"} (${fmtYM(k.T)}) has arrived. We have no confirmation that it is complete or that keys are being handed over. Check with ${p.kind==="BTO"?"HDB":"the developer"}.`};
   if(k.delay>=1){
     const why=p.remark?p.remark.replace(/\s*\d{4}-\d{2}-\d{2}$/,"").replace("Covid19:","Covid-19:").replace(/month(s)?\(s\)/,"months")+".":"";
-    return{cls:"behind",t:`About ${k.delay} months behind the original date`,d:`Launched with completion in ${fmtYM(k.E)}, now ${fmtYM(k.T)}. ${why}`};
+    return{cls:"behind",t:`Delay announced: about ${k.delay} months`,d:`Launched with completion estimated for ${fmtYM(k.E)}, now ${fmtYM(k.T)}. ${why}`};
   }
   return{cls:"ahead",t:"No delay announced",d:p.kind==="BTO"?`HDB still estimates completion in ${fmtYM(k.T)}.`:`Developer's expected TOP is ${fmtYM(k.T)}. Developers don't always announce delays.`};
 }
@@ -610,7 +647,7 @@ function rnd(s){const x=Math.sin(hash(s)%100000+1)*43758.5453;return x-Math.floo
 function building(pct,name){
   pct=pct||0;const ph=phase(),NI=ph==="night",GO=ph==="golden";
   const W=360,H=290,G=246,N=16,fh=11,fx=112,fw=112,dx=40,dy=-20,top=G-N*fh;
-  const built=pct>0?Math.max(1,Math.round(N*Math.min(pct,100)/100)):0,done=pct>=100,yb=G-built*fh;
+  const built=pct>0?Math.max(1,Math.round(N*Math.min(pct,100)/100)):0,done=false,yb=G-built*fh; // dates alone never prove completion
   const F=FACADES[hash(name)%FACADES.length],cf=tint(F[0],ph),cs=tint(F[1],ph),ca=tint(F[2],ph);
   const u="b"+hash(name+ph)%99999;
   const sky=NI?["#151A44","#2C2C66","#5B4A85"]:GO?["#E99A86","#F6C49A","#FCE3BC"]:["#8CCDF0","#C2E5F6","#EEF7EE"];
@@ -734,7 +771,7 @@ function explore(){
     ["Just launched","🌱","Fresh sites, foundations going in.",withK.filter(x=>x.p.launch).sort((a,b)=>b.p.launch.localeCompare(a.p.launch))],
     ["Running late","🐢","HDB has pushed back the date.",withK.filter(x=>x.k.delay>=3&&x.k.pct<100).sort((a,b)=>b.k.delay-a.k.delay)]
   ];
-  const chip=x=>`<button type="button" class="chip" data-i="${x.p.i}">${esc(x.p.name.replace(/ \((\w+ \d{4}) launch\)$/," ($1)"))}<small>${x.k.pct==null?"soon":Math.round(x.k.pct)+"%"}</small></button>`;
+  const chip=x=>`<button type="button" class="chip" data-i="${x.p.i}">${esc(x.p.name.replace(/ \((\w+ \d{4}) launch\)$/," ($1)"))}<small>${x.k.pct==null?"not launched":Math.round(x.k.pct)+"% timeline"}</small></button>`;
   $("#explore").innerHTML=`<p class="lede">${nb} BTOs and ${nc} condos across Singapore. Tap one to fly there.</p>`+
     shelves.filter(s=>s[3].length).map(([t,ic,sub,list])=>`<div class="shelf"><h3><i aria-hidden="true">${ic}</i>${t}</h3><p>${sub}</p><div class="chips">${list.slice(0,6).map(chip).join("")}</div></div>`).join("");
 }
@@ -752,27 +789,28 @@ function card(p){
   let where=p.kind==="BTO"?(p.blks.length?"Blk "+p.blks.slice().sort((a,b)=>parseInt(a)-parseInt(b)||a.localeCompare(b)).join(", ")+", "+p.roads.map(title).join(" / "):"Block numbers not on OneMap yet"):(p.addr||"Address not listed");
   if(where.length>140)where=where.slice(0,137)+"…";
   return `<section class="site" data-key="${esc(p.key)}" id="c-${id}">
-  <div class="scene" data-pct="${k.pct||0}">${building(k.pct,p.name)}</div>
+  <div class="scene" data-pct="${k.pct||0}">${building(k.pct,p.name)}<span class="artnote">Illustration of the estimated timeline</span></div>
   <div class="body">
     <h2>${esc(p.name)}<span class="tag ${p.kind}">${p.kind}</span></h2><p class="addr">${esc(where)}</p>
-    <div class="storey"><span class="num">${k.pct==null?"—":Math.round(k.pct)+"%"}</span><span>of the wait to keys is over</span></div>
+    <div class="storey"><span class="num">${k.pct==null?"—":Math.round(k.pct)+"%"}</span><span>${k.pct==null?"timeline starts at launch":PCT_WORDS}</span></div>
     <div class="bar"><i style="width:${k.pct||0}%"></i></div>
+    <p class="explain">Time since launch, as a share of the time to ${srcName(p)} of completion. It doesn't measure work on site.</p>
     <div class="built" data-built="${esc(p.key)}">${builtHTML(p)}</div>
     <div class="verdict ${v.cls}"><b>${esc(v.t)}</b>${esc(v.d)}</div>
     <div class="facts">
-      <div>Pace<b>${k.rate?k.rate.toFixed(1)+"% a month":"—"}</b></div>
-      <div>Time left<b>${k.left?k.left+" months":"—"}</b></div>
       <div>Launched<b>${fmtYM(k.L)}</b></div>
-      <div>${p.kind==="BTO"?"Completion":"Expected TOP"}<b>${fmtYM(k.T)}</b></div>
-      <div>Likely stage<b>${stageFor(k.pct)}</b></div>
+      <div>${dateLabel(p)}<b>${fmtYM(k.T)}</b></div>
+      <div>Until that date<b>${k.pct==null?"—":k.pct>=100?"Date passed":k.left?"~"+k.left+" months":"Under a month"}</b></div>
+      <div>Typical stage by now<b>${stageFor(k.pct)}</b><small>General guide, not verified</small></div>
     </div>
     <button type="button" class="add sharebtn" data-share="${esc(p.key)}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Share progress card</button>
-    <p class="note" style="margin-top:14px">This is a time-based estimate: how much of the time from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"} has passed. It doesn't measure the work on site, so check recent site photos below for the real picture.</p>
+    ${sourcesHTML(p)}
     <div class="photos">
       <h3>Site photos</h3>
-      <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes. <a href="privacy.html">Photo rules</a></p>
+      <p class="note">Shared by people within 800 m of the site in the last 14 days. Not verified by ${p.kind==="BTO"?"HDB":"the developer"}.</p>
       <div class="strip" aria-label="Photo timeline, newest first"></div>
-      ${p.ll?`<label class="add">Add a site photo<input type="file" accept="image/*" data-up="${esc(p.key)}"></label>`:`<p class="note">Photo uploads open once this site is on the map.</p>`}
+      ${p.ll?`<label class="add">Add a site photo<input type="file" accept="image/*" data-up="${esc(p.key)}"></label>
+      <p class="note howto">You need to be within 800 m of the site, using a photo from the last 14 days. We read the location saved in the photo, or ask for yours if there isn't one. Your exact location isn't stored. Photos appear for everyone straight away and can be reported. Shoot the building, not faces or homes. <a href="privacy.html">Photo rules</a></p>`:`<p class="note">Photo uploads open once this site is on the map.</p>`}
       <p class="status" role="status"></p>
     </div>
     <div class="row">
@@ -783,14 +821,25 @@ function card(p){
     ${tipHTML(false)}
   </div></section>`;
 }
+function fmtCheck(t){if(!t)return"";const m=String(t).match(/(\d{4})-(\d\d)-(\d\d)(?: (\d\d):(\d\d))?/);if(!m)return esc(t);const d=new Date(+m[1],m[2]-1,+m[3],+(m[4]||0),+(m[5]||0));return esc(fmtDay(d)+(m[4]?", "+d.toLocaleTimeString("en-SG",{hour:"numeric",minute:"2-digit"}):""))}
+function sourcesHTML(p){
+  const ck=DATAINFO.checked[p.kind==="BTO"?"bto":"condo"],stale=ck&&Date.now()-new Date(ck.replace(" ","T")+":00+08:00")>3*864e5;
+  return `<details class="sources"><summary>Where these numbers come from</summary><dl>
+    <dt>Estimated dates</dt><dd>${p.kind==="BTO"?"HDB's estimated completion and any announced delays, as compiled by BTO HQ.":"The developer's expected TOP, from its EdgeProp new-launch listing."}</dd>
+    <dt>${ck?"Last successful check":"Last data refresh"}</dt><dd>${fmtCheck(ck||DATAINFO.updated)||"Unknown"}${stale?" (the source couldn't be read since then, so this may be out of date)":""}. We check daily; the source doesn't say when it last changed these dates.</dd>
+    <dt>Timeline %</dt><dd>Worked out by TOP Already? from the launch date and estimated date. Not an official figure.</dd>
+    <dt>Verified milestones</dt><dd>None published for this project.</dd>
+    <dt>Site photos</dt><dd>Shared by people near the site. Not checked by ${p.kind==="BTO"?"HDB":"the developer"}.</dd>
+  </dl><p><a href="privacy.html">How the numbers work</a></p></details>`;
+}
 function render(){
   const items=tracked.map(key=>P.find(p=>p.key===key)).filter(Boolean);
   $("#wcount").textContent=items.length?`${items.length} project${items.length>1?"s":""}`:"";
   $("#list").innerHTML=items.length?items.map(p=>{const k=stats(p),v=verdict(p,k);return `<button type="button" class="wrow" data-open="${p.i}">
     <span class="wtop"><b>${esc(p.name)}</b><span class="tag ${p.kind}">${p.kind}</span></span>
-    <span class="wpct fredoka">${k.pct==null?"Soon":Math.round(k.pct)+"%"}</span>
+    <span class="wpct fredoka">${pctShort(k)}${k.pct==null?"":`<small>${PCT_WORDS}</small>`}</span>
     <span class="pbar"><i style="width:${k.pct||0}%"></i></span>
-    <span class="wsub ${v.cls}">${esc(v.t)}. ${p.kind==="BTO"?"Completion":"TOP"} ${fmtYM(k.T)}</span></button>`}).join(""):
+    <span class="wsub ${v.cls}">${esc(v.t)} · ${dateLabel(p)} ${fmtYM(k.T)}</span></button>`}).join(""):
     `<div class="empty"><p><b class="fredoka" style="font-size:1.15rem;color:var(--ink)">Nothing here yet</b><br>Fly around the map and tap a building, then press Watch this. It'll live here so you can check on it anytime.</p><button type="button" class="add" data-tab="map">Go to the map</button></div>`;
 }
 
@@ -851,7 +900,7 @@ function builtHTML(p){
     const tot=s.total&&s.total>=s.storeys?s.total:null,list=(cache[p.key]||[]).filter(x=>x.storeys!=null);
     let trend="";
     if(list.length>1){const a=list[list.length-1],b=list[0],dd=b.storeys-a.storeys;if(dd>0)trend=`<span class="up">+${dd} since ${esc(fmtDay(new Date(a.taken_at)).replace(/ \d{4}$/,""))}</span>`}
-    return `<div class="builtrow"><span class="bico" aria-hidden="true">🏗️</span><div><b>Built so far: ~${s.storeys}${tot?` of ${tot}`:""} storeys</b><span>From a site photo ${esc(ago(s.at))}${trend?" · ":""}${trend}</span>${tot?`<span class="bbar"><i style="width:${Math.min(100,s.storeys/tot*100)}%"></i></span>`:""}</div></div>`;
+    return `<div class="builtrow"><span class="bico" aria-hidden="true">🏗️</span><div><b>Seen in photos: ~${s.storeys}${tot?` of ${tot}`:""} storeys up</b><span>Community observation from a site photo ${esc(ago(s.at))}${trend?" · ":""}${trend}</span>${tot?`<span class="bbar"><i style="width:${Math.min(100,s.storeys/tot*100)}%"></i></span>`:""}</div></div>`;
   }
   return "";
   return `<div class="builtrow empty"><span class="bico" aria-hidden="true">📸</span><div><b>How far is it really built?</b><span>No storey count yet. Add a site photo and tell us how many floors are up.</span></div></div>`;
@@ -892,7 +941,7 @@ function renderReporter(){
   const mine=Object.entries(c).map(([k,v])=>({p:P.find(q=>q.key===k),v})).filter(x=>x.p).sort((a,b)=>new Date(b.v.at)-new Date(a.v.at));
   const ref=MYPOS||(MAP?centre():null);
   const next=P.filter(p=>p.ll&&!c[p.key]&&stats(p).pct!=null&&stats(p).pct<100).map(p=>({p,d:ref?metres(ref,p.ll):0})).sort((a,b)=>a.d-b.d).slice(0,mine.length?3:6);
-  box.innerHTML=`<div class="repcard"><div class="rephead"><b>Your collection</b><span>${r.n} of ${total} sites</span></div>
+  box.innerHTML=`<div class="repcard"><div class="rephead"><b>${r.n} of ${total} sites collected</b><span>Saved on this device</span></div>
    <span class="bbar colbar"><i style="width:${Math.max(r.n?3:0,r.n/total*100)}%"></i></span>
    <div class="colgrid">${mine.map(({p,v})=>`<button type="button" class="coltile got" data-i="${p.i}"><img loading="lazy" src="${thumb(v.path)}" alt=""><span>${esc(p.name.replace(/\s*\(.*?\)/,""))}</span><i>${v.n>1?"×"+v.n:"✓"}</i></button>`).join("")}${next.map(({p,d})=>`<button type="button" class="coltile" data-i="${p.i}"><b>?</b><span>${esc(p.name.replace(/\s*\(.*?\)/,""))}</span><small>${ref?distTxt(d)+" away":"Not yet"}</small></button>`).join("")}</div>
    <p class="note" style="margin:10px 0 8px">${r.n?"Pass by any BTO or condo site, snap it, and it's added to your collection.":"Pass by any BTO or condo site and snap it to start your collection. Every site you photograph is yours to keep."}</p>
@@ -971,7 +1020,11 @@ async function uploadFile(key,file){
     if(ex.date&&Date.now()-ex.date>MAXAGE_DAYS*864e5)return say(`This photo is from ${fmtDay(ex.date)}. Only photos from the last ${MAXAGE_DAYS} days can be added, so the timeline stays current.`,"err");
     let spot=ex.gps;
     if(!spot){
-      try{spot=await here()}catch(e){return say("We need your location to confirm you're at the site. Allow location for this page and try again.","err")}
+      say("This photo has no location saved. To add it, confirm you're at the site now.");
+      const ok=await new Promise(res=>{const b=document.createElement("button");b.type="button";b.className="ghost";b.textContent="Use my current location";b.style.marginTop="8px";const n=document.createElement("button");n.type="button";n.className="linkbtn";n.textContent="Cancel";n.style.marginLeft="10px";st.append(document.createElement("br"),b,n);b.onclick=()=>res(true);n.onclick=()=>res(false)});
+      if(!ok)return say("No problem. Photos taken with your camera's location on can be added anytime.");
+      say("Checking your location…");
+      try{spot=await here()}catch(e){return say("Location wasn't allowed, so we can't confirm you're at the site. Turn on location for this site in your browser settings, or take a new photo with your camera's location on.","err")}
     }
     const d=metres(spot,p.ll);
     if(d>RADIUS)return say(`You're about ${d>=1000?(d/1000).toFixed(1)+" km":d+" m"} from ${p.name}. Photos need to be taken within ${RADIUS} m of the site.`,"err");
@@ -1026,7 +1079,6 @@ async function makeCard(p){
   const bg=c.createLinearGradient(0,0,0,Hh);bg.addColorStop(0,"#BFE6FB");bg.addColorStop(.55,"#E3F6EA");bg.addColorStop(1,"#E3F6EA");c.fillStyle=bg;c.fillRect(0,0,W,Hh);
   // header
   c.fillStyle=ink;c.font="500 64px Fraunces, Georgia, serif";c.textBaseline="alphabetic";c.fillText("TOP Already?",150,150);
-  const LOGO='<svg viewBox="0 0 512 512"><clipPath id="lgc"><rect width="512" height="512" rx="112"/></clipPath><g clip-path="url(#lgc)"><defs><linearGradient id="lgsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#241E5C"/><stop offset=".38" stop-color="#6A3F9A"/><stop offset=".62" stop-color="#E56A9B"/><stop offset=".76" stop-color="#FFA98A"/></linearGradient><linearGradient id="lgsun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE98C"/><stop offset=".55" stop-color="#FFB16E"/><stop offset="1" stop-color="#FF6F8E"/></linearGradient><linearGradient id="lgsea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B2A7A"/><stop offset="1" stop-color="#1A1747"/></linearGradient><linearGradient id="lgfront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF4EA"/><stop offset="1" stop-color="#F6D3E0"/></linearGradient><linearGradient id="lgside" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B99BE0"/><stop offset="1" stop-color="#8E6CC7"/></linearGradient><mask id="lgcut"><rect width="512" height="512" fill="#fff"/><g fill="#000"><rect y="300" width="512" height="5"/><rect y="320" width="512" height="7"/><rect y="342" width="512" height="9"/><rect y="366" width="512" height="11"/></g></mask></defs><rect width="512" height="512" fill="url(#lgsky)"/><g fill="#FFF3D6"><circle cx="70" cy="70" r="2.5"/><circle cx="132" cy="44" r="1.8"/><circle cx="404" cy="58" r="2.2"/><circle cx="458" cy="118" r="1.6"/><circle cx="56" cy="160" r="1.6"/><circle cx="300" cy="34" r="1.6"/></g><circle cx="256" cy="300" r="132" fill="url(#lgsun)" mask="url(#lgcut)"/><g fill="#4A2F86" opacity=".9"><rect x="40" y="300" width="44" height="84"/><rect x="88" y="262" width="34" height="122"/><rect x="380" y="282" width="40" height="102"/><rect x="424" y="312" width="52" height="72"/></g><path d="M302 146 L340 128 V366 L302 384Z" fill="url(#lgside)"/><rect x="198" y="146" width="104" height="238" fill="url(#lgfront)"/><path d="M198 146 L236 128 H340 L302 146Z" fill="#FFFFFF"/><g><rect x="214" y="166" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="239" y="166" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="264" y="166" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="214" y="191" width="17" height="12" rx="3" fill="#FFD36E"/><rect x="239" y="191" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="264" y="191" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="214" y="216" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="239" y="216" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="264" y="216" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="214" y="241" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="239" y="241" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="264" y="241" width="17" height="12" rx="3" fill="#FFD36E"/><rect x="214" y="266" width="17" height="12" rx="3" fill="#FFD36E"/><rect x="239" y="266" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="264" y="266" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="214" y="291" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="239" y="291" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="264" y="291" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="214" y="316" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="239" y="316" width="17" height="12" rx="3" fill="#FFD36E"/><rect x="264" y="316" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="214" y="341" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="239" y="341" width="17" height="12" rx="3" fill="#5A3E9E"/><rect x="264" y="341" width="17" height="12" rx="3" fill="#5A3E9E"/></g><g stroke="#FFE3F0" stroke-width="4" stroke-linecap="round" opacity=".55"><path d="M312 172 L330 163M312 222 L330 213M312 272 L330 263M312 322 L330 313"/></g><g stroke="#FFD36E" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M372 384 V86" stroke-width="10"/><path d="M156 92 H420" stroke-width="10"/><path d="M372 58 L180 92 M372 58 L420 92" stroke-width="4"/><path d="M234 92 V116" stroke-width="4"/></g><rect x="216" y="116" width="36" height="9" rx="4.5" fill="#FF8FB3"/><rect x="398" y="94" width="26" height="16" rx="4" fill="#FFD36E"/><circle cx="372" cy="52" r="7" fill="#FF5E7E"/><rect y="384" width="512" height="128" fill="url(#lgsea)"/><g stroke-linecap="round"><path d="M196 404 H306" stroke="#F6D3E0" stroke-width="6" opacity=".55"/><path d="M212 426 H292" stroke="#F6D3E0" stroke-width="5" opacity=".35"/><path d="M226 446 H278" stroke="#F6D3E0" stroke-width="4" opacity=".22"/><path d="M126 410 H170" stroke="#FFB16E" stroke-width="4" opacity=".55"/><path d="M342 412 H400" stroke="#FFB16E" stroke-width="4" opacity=".5"/><path d="M90 440 H130" stroke="#FF8FB3" stroke-width="3" opacity=".45"/><path d="M380 446 H430" stroke="#FF8FB3" stroke-width="3" opacity=".4"/><path d="M366 404 H378" stroke="#FFD36E" stroke-width="5" opacity=".6"/></g></g></svg>';
   try{const logo=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src="icon-192.png"});c.save();rrect(c,52,82,88,88,20);c.clip();c.drawImage(logo,52,82,88,88);c.restore()}catch(e){}
   // card panel
   const px=60,py=210,pw=W-120,ph=Hh-210-170;
@@ -1047,7 +1099,7 @@ async function makeCard(p){
   // big percent
   c.font="500 200px Fraunces, Georgia, serif";const pct=k.pct==null?"Soon":Math.round(k.pct)+"%";c.fillText(pct,px+56,y);
   const pw2=c.measureText(pct).width;c.font="600 40px Figtree, sans-serif";c.fillStyle=muted;
-  if(k.pct!=null){c.fillText("of the wait",px+80+pw2,y-80);c.fillText("is over",px+80+pw2,y-30)}
+  if(k.pct!=null){c.fillText("of estimated",px+80+pw2,y-80);c.fillText("timeline elapsed",px+80+pw2,y-30)}
   y+=50;
   // bar
   const bx=px+60,bw=pw-120,bh=64;c.fillStyle="#F3EEE6";rrect(c,bx,y,bw,bh,32);c.fill();
@@ -1058,7 +1110,7 @@ async function makeCard(p){
   c.font="500 54px Fraunces, Georgia, serif";c.fillStyle=v.cls==="behind"?"#D9483B":v.cls==="ahead"?"#2E9257":ink;
   for(const ln of wrap(c,v.t,pw-120).slice(0,2)){c.fillText(ln,px+60,y);y+=64}
   c.font="600 40px Figtree, sans-serif";c.fillStyle=muted;
-  for(const ln of [(p.kind==="BTO"?"Completion ":"Expected TOP ")+fmtYM(k.T),k.left?`About ${k.left} months to go`:""].filter(Boolean)){c.fillText(ln,px+60,y+6);y+=52}
+  for(const ln of [dateLabel(p)+" "+fmtYM(k.T)+(k.pct!=null&&k.pct<100&&k.left?`, about ${k.left} months away`:""),"Time-based estimate, not measured progress"].filter(Boolean)){c.fillText(ln,px+60,y+6);y+=52}
   // footer
   c.fillStyle=ink;c.font="600 38px Figtree, sans-serif";c.textAlign="center";
   c.fillText("Track yours at "+location.host+location.pathname.replace(/\/$/,""),W/2,Hh-70);c.textAlign="left";
@@ -1084,7 +1136,7 @@ async function openShare(key,btn){
 }
 $("#sb-share").addEventListener("click",async()=>{
   const d=$("#sb-share").dataset;track("share",d.key);
-  try{await navigator.share({files:[shareFile],text:`${d.name}: see how far along it is on TOP Already? ${d.url}`})}catch(e){}
+  try{await navigator.share({files:[shareFile],text:`${d.name}: see its estimated timeline and site photos on TOP Already? ${d.url}`})}catch(e){}
 });
 $("#sb-close").addEventListener("click",()=>$("#sharebox").close());
 $("#sb-save").addEventListener("click",()=>track("share",$("#sb-share").dataset.key));
@@ -1094,7 +1146,7 @@ $("#sharebox").addEventListener("click",e=>{if(e.target.id==="sharebox")$("#shar
 
 const FOUND_KEY="storeys.found.v1";
 function bldgSvg(p){
-  const k=stats(p),pct=k.pct||0,N=7,fh=7,fx=12,fw=24,dx=12,dy=-6,G=64,built=Math.max(1,Math.round(N*Math.min(pct,100)/100)),done=pct>=100,yb=G-built*fh;
+  const k=stats(p),pct=k.pct||0,N=7,fh=7,fx=12,fw=24,dx=12,dy=-6,G=64,built=Math.max(1,Math.round(N*Math.min(pct,100)/100)),done=false,yb=G-built*fh;
   const F=FACADES[hash(p.name)%FACADES.length];
   let g=`<ellipse cx="30" cy="65" rx="22" ry="4.5" fill="rgba(43,36,32,.22)"/>`;
   g+=`<g fill="none" stroke="#3A2C26" stroke-opacity=".28" stroke-dasharray="2 2"><rect x="${fx}" y="${G-N*fh}" width="${fw}" height="${N*fh}"/><path d="M${fx+fw} ${G-N*fh}l${dx} ${dy}V${G+dy}"/></g>`;
@@ -1201,12 +1253,26 @@ function badge(){const n=tracked.length;$("#tbadge").hidden=!n;$("#tbadge").text
 
 /* ---------- Project sheet ---------- */
 let SHEETKEY=null;
+/* the phone's back button closes the panel instead of leaving the app */
+let SHEETHIST=false,LASTFOCUS=null,IGNOREPOP=false,PENDURL=null;
+function sheetShown(url){
+  if($("#sheet").hidden)LASTFOCUS=document.activeElement;
+  try{if(IGNOREPOP)PENDURL=url;else if(SHEETHIST)history.replaceState({sheet:1},"",url);else{history.pushState({sheet:1},"",url);SHEETHIST=true}}catch(e){}
+  $("#sheet").hidden=false;$("#sheet .panel").scrollTop=0;
+  const x=$("#sheet .xbtn");if(x)x.focus({preventScroll:true});
+}
 function openSheet(i){
   const p=P[i];if(!p)return;SHEETKEY=p.key;
-  hideWelcome();track("open",p.key);try{history.replaceState(null,"","?p="+slug(p.name))}catch(e){}
-  $("#sheetbody").innerHTML=card(p);$("#sheet").hidden=false;$("#sheet .panel").scrollTop=0;loadPhotos(p.key);
+  hideWelcome();track("open",p.key);
+  $("#sheetbody").innerHTML=card(p);sheetShown("?p="+slug(p.name));loadPhotos(p.key);
 }
-function closeSheet(){$("#sheet").hidden=true;$("#sheetbody").innerHTML="";SHEETKEY=null;try{history.replaceState(null,"",location.pathname)}catch(e){}}
+function closeSheet(fromBack){
+  if($("#sheet").hidden&&!SHEETHIST)return;
+  $("#sheet").hidden=true;$("#sheetbody").innerHTML="";SHEETKEY=null;
+  if(SHEETHIST){SHEETHIST=false;if(fromBack!==true){IGNOREPOP=true;try{history.back()}catch(e){IGNOREPOP=false}}}
+  if(LASTFOCUS&&document.contains(LASTFOCUS)&&LASTFOCUS.focus)LASTFOCUS.focus({preventScroll:true});LASTFOCUS=null;
+}
+addEventListener("popstate",()=>{if(IGNOREPOP){IGNOREPOP=false;if(PENDURL&&!$("#sheet").hidden){try{history.pushState({sheet:1},"",PENDURL);SHEETHIST=true}catch(e){}}PENDURL=null;return}if(!$("#lb").hidden)closeLb();if(!$("#sheet").hidden||SHEETHIST)closeSheet(true)});
 $("#sheet").addEventListener("click",e=>{
   if(e.target.closest("[data-close]"))return closeSheet();
   const f=e.target.closest("[data-fly]");if(f){closeSheet();setTab("map");flyTo(+f.dataset.fly);return}
@@ -1236,7 +1302,7 @@ function applyLight(force){
   if(changed||force)document.querySelectorAll("#sheet .scene:not(.photo)").forEach(sc=>{const p=P.find(q=>q.key===SHEETKEY);if(p)sc.innerHTML=building(stats(p).pct,p.name)});
 }
 function hideWelcome(){const w=$("#welcome");if(!w||w.hidden)return;w.hidden=true;try{localStorage.setItem("storeys.welcomed","1")}catch(e){}}
-$("#welcomeok").addEventListener("click",hideWelcome);$("#q").addEventListener("focus",hideWelcome);
+$("#welcomeok").addEventListener("click",hideWelcome);$("#welcomesearch").addEventListener("click",()=>{hideWelcome();$("#q").focus()});$("#q").addEventListener("focus",hideWelcome);
 $("#lightbtn").addEventListener("click",()=>{
   LIGHT=LIGHT==="auto"?(autoPhase()==="night"?"day":"night"):LIGHT==="night"?"day":"auto";
   try{localStorage.setItem("storeys.light",LIGHT)}catch(e){}
@@ -1251,14 +1317,15 @@ function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show")
 function distTxt(m){return m<1000?Math.round(m/10)*10+" m":(m/1000).toFixed(m<10000?1:0)+" km"}
 function centre(){const c=MAP.getCenter();return [c.lat,c.lng]}
 function initMap(){
-  if(!window.maplibregl){$("#map").innerHTML=`<div class="nomap"><p>The map couldn't load. Check your connection, or browse projects in Discover.</p></div>`;return}
+  if(!window.maplibregl){$("#map").innerHTML=`<div class="nomap"><p>The map couldn't load. Check your connection. You can still search above, or browse projects in the Community tab.</p></div>`;return}
   try{
-    const startP=tracked.map(k=>P.find(p=>p.key===k)).find(p=>p&&p.ll);
-    MAP=new maplibregl.Map({container:"map",style:worldStyle(phase()),center:startP?[startP.ll[1],startP.ll[0]-0.002]:[103.8198,1.3521],zoom:startP?16.2:13.2,pitch:48,bearing:-12,minZoom:11,maxZoom:18.5,maxPitch:60,dragRotate:false,attributionControl:false,maxBounds:[[103.5,1.12],[104.15,1.52]]});
-  }catch(e){$("#map").innerHTML=`<div class="nomap"><p>Your browser can't show the 3D map. Try Safari or Chrome on a newer phone, or browse projects in Discover.</p></div>`;return}
+    const startP=tracked.map(k=>P.find(p=>p.key===k)).find(p=>p&&p.ll)||busiest();
+    MAP=new maplibregl.Map({container:"map",style:worldStyle(phase()),center:startP?[startP.ll[1],startP.ll[0]-0.002]:[103.8198,1.3521],zoom:startP?(tracked.length?16.2:15.2):13.2,pitch:48,bearing:-12,minZoom:11,maxZoom:18.5,maxPitch:60,dragRotate:false,attributionControl:false,maxBounds:[[103.5,1.12],[104.15,1.52]]});
+  }catch(e){$("#map").innerHTML=`<div class="nomap"><p>Your browser can't show the 3D map. Try Safari or Chrome on a newer phone. You can still search above, or browse projects in the Watchlist and Community tabs.</p></div>`;return}
   MAP.touchZoomRotate.disableRotation();
   MAP.addControl(new maplibregl.AttributionControl({compact:true}),"bottom-right");
   MAP.once("idle",()=>{const a=document.querySelector("#map .maplibregl-ctrl-attrib");if(a)a.classList.remove("maplibregl-compact-show")});
+  setTimeout(()=>{if(MAP&&!MAP.loaded())toast("The map is slow to load. Your connection may be patchy.")},12000);
   MAP.on("styleimagemissing",e=>{const im=poiIcon(e.id);if(im&&!MAP.hasImage(e.id))MAP.addImage(e.id,im,{pixelRatio:2})});
   const here=P.filter(p=>p.ll);$("#wtotal").textContent=here.length;
   MARKS=here.map(p=>{const el=document.createElement("div");el.className="bldg"+(found.has(p.key)?" seen":"");el.innerHTML=`<div class="inner">${bldgSvg(p)}</div>`;el.setAttribute("role","button");el.setAttribute("aria-label",p.name);
@@ -1284,13 +1351,15 @@ function discover(){
   if(!MAP||MAP.getZoom()<14.5)return;const c=centre();
   for(const mk of MARKS){if(found.has(mk.p.key))continue;if(metres(c,mk.p.ll)<160){found.add(mk.p.key);store(FOUND_KEY,[...found]);mk.el.classList.add("seen");updFound();toast(isCollected(mk.p.key)?"Back at "+mk.p.name.replace(/\s*\(.*?\)/,""):"Spotted "+mk.p.name.replace(/\s*\(.*?\)/,"")+"! Snap it to collect 📸")}}
 }
+function busiest(){ // project with the most other projects within 2.5 km, so first-timers land among buildings
+  let best=null,bn=-1;for(const p of P){if(!p.ll)continue;const n=P.filter(q=>q.ll&&metres(p.ll,q.ll)<2500).length;if(n>bn){bn=n;best=p}}return best}
 function nearest(n){const c=centre();return MARKS.map(m=>({p:m.p,d:metres(c,m.p.ll)})).sort((a,b)=>a.d-b.d).slice(0,n)}
 function nearby(){
-  if(!MAP)return;$("#nearlabel").textContent=MYPOS&&metres(centre(),MYPOS)<800?"Around you":"Near here";const list=nearest(8),sig=list.map(x=>x.p.i).join(",");
+  if(!MAP)return;const mine=MYPOS&&metres(centre(),MYPOS)<800;$("#nearlabel").textContent=mine?"Around you":"Near the map centre";const list=(mine?MARKS.map(m=>({p:m.p,d:metres(MYPOS,m.p.ll)})).sort((a,b)=>a.d-b.d).slice(0,8):nearest(8)),sig=list.map(x=>x.p.i).join(",");
   const html=list.map((x,j)=>{const k=stats(x.p);const at=x.d<160;return `<button type="button" class="ncard${at?" here":""}" role="listitem" data-near="${x.p.i}">
-    <b>${esc(x.p.name)}</b><span class="meta"><span>${x.p.kind}, ${at?"right here":distTxt(x.d)+" away"}</span><span>${k.pct==null?"soon":Math.round(k.pct)+"%"}</span></span>
+    <b>${esc(x.p.name)}</b><span class="meta"><span>${x.p.kind}, ${at?(mine?"you're here":"at map centre"):distTxt(x.d)+(mine?" from you":" from map centre")}</span><span>${k.pct==null?"Not launched":Math.round(k.pct)+"% of timeline"}</span></span>
     <span class="pbar"><i style="width:${k.pct||0}%"></i></span>${at?`<span class="go">See details</span>`:`<span class="go">Fly there</span>`}</button>`}).join("");
-  const box=$("#nearby");box.innerHTML=html;if(sig!==LASTNEAR){box.scrollLeft=0;LASTNEAR=sig}
+  const box=$("#nearby");box.innerHTML=html;const nw=document.querySelector(".nearwrap");if(nw)document.documentElement.style.setProperty("--nearh",(nw.offsetHeight+16)+"px");if(sig!==LASTNEAR){box.scrollLeft=0;LASTNEAR=sig}
 }
 $("#nearby").addEventListener("click",e=>{const b=e.target.closest("[data-near]");if(!b)return;const i=+b.dataset.near;if(b.classList.contains("here"))openSheet(i);else flyTo(i)});
 function edges(){
@@ -1305,16 +1374,16 @@ function edges(){
   }
   out.sort((a,b)=>a.y-b.y);for(let i=1;i<out.length;i++)for(let j=0;j<i;j++){const a=out[j],b=out[i];if(Math.abs(a.x-b.x)<110&&b.y-a.y<36)b.y=a.y+36}
   for(const o of out){o.y=Math.min(o.y,H-bot);o.x=Math.max(pad,Math.min(W-pad,o.x))}
-  box.innerHTML=out.map(o=>`<button type="button" class="edge" style="left:${o.x.toFixed(0)}px;top:${o.y.toFixed(0)}px" data-near="${o.p.i}" aria-label="${esc(o.p.name)}, ${distTxt(o.d)} away"><i><svg viewBox="0 0 12 12" style="transform:rotate(${o.a.toFixed(0)}deg)"><path d="M2 6h8M7 3l3 3-3 3" fill="none" stroke="#3A2C26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>${distTxt(o.d)}</button>`).join("");
+  box.innerHTML=out.map(o=>`<button type="button" class="edge" style="left:${o.x.toFixed(0)}px;top:${o.y.toFixed(0)}px" data-near="${o.p.i}" aria-label="${esc(o.p.name)}, ${distTxt(o.d)} from map centre" title="${distTxt(o.d)} from map centre"><i><svg viewBox="0 0 12 12" style="transform:rotate(${o.a.toFixed(0)}deg)"><path d="M2 6h8M7 3l3 3-3 3" fill="none" stroke="#3A2C26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>${distTxt(o.d)}</button>`).join("");
 }
 $("#edges").addEventListener("click",e=>{const b=e.target.closest("[data-near]");if(b)flyTo(+b.dataset.near)});
 function flyTo(i,open){
   const p=P[i];if(!MAP||!p||!p.ll)return open&&openSheet(i);
-  MAP.flyTo({center:[p.ll[1],p.ll[0]],zoom:Math.max(16.2,MAP.getZoom()),pitch:50,speed:1.1,curve:1.5,essential:true});
+  MAP.flyTo({center:[p.ll[1],p.ll[0]],zoom:Math.max(16.2,MAP.getZoom()),pitch:50,speed:1.1,curve:1.5,essential:false});
   if(open)MAP.once("moveend",()=>openSheet(i));
 }
 $("#locate").addEventListener("click",async()=>{
-  try{const pos=await here();if(!(pos[0]>1.12&&pos[0]<1.52&&pos[1]>103.5&&pos[1]<104.15))return toast("You seem to be outside Singapore");MYPOS=pos;showMe(pos);MAP&&MAP.flyTo({center:[pos[1],pos[0]],zoom:16.4,speed:1.2})}
+  try{const pos=await here();if(!(pos[0]>1.12&&pos[0]<1.52&&pos[1]>103.5&&pos[1]<104.15))return toast("You seem to be outside Singapore");MYPOS=pos;showMe(pos);MAP&&MAP.flyTo({center:[pos[1],pos[0]],zoom:16.4,speed:1.2,essential:false})}
   catch(e){toast("Allow location to fly to where you are")}
 });
 
@@ -1330,15 +1399,15 @@ sug.addEventListener("click",e=>{const b=e.target.closest("[data-i]");if(b)choos
 
 /* ---------- Load data ---------- */
 fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
-  $("#upd").textContent=D.updated;
+  DATAINFO={updated:D.updated||"",checked:D.checked||{}};$("#upd").textContent=D.updated;
   D.bto.forEach(r=>P.push({kind:"BTO",name:r[0],launch:r[2],ecd:r[3],delayed:r[4],remark:r[5],roads:r[6]?r[6].split("|"):[],blks:r[7]?r[7].split(" "):[],postals:r[8]?r[8].split(" "):[],ll:r[9]||null,addr:""}));
   D.condo.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3],ll:r[4]||null}));
   P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch;p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
   render();explore();badge();initMap();applyLight(false);loadFeed();loadStatus();$("#tipslot").innerHTML=tipHTML(true);
   try{if(!sessionStorage.getItem("storeys.v")){sessionStorage.setItem("storeys.v","1");track("visit")}}catch(e){track("visit")}
   const want=new URLSearchParams(location.search).get("p"),wp=want&&P.find(q=>slug(q.name)===want);
-  if(wp){track("link",wp.key);setTab("map");if(wp.ll&&MAP)flyTo(wp.i,true);else openSheet(wp.i)}
+  if(wp){try{history.replaceState(null,"",location.pathname)}catch(e){}track("link",wp.key);setTab("map");if(wp.ll&&MAP)flyTo(wp.i,true);else openSheet(wp.i)}
   let seen=false;try{seen=!!localStorage.getItem("storeys.welcomed")}catch(e){}
   if(!seen&&!wp)$("#welcome").hidden=false;
-}).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
+}).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the project data. Check your connection and refresh the page.</p></div>`;toast("Couldn't load project data. Refresh to try again.")});
 </script></body></html>
