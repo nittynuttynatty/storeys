@@ -4,9 +4,9 @@ Runs in the publish workflow; the pages are not committed."""
 import json, os, re, html, datetime
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
-APP = "Storeys"
+APP = "TOP Already?"
 cname = os.path.join(ROOT, "CNAME")
-SITE = ("https://" + open(cname).read().strip() + "/") if os.path.exists(cname) else "https://nittynuttynatty.github.io/storeys/"
+SITE = ("https://" + open(cname).read().strip() + "/") if os.path.exists(cname) else "https://topalready.github.io/"
 
 def slug(s):
     return re.sub(r"^-|-$", "", re.sub(r"[^a-z0-9]+", "-", s.lower()))
