@@ -127,8 +127,8 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 .chip.on{background:var(--crane);color:#3A2C26}
 #bigmap{height:min(62vh,440px);border:3px solid var(--edge);border-radius:22px;box-shadow:0 5px 0 var(--edge);overflow:hidden;background:var(--tile);z-index:0}
 #bigmap .leaflet-tile-pane{filter:saturate(1.15) sepia(.12) contrast(.97)}
-.pin{width:30px;height:36px}
-.pin svg{display:block;filter:drop-shadow(0 2px 0 rgba(58,44,38,.45))}
+.pin{width:18px;height:24px}
+.pin svg{display:block;filter:drop-shadow(0 1px 0 rgba(58,44,38,.35))}
 .leaflet-popup-content-wrapper{border:3px solid var(--edge);border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--edge)}
 .leaflet-popup-tip{background:var(--card);border:3px solid var(--edge)}
 .leaflet-popup-content{margin:12px 14px;font-family:"Nunito",sans-serif;font-weight:600;font-size:.92rem;line-height:1.4}
@@ -142,6 +142,37 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 #tourbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
 #tourbar[hidden]{display:none}
 #tlabel{font-weight:700;text-align:center;flex:1}
+.walkbtn{margin:14px 0 0}
+#world{position:fixed;inset:0;z-index:2000;background:#E9F3E6;overflow:hidden;touch-action:none}
+#world[hidden]{display:none}
+#wmap{position:absolute;inset:0}
+#wmap .maplibregl-ctrl-attrib{font-size:10px}
+.wvignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(58,44,38,.28));z-index:500}
+#hero{position:absolute;left:50%;top:50%;width:56px;height:73px;margin:-66px 0 0 -28px;z-index:600;pointer-events:none}
+#hero svg{position:relative;display:block}
+#hero.left svg{transform:scaleX(-1)}
+.hshadow{position:absolute;left:9px;bottom:-5px;width:38px;height:12px;border-radius:50%;background:rgba(58,44,38,.28)}
+#hero.walking svg{animation:bob .32s ease-in-out infinite alternate}
+#hero.walking .l1{animation:stepA .32s ease-in-out infinite alternate}#hero.walking .l2{animation:stepA .32s ease-in-out infinite alternate-reverse}
+@keyframes bob{to{transform:translateY(-3px)}}@keyframes stepA{to{transform:translateY(-3px)}}
+#hero.left.walking svg{animation:bobL .32s ease-in-out infinite alternate}@keyframes bobL{from{transform:scaleX(-1)}to{transform:scaleX(-1) translateY(-3px)}}
+.hud{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:12px;right:12px;display:flex;gap:8px;align-items:center;z-index:700}
+.hudchip{background:var(--card);border:3px solid var(--edge);border-radius:14px;padding:6px 11px;font-weight:700;font-size:.85rem;box-shadow:0 3px 0 var(--edge)}
+.hudchip b{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1rem}
+#wclose{margin-left:auto}
+#joy{position:absolute;left:22px;bottom:calc(26px + env(safe-area-inset-bottom,0px));width:116px;height:116px;border-radius:50%;background:rgba(255,253,247,.75);border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);z-index:700;touch-action:none}
+#knob{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--crane);border:3px solid var(--edge);box-shadow:0 3px 0 var(--edge)}
+.whint{position:absolute;left:150px;right:14px;bottom:calc(40px + env(safe-area-inset-bottom,0px));z-index:650;font-weight:700;font-size:.85rem;color:var(--ink);background:rgba(255,253,247,.85);border-radius:14px;padding:8px 12px;transition:opacity .6s}
+#near{position:absolute;left:12px;right:12px;bottom:calc(160px + env(safe-area-inset-bottom,0px));z-index:700;background:var(--card);border:3px solid var(--edge);border-radius:20px;box-shadow:0 5px 0 var(--edge);padding:12px 14px;max-width:420px;margin:0 auto}
+#near[hidden]{display:none}
+#near b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.15rem}
+#near .pbar{height:12px;border:2.5px solid var(--edge);border-radius:9px;background:var(--tile);overflow:hidden;margin:6px 0}
+#near .pbar i{display:block;height:100%;background:repeating-linear-gradient(-45deg,var(--grass) 0 6px,var(--grass2) 6px 12px)}
+#near .new{display:inline-block;background:var(--crane);border:2px solid var(--edge);border-radius:99px;padding:0 8px;font-size:.72rem;font-weight:800;margin-left:6px;vertical-align:3px}
+#near .add{margin-top:8px;font-size:.95rem;padding:7px 14px}
+.bldg{width:84px;height:105px;pointer-events:none}
+.bldg .lbl{position:absolute;left:50%;top:104px;transform:translateX(-50%);white-space:nowrap;font:700 11px/1.2 "Nunito",sans-serif;color:#3A2C26;background:rgba(255,253,247,.9);border:2px solid #3A2C26;border-radius:8px;padding:1px 6px}
+.bldg.seen .lbl{background:#FFE08A}
 </style></head>
 <body><div class="wrap">
 <header>
@@ -155,18 +186,31 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 <main id="list"><div class="empty"><p>Loading projects…</p></div></main>
 <section id="mapsec" aria-labelledby="map-h">
   <h2 id="map-h">The map</h2>
-  <p class="lede">Every BTO and new launch we track. Pinch to zoom, tap a pin to peek.</p>
+  <p class="lede">Every BTO and new launch we track. Pinch to zoom, tap a pin to peek, or step inside and walk around.</p>
   <div class="mapfilters" role="group" aria-label="Show on map">
     <button type="button" class="chip on" data-filter="all" aria-pressed="true">All</button>
     <button type="button" class="chip" data-filter="BTO" aria-pressed="false">BTOs</button>
     <button type="button" class="chip" data-filter="Condo" aria-pressed="false">Condos</button>
-    <button type="button" class="chip tourbtn" id="tour" aria-pressed="false">Take a stroll</button>
+    
   </div>
   <div id="bigmap" role="region" aria-label="Map of Singapore with project pins"></div>
-  <div id="tourbar" hidden><button type="button" class="ghost" id="tprev">Back</button><span id="tlabel"></span><button type="button" class="ghost" id="tnext">Next stop</button></div>
+  <button type="button" class="add walkbtn" id="walk"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 3v3M8 12l3-4 4 1 2 4M11 8l-1 5"/></svg>Walk around Singapore</button>
 </section>
 <section id="explore" aria-labelledby="ex-h"></section>
 <p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>.</p>
+</div>
+<div id="world" hidden role="dialog" aria-modal="true" aria-label="Walk around Singapore">
+  <div id="wmap"></div>
+  <div class="wvignette" aria-hidden="true"></div>
+  <div id="hero" aria-hidden="true"><div class="hshadow"></div><svg viewBox="0 0 40 52" width="56" height="73"><g stroke="#3A2C26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><path class="leg l1" d="M15 40v8" /><path class="leg l2" d="M25 40v8"/><rect x="9" y="24" width="22" height="19" rx="9" fill="#FFB020"/><circle cx="20" cy="15" r="11" fill="#FFE3D1"/><path d="M9 13c1-8 21-9 22 0-4-3-9-4-11-1-3-3-8-2-11 1z" fill="#6B4A3A"/><circle cx="16.5" cy="16" r="1.4" fill="#3A2C26" stroke="none"/><circle cx="23.5" cy="16" r="1.4" fill="#3A2C26" stroke="none"/><path d="M18 20q2 1.6 4 0" fill="none" stroke-width="1.8"/></g></svg></div>
+  <div class="hud">
+    <div class="hudchip"><b id="wfound">0</b> of <span id="wtotal">0</span> sites found</div>
+    <div class="hudchip"><b id="wsteps">0 m</b> walked</div>
+    <button type="button" class="ghost" id="wclose" aria-label="Leave the walk">Exit</button>
+  </div>
+  <div id="near" hidden></div>
+  <div id="joy" aria-label="Move: drag the stick, or use arrow keys"><div id="knob"></div></div>
+  <div class="whint" id="whint">Drag the stick or use arrow keys to walk. Get close to a building to see how it's doing.</div>
 </div>
 <dialog id="sharebox" aria-labelledby="sb-h">
   <h2 id="sb-h">Your progress card</h2>
@@ -548,11 +592,11 @@ $("#sharebox").addEventListener("click",e=>{if(e.target.id==="sharebox")$("#shar
 
 
 /* ---------- Big map ---------- */
-let MAP=null,PINS=[],FILTER="all",TOUR=null;
+let MAP=null,PINS=[],FILTER="all";
 function pinIcon(p,pct){
-  const c=p.kind==="BTO"?"#BDE8F5":"#FFD3B5",done=pct!=null&&pct>=100,h=Math.round(8+10*Math.min(1,(pct||0)/100));
-  return L.divIcon({className:"pin",iconSize:[30,36],iconAnchor:[15,34],popupAnchor:[0,-30],html:
-   `<svg width="30" height="36" viewBox="0 0 30 36"><path d="M15 34 C15 34 3 22 3 13 a12 12 0 0 1 24 0 c0 9-12 21-12 21z" fill="${c}" stroke="#3A2C26" stroke-width="2.5"/><rect x="10" y="${20-h}" width="10" height="${h}" rx="1.5" fill="${done?"#62C07A":"#FFFDF7"}" stroke="#3A2C26" stroke-width="2"/></svg>`});
+  const c=p.kind==="BTO"?"#7CC8E8":"#F4A77E",done=pct!=null&&pct>=100,h=Math.round(3+6*Math.min(1,(pct||0)/100));
+  return L.divIcon({className:"pin",iconSize:[18,24],iconAnchor:[9,23],popupAnchor:[0,-20],html:
+   `<svg width="18" height="24" viewBox="0 0 18 24"><path d="M9 23 C9 23 1.5 14.5 1.5 9 a7.5 7.5 0 0 1 15 0 c0 5.5-7.5 14-7.5 14z" fill="${c}" stroke="#3A2C26" stroke-width="1.4"/><rect x="6" y="${13-h}" width="6" height="${h}" rx="1" fill="${done?"#62C07A":"#FFFDF7"}" stroke="#3A2C26" stroke-width="1"/></svg>`});
 }
 function popupHtml(p){
   const k=stats(p);
@@ -577,22 +621,109 @@ function focusOn(i){
   setTimeout(()=>{MAP.flyTo(m.getLatLng(),16,{duration:1.2});MAP.once("moveend",()=>m.openPopup())},350);
 }
 function setFilterUI(){document.querySelectorAll("[data-filter]").forEach(b=>{const on=b.dataset.filter===FILTER;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)})}
-document.querySelector(".mapfilters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;FILTER=b.dataset.filter;setFilterUI();drawPins();if(TOUR)stopTour()});
-/* A stroll: hop between projects, north to south, nearest-next */
-function buildTour(){
-  let left=PINS.filter(m=>MAP.hasLayer(m)),route=[];if(!left.length)return route;
-  let cur=left.reduce((a,b)=>a.getLatLng().lat>b.getLatLng().lat?a:b);
-  while(cur&&route.length<12){route.push(cur);left=left.filter(m=>m!==cur);if(!left.length)break;const here=cur.getLatLng();cur=left.reduce((a,b)=>here.distanceTo(a.getLatLng())<here.distanceTo(b.getLatLng())?a:b)}
-  return route;
+document.querySelector(".mapfilters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;FILTER=b.dataset.filter;setFilterUI();drawPins();});
+
+
+/* ---------- Walk-around world ---------- */
+let W=null;
+const FOUND_KEY="storeys.found.v1";
+function bldgSvg(p){
+  const k=stats(p),pct=k.pct||0,floors=6,built=Math.max(1,Math.round(floors*pct/100)),c=PASTELS[hash(p.name)%PASTELS.length],E="#3A2C26";
+  let g=`<ellipse cx="28" cy="66" rx="22" ry="4" fill="rgba(58,44,38,.25)"/>`;
+  g+=`<rect x="14" y="${64-floors*8}" width="28" height="${floors*8}" rx="2" fill="none" stroke="${E}" stroke-opacity=".3" stroke-dasharray="3 3"/>`;
+  for(let i=0;i<built;i++){const y=64-(i+1)*8;g+=`<rect x="14" y="${y}" width="28" height="8" fill="${i%2?"#FFFBF2":c}" stroke="${E}" stroke-width="1.6"/><rect x="18" y="${y+2.5}" width="5" height="3" rx="1" fill="#9FD3F2"/><rect x="26" y="${y+2.5}" width="5" height="3" rx="1" fill="#9FD3F2"/><rect x="34" y="${y+2.5}" width="5" height="3" rx="1" fill="#9FD3F2"/>`}
+  if(pct<100){const top=64-built*8;g+=`<g stroke="${E}" stroke-width="1.6"><rect x="45" y="${top-16}" width="3.5" height="${80-top}" fill="#FFB020"/><rect x="24" y="${top-18}" width="30" height="4" rx="1.5" fill="#FFB020"/></g>`}
+  else g+=`<rect x="12" y="${64-floors*8-4}" width="32" height="5" rx="2" fill="${c}" stroke="${E}" stroke-width="1.6"/>`;
+  const short=p.name.replace(/\s*\(.*?\)/,"");
+  return `<svg width="84" height="105" viewBox="0 0 56 70" style="overflow:visible">${g}</svg><span class="lbl">${esc(short.length>22?short.slice(0,21)+"…":short)}</span>`;
 }
-function tourGo(d){if(!TOUR)return;TOUR.at=Math.max(0,Math.min(TOUR.route.length-1,TOUR.at+d));const m=TOUR.route[TOUR.at];
-  $("#tlabel").textContent=`Stop ${TOUR.at+1} of ${TOUR.route.length}`;$("#tprev").disabled=TOUR.at===0;$("#tnext").textContent=TOUR.at===TOUR.route.length-1?"Finish":"Next stop";
-  MAP.closePopup();MAP.flyTo(m.getLatLng(),16,{duration:1.6});MAP.once("moveend",()=>m.openPopup())}
-function stopTour(){TOUR=null;$("#tourbar").hidden=true;$("#tour").classList.remove("on");$("#tour").setAttribute("aria-pressed","false");$("#tour").textContent="Take a stroll"}
-$("#tour").addEventListener("click",()=>{if(TOUR){stopTour();return}if(!MAP)return;TOUR={route:buildTour(),at:0};if(!TOUR.route.length)return stopTour();
-  $("#tourbar").hidden=false;$("#tour").classList.add("on");$("#tour").setAttribute("aria-pressed","true");$("#tour").textContent="End stroll";tourGo(0)});
-$("#tprev").addEventListener("click",()=>tourGo(-1));
-$("#tnext").addEventListener("click",()=>{if(TOUR&&TOUR.at===TOUR.route.length-1){stopTour();MAP.closePopup();return}tourGo(1)});
+const WORLD_STYLE={version:8,sources:{o:{type:"vector",url:"https://tiles.openfreemap.org/planet"}},layers:[
+ {id:"bg",type:"background",paint:{"background-color":"#F4E9D4"}},
+ {id:"lu",type:"fill",source:"o","source-layer":"landuse",paint:{"fill-color":["match",["get","class"],"residential","#F1E3CB","school","#F6DCC6","commercial","#F3DCCB","#EFE2CC"]}},
+ {id:"park",type:"fill",source:"o","source-layer":"park",paint:{"fill-color":"#A9DA93"}},
+ {id:"lc",type:"fill",source:"o","source-layer":"landcover",paint:{"fill-color":["match",["get","class"],"wood","#8CCB7C","grass","#B5E2A0","sand","#F3E3B0","#B5E2A0"]}},
+ {id:"water",type:"fill",source:"o","source-layer":"water",paint:{"fill-color":"#86CBE8"}},
+ {id:"ww",type:"line",source:"o","source-layer":"waterway",paint:{"line-color":"#86CBE8","line-width":4}},
+ {id:"rcase",type:"line",source:"o","source-layer":"transportation",filter:["!in","class","path","rail","transit"],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#C9A97E","line-width":["interpolate",["exponential",1.6],["zoom"],14,3,18,["match",["get","class"],"motorway",46,"trunk",40,"primary",34,"secondary",28,"tertiary",24,16]]}},
+ {id:"road",type:"line",source:"o","source-layer":"transportation",filter:["!in","class","path","rail","transit"],layout:{"line-cap":"round","line-join":"round"},paint:{"line-color":"#FFF8EA","line-width":["interpolate",["exponential",1.6],["zoom"],14,1.8,18,["match",["get","class"],"motorway",38,"trunk",33,"primary",28,"secondary",23,"tertiary",19,12]]}},
+ {id:"path",type:"line",source:"o","source-layer":"transportation",filter:["==","class","path"],paint:{"line-color":"#E2C79A","line-width":2,"line-dasharray":[2,1.5]}},
+ {id:"bld",type:"fill-extrusion",source:"o","source-layer":"building",paint:{"fill-extrusion-color":["match",["%",["to-number",["coalesce",["get","render_height"],10]],5],0,"#FFD3C2",1,"#FFF1C9",2,"#D7EEF9",3,"#E2F2D2",4,"#F9E0EC","#FFF1C9"],"fill-extrusion-height":["min",["*",["coalesce",["get","render_height"],10],0.55],26],"fill-extrusion-base":["min",["*",["coalesce",["get","render_min_height"],0],0.55],26],"fill-extrusion-opacity":0.95,"fill-extrusion-vertical-gradient":true}}
+]};
+function loadWorldLib(){
+  if(window.maplibregl)return Promise.resolve();
+  return new Promise((res,rej)=>{
+    const l=document.createElement("link");l.rel="stylesheet";l.href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css";document.head.appendChild(l);
+    const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js";sc.onload=res;sc.onerror=rej;document.head.appendChild(sc);
+  });
+}
+function bldgEl(p,found){const d=document.createElement("div");d.className="bldg"+(found?" seen":"");d.innerHTML=bldgSvg(p);return d}
+function openWorld(start){
+  const found=new Set(store(FOUND_KEY)||[]);
+  $("#world").hidden=false;document.body.style.overflow="hidden";
+  const m=new maplibregl.Map({container:"wmap",style:WORLD_STYLE,center:[start[1],start[0]],zoom:17.3,pitch:50,bearing:-18,interactive:false,attributionControl:false,maxBounds:[[103.55,1.15],[104.1,1.5]]});
+  m.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}),"bottom-right");
+  m.on("load",()=>m.setLight({anchor:"map",color:"#FFF6E6",intensity:0.18,position:[1.3,200,40]}));
+  const here=P.filter(p=>p.ll);
+  const marks=here.map(p=>{const el=bldgEl(p,found.has(p.key));const mk=new maplibregl.Marker({element:el,anchor:"bottom",offset:[0,6]}).setLngLat([p.ll[1],p.ll[0]]).addTo(m);mk.p=p;mk.el=el;return mk});
+  $("#wtotal").textContent=here.length;$("#wfound").textContent=[...found].filter(k=>here.some(p=>p.key===k)).length;
+  $("#wsteps").textContent="0 m";
+  W={m,marks,found,vx:0,vy:0,keys:{},steps:0,dist:0,raf:0,last:0,nearKey:null};
+  $("#whint").style.opacity=1;setTimeout(()=>{if(W)$("#whint").style.opacity=0},6000);
+  W.last=performance.now();W.raf=requestAnimationFrame(tick);
+  m.once("load",checkNear);
+}
+function closeWorld(){if(!W)return;cancelAnimationFrame(W.raf);W.m.remove();W=null;$("#world").hidden=true;document.body.style.overflow="";$("#near").hidden=true;render()}
+function tick(t){
+  if(!W)return;const dt=Math.min(.05,(t-W.last)/1000);W.last=t;
+  let vx=W.vx,vy=W.vy;const K=W.keys;
+  if(K.ArrowLeft||K.a)vx=-1;if(K.ArrowRight||K.d)vx=1;if(K.ArrowUp||K.w)vy=-1;if(K.ArrowDown||K.s)vy=1;
+  const len=Math.hypot(vx,vy);const hero=$("#hero");
+  if(len>.08){
+    const sp=190*Math.min(1,len)/len;const dx=vx*sp*dt,dy=vy*sp*dt;
+    const before=W.m.getCenter();W.m.panBy([dx,dy],{duration:0});const after=W.m.getCenter();
+    const metres=before.distanceTo(after);W.dist+=metres;const st=Math.floor(W.dist/10);
+    if(st!==W.steps){W.steps=st;$("#wsteps").textContent=W.dist<1000?Math.round(W.dist/10)*10+" m":(W.dist/1000).toFixed(1)+" km"}
+    hero.classList.add("walking");if(Math.abs(vx)>.2)hero.classList.toggle("left",vx<0);
+    if(!W.nc||t-W.nc>250){W.nc=t;checkNear()}
+  }else hero.classList.remove("walking");
+  W.raf=requestAnimationFrame(tick);
+}
+function checkNear(){
+  if(!W)return;const c=W.m.getCenter();let best=null,bd=1e9;
+  for(const mk of W.marks){const d=c.distanceTo(mk.getLngLat());if(d<bd){bd=d;best=mk}}
+  const box=$("#near");
+  if(!best||bd>220){if(W.nearKey){box.hidden=true;W.nearKey=null}return}
+  const p=best.p;if(W.nearKey===p.key)return;W.nearKey=p.key;
+  const isNew=!W.found.has(p.key);
+  if(isNew){W.found.add(p.key);store(FOUND_KEY,[...W.found]);best.el.classList.add("seen");$("#wfound").textContent=[...W.found].filter(k=>W.marks.some(mk=>mk.p.key===k)).length}
+  const k=stats(p);
+  box.innerHTML=`<b>${esc(p.name)}${isNew?'<span class="new">New find!</span>':""}</b>${p.kind}${k.pct!=null?`, ${Math.round(k.pct)}% of the way there`:", not launched yet"}<div class="pbar"><i style="width:${k.pct||0}%"></i></div>${esc(verdict(p,k).t)}. ${p.kind==="BTO"?"Completion":"Expected TOP"} ${fmtYM(k.T)}.<br><button type="button" class="add" data-wwatch="${p.i}">${tracked.includes(p.key)?"Watching":"Watch this"}</button>`;
+  box.hidden=false;
+}
+/* joystick + keys */
+(function(){
+  const joy=$("#joy"),knob=$("#knob");let id=null;
+  const move=e=>{const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy;const max=r.width/2-12,l=Math.hypot(dx,dy);if(l>max){dx*=max/l;dy*=max/l}knob.style.transform=`translate(${dx}px,${dy}px)`;if(W){W.vx=dx/max;W.vy=dy/max}};
+  joy.addEventListener("pointerdown",e=>{id=e.pointerId;joy.setPointerCapture(id);move(e);$("#whint").style.opacity=0});
+  joy.addEventListener("pointermove",e=>{if(e.pointerId===id)move(e)});
+  const end=e=>{if(e.pointerId!==id)return;id=null;knob.style.transform="";if(W){W.vx=0;W.vy=0}};
+  joy.addEventListener("pointerup",end);joy.addEventListener("pointercancel",end);
+  addEventListener("keydown",e=>{if(!W)return;if(e.key==="Escape")return closeWorld();if(/^Arrow|^[wasd]$/.test(e.key)){W.keys[e.key]=true;e.preventDefault();$("#whint").style.opacity=0}});
+  addEventListener("keyup",e=>{if(W)W.keys[e.key]=false});
+})();
+$("#wclose").addEventListener("click",closeWorld);
+$("#near").addEventListener("click",e=>{const b=e.target.closest("[data-wwatch]");if(!b)return;const p=P[+b.dataset.wwatch];if(!tracked.includes(p.key)){tracked=[p.key,...tracked];saveTracked()}b.textContent="Watching"});
+$("#walk").addEventListener("click",async()=>{
+  const btn=$("#walk"),lbl=btn.lastChild,orig=lbl.textContent;btn.setAttribute("aria-disabled","true");lbl.textContent=" Getting the world ready…";
+  const inSG=ll=>ll&&ll[0]>1.15&&ll[0]<1.5&&ll[1]>103.55&&ll[1]<104.1;
+  let start=null;
+  try{const pos=await Promise.race([here(),new Promise((_,r)=>setTimeout(()=>r(0),6000))]);if(inSG(pos))start=pos}catch(e){}
+  if(!start){const w=tracked.map(k=>P.find(p=>p.key===k)).find(p=>p&&p.ll);start=w?[w.ll[0]-0.0012,w.ll[1]-0.0012]:[1.3521,103.8198]}
+  try{await loadWorldLib();if(!maplibregl.supported||maplibregl.supported())openWorld(start);else throw 0}
+  catch(e){alert("Your browser can't show the 3D world. Try Safari or Chrome on a newer phone.")}
+  finally{btn.removeAttribute("aria-disabled");lbl.textContent=orig}
+});
+
 
 /* ---------- Events ---------- */
 const q=$("#q"),sug=$("#sugg");
