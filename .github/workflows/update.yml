@@ -39,7 +39,9 @@ jobs:
           git add data.json
           git diff --cached --quiet || git commit -m "Daily data refresh [data]" && git push || true
       - name: Build project link pages
-        run: python scripts/pages.py
+        run: |
+          pip install --quiet pillow
+          python scripts/pages.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

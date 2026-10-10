@@ -22,6 +22,11 @@ def next_data(s):
     m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', s, re.S)
     return json.loads(m.group(1)) if m else None
 
+# Sites OneMap can't find by name yet (no blocks or postal codes published)
+KNOWN_SITES = {
+    "Mount Pleasant Crest": [1.3297, 103.8344],  # former Old Police Academy, Thomson Road, by Mount Pleasant MRT
+}
+
 old = json.load(open(DATA))
 old_bto = {r[0]: r for r in old["bto"]}
 old_condo = {r[0]: r for r in old["condo"]}
@@ -93,7 +98,7 @@ if len(raw) >= 0.7 * len(old["bto"]):
             if not blks and prev:
                 roads, blks, postals, ll = prev[6], prev[7], prev[8], prev[9] or ll
         if not ll:
-            ll = (prev[9] if prev else None) or point(name)
+            ll = (prev[9] if prev else None) or point(name) or KNOWN_SITES.get(name)
         bto.append([label, x["PROJECT_TYPE"], x["LAUNCH_DATE"][:7], (x["ESTIMATED_TOP"] or "")[:7],
                     (x["ESTIMATED_DELAYED_TOP"] or "")[:7], x["REMARKS"] or "", roads, blks, postals, ll])
 else:

@@ -1,7 +1,12 @@
 """Build one small page per project (p/<slug>/) so shared links get a proper
 title and preview in WhatsApp/Telegram, then hop into the app on that project.
 Runs in the publish workflow; the pages are not committed."""
-import json, os, re, html, datetime
+import json, os, re, html, datetime, sys
+sys.path.insert(0, os.path.dirname(__file__))
+try:
+    from cards import card
+except Exception as e:  # Pillow missing: pages still build, just without picture previews
+    print("no preview cards:", e); card = None
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 APP = "TOP Already?"
@@ -28,6 +33,7 @@ made = 0
 for kind, name, launch, ecd, delayed in rows:
     s = slug(name)
     L, T = ym(launch), ym(delayed or ecd)
+    pct = None
     if L and T and T > L:
         pct = max(0, min(100, round((today - L).days / (T - L).days * 100)))
         desc = f"{pct}% of the wait to keys is over. Expected {'completion' if kind == 'BTO' else 'TOP'}: {fmt(T)}. See site photos from people nearby."
@@ -36,6 +42,14 @@ for kind, name, launch, ecd, delayed in rows:
     title = f"{name} ({kind}) · {APP}"
     url = f"{SITE}p/{s}/"
     e = html.escape
+    os.makedirs(os.path.join(ROOT, "p", s), exist_ok=True)
+    img = f"{SITE}icon-512.png"
+    if card:
+        try:
+            card(os.path.join(ROOT, "p", s, "card.png"), name, kind, pct, f"Expected {'completion' if kind == 'BTO' else 'TOP'}: {fmt(T)}")
+            img = f"{url}card.png"
+        except Exception as e:
+            print("card failed", name, e)
     page = f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{e(title)}</title>
@@ -45,8 +59,8 @@ for kind, name, launch, ecd, delayed in rows:
 <meta property="og:title" content="{e(name)}: how far along is it?">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{e(url)}">
-<meta property="og:image" content="{SITE}icon-512.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{img}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta http-equiv="refresh" content="0;url=../../?p={s}">
 <link rel="icon" href="../../icon-192.png">
 <style>body{{font:16px/1.5 system-ui,sans-serif;background:#F6EFE2;color:#3A2C26;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center;padding:16px}}</style>

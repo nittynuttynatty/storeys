@@ -308,6 +308,11 @@ input[type=text]{font-weight:400;border-radius:999px}
 .nearhead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:0 14px 6px 16px}
 .nearhead .nearlabel{margin:0}
 #locate{position:static;right:auto;bottom:auto}
+.welcome{position:absolute;z-index:25;left:12px;right:12px;top:calc(66px + env(safe-area-inset-top,0px));max-width:420px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh);padding:14px 16px 12px;color:var(--ink)}
+.welcome b{display:block;font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.1rem}
+.welcome p{margin:4px 0 10px;font-size:.92rem;color:var(--muted)}
+.welcome button{font:inherit;font-weight:600;font-size:.88rem;border:0;border-radius:99px;padding:7px 16px;background:var(--accent,#E9A23B);color:var(--accent-ink,#4A3410);cursor:pointer}
+.welcome[hidden]{display:none}
 /* light switch + night skin */
 .lightbtn{flex:0 0 auto;position:relative;display:grid;place-items:center;width:40px;height:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0;font:600 .78rem/1 "Figtree",system-ui,sans-serif;color:var(--ink);box-shadow:var(--sh);cursor:pointer}
 .lightbtn svg{width:22px;height:22px}
@@ -354,6 +359,7 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
     <div class="found" title="Sites you've flown past"><b id="wfound">0</b>/<span id="wtotal">0</span> found</div>
     <button type="button" id="lightbtn" class="lightbtn" aria-label="Day or night"></button>
   </div>
+  <div class="welcome" id="welcome" hidden><b>Welcome to TOP Already?</b><p>Search your BTO or condo to see how far along it is, or drag the map to fly around. Tap any building for its progress and fresh site photos.</p><button type="button" id="welcomeok">Got it</button></div>
   <div class="toast" id="toast" role="status"></div>
   <div class="nearwrap"><div class="nearhead"><p class="nearlabel" id="nearlabel">Near here</p><button type="button" id="locate" aria-label="See what's around me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Around me</button></div><div id="nearby" role="list"></div></div>
 </section>
@@ -1029,7 +1035,7 @@ function badge(){const n=tracked.length;$("#tbadge").hidden=!n;$("#tbadge").text
 let SHEETKEY=null;
 function openSheet(i){
   const p=P[i];if(!p)return;SHEETKEY=p.key;
-  track("open",p.key);try{history.replaceState(null,"","?p="+slug(p.name))}catch(e){}
+  hideWelcome();track("open",p.key);try{history.replaceState(null,"","?p="+slug(p.name))}catch(e){}
   $("#sheetbody").innerHTML=card(p);$("#sheet").hidden=false;$("#sheet .panel").scrollTop=0;loadPhotos(p.key);
 }
 function closeSheet(){$("#sheet").hidden=true;$("#sheetbody").innerHTML="";SHEETKEY=null;try{history.replaceState(null,"",location.pathname)}catch(e){}}
@@ -1061,6 +1067,8 @@ function applyLight(force){
   if(MAP&&(changed||force))MAP.setStyle(worldStyle(ph),{diff:true});
   if(changed||force)document.querySelectorAll("#sheet .scene:not(.photo)").forEach(sc=>{const p=P.find(q=>q.key===SHEETKEY);if(p)sc.innerHTML=building(stats(p).pct,p.name)});
 }
+function hideWelcome(){const w=$("#welcome");if(!w||w.hidden)return;w.hidden=true;try{localStorage.setItem("storeys.welcomed","1")}catch(e){}}
+$("#welcomeok").addEventListener("click",hideWelcome);$("#q").addEventListener("focus",hideWelcome);
 $("#lightbtn").addEventListener("click",()=>{
   LIGHT=LIGHT==="auto"?(autoPhase()==="night"?"day":"night"):LIGHT==="night"?"day":"auto";
   try{localStorage.setItem("storeys.light",LIGHT)}catch(e){}
@@ -1162,5 +1170,7 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   try{if(!sessionStorage.getItem("storeys.v")){sessionStorage.setItem("storeys.v","1");track("visit")}}catch(e){track("visit")}
   const want=new URLSearchParams(location.search).get("p"),wp=want&&P.find(q=>slug(q.name)===want);
   if(wp){track("link",wp.key);setTab("map");if(wp.ll&&MAP)flyTo(wp.i,true);else openSheet(wp.i)}
+  let seen=false;try{seen=!!localStorage.getItem("storeys.welcomed")}catch(e){}
+  if(!seen&&!wp)$("#welcome").hidden=false;
 }).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
 </script></body></html>
