@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Storeys</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -90,10 +90,6 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 .src{font-size:.82rem;color:var(--muted);margin-top:28px;font-weight:600}
 @media (prefers-reduced-motion:no-preference){.fl{animation:rise .45s cubic-bezier(.3,1.6,.6,1) both}@keyframes rise{from{opacity:0;transform:translateY(4px)}}
   .cloud{animation:drift 14s ease-in-out infinite alternate}@keyframes drift{to{transform:translateX(10px)}}}
-#town{margin:10px -16px 18px;line-height:0}
-#town svg{width:100%;height:auto;display:block}
-#explore{margin-top:8px}
-#explore h2{font-size:1.6rem;margin:0}
 #explore .lede{color:var(--muted);margin:2px 0 14px}
 .shelf{background:var(--card);border:3px solid var(--edge);border-radius:22px;box-shadow:0 5px 0 var(--edge);padding:14px 14px 16px;margin-bottom:18px}
 .shelf h3{display:flex;align-items:center;gap:8px;font-size:1.15rem;margin:0 0 2px}
@@ -115,107 +111,131 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 .sb-actions .add{margin:0}
 .sb-actions .ghost{margin-left:auto}
 [hidden]{display:none!important}
-.mapbox{margin-top:18px}
-.mapbox h3{font-size:1.2rem;margin:0 0 8px}
-.mapbox .mapjump{display:block;width:100%;padding:0;cursor:pointer;border:3px solid var(--edge);border-radius:16px;overflow:hidden;box-shadow:0 4px 0 var(--edge);background:var(--tile)}
-.mapbox img{display:block;width:100%;height:auto;aspect-ratio:512/300}
-.mapbox .note{margin-top:10px}
-#mapsec{margin:6px 0 26px}
-#mapsec h2{font-size:1.6rem;margin:0}
-#mapsec .lede{color:var(--muted);margin:2px 0 12px}
-.mapfilters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.chip.on{background:var(--crane);color:#3A2C26}
-#bigmap{height:min(62vh,440px);border:3px solid var(--edge);border-radius:22px;box-shadow:0 5px 0 var(--edge);overflow:hidden;background:var(--tile);z-index:0}
-#bigmap .leaflet-tile-pane{filter:saturate(1.15) sepia(.12) contrast(.97)}
-.pin{width:18px;height:24px}
-.pin svg{display:block;filter:drop-shadow(0 1px 0 rgba(58,44,38,.35))}
-.leaflet-popup-content-wrapper{border:3px solid var(--edge);border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 4px 0 var(--edge)}
-.leaflet-popup-tip{background:var(--card);border:3px solid var(--edge)}
-.leaflet-popup-content{margin:12px 14px;font-family:"Nunito",sans-serif;font-weight:600;font-size:.92rem;line-height:1.4}
-.leaflet-popup-content b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.08rem}
-.leaflet-popup-content .pbar{height:10px;border:2px solid var(--edge);border-radius:9px;background:var(--tile);overflow:hidden;margin:6px 0}
-.leaflet-popup-content .pbar i{display:block;height:100%;background:var(--grass)}
-.leaflet-popup-content button{margin-top:8px;font-size:.92rem;padding:7px 12px}
-.leaflet-container{font-family:"Nunito",sans-serif}
-.leaflet-control-attribution{font-size:10px}
-.leaflet-bar a{color:var(--ink)!important}
-#tourbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
-#tourbar[hidden]{display:none}
-#tlabel{font-weight:700;text-align:center;flex:1}
-.walkbtn{margin:14px 0 0}
-#world{position:fixed;inset:0;z-index:2000;background:#E9F3E6;overflow:hidden;touch-action:none}
-#world[hidden]{display:none}
-#wmap{position:absolute;inset:0}
-#wmap .maplibregl-ctrl-attrib{font-size:10px}
-#wmap .maplibregl-ctrl-bottom-right{bottom:env(safe-area-inset-bottom,0px)}
-.wvignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(58,44,38,.28));z-index:500}
-#hero{position:absolute;left:50%;top:50%;width:56px;height:73px;margin:-66px 0 0 -28px;z-index:600;pointer-events:none}
-#hero svg{position:relative;display:block}
-#hero.left svg{transform:scaleX(-1)}
-.hshadow{position:absolute;left:9px;bottom:-5px;width:38px;height:12px;border-radius:50%;background:rgba(58,44,38,.28)}
-#hero.walking svg{animation:bob .32s ease-in-out infinite alternate}
-#hero.walking .l1{animation:stepA .32s ease-in-out infinite alternate}#hero.walking .l2{animation:stepA .32s ease-in-out infinite alternate-reverse}
-@keyframes bob{to{transform:translateY(-3px)}}@keyframes stepA{to{transform:translateY(-3px)}}
-#hero.left.walking svg{animation:bobL .32s ease-in-out infinite alternate}@keyframes bobL{from{transform:scaleX(-1)}to{transform:scaleX(-1) translateY(-3px)}}
-.hud{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:12px;right:12px;display:flex;gap:8px;align-items:center;z-index:700}
-.hudchip{background:var(--card);border:3px solid var(--edge);border-radius:14px;padding:6px 11px;font-weight:700;font-size:.85rem;box-shadow:0 3px 0 var(--edge)}
-.hudchip b{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1rem}
-#wclose{margin-left:auto}
-#joy{position:absolute;left:22px;bottom:calc(26px + env(safe-area-inset-bottom,0px));width:116px;height:116px;border-radius:50%;background:rgba(255,253,247,.75);border:3px solid var(--edge);box-shadow:0 4px 0 var(--edge);z-index:700;touch-action:none}
-#knob{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:var(--crane);border:3px solid var(--edge);box-shadow:0 3px 0 var(--edge)}
-.whint{position:absolute;left:150px;right:14px;bottom:calc(40px + env(safe-area-inset-bottom,0px));z-index:650;font-weight:700;font-size:.85rem;color:var(--ink);background:rgba(255,253,247,.85);border-radius:14px;padding:8px 12px;transition:opacity .6s}
-#near{position:absolute;left:12px;right:12px;bottom:calc(160px + env(safe-area-inset-bottom,0px));z-index:700;background:var(--card);border:3px solid var(--edge);border-radius:20px;box-shadow:0 5px 0 var(--edge);padding:12px 14px;max-width:420px;margin:0 auto}
-#near[hidden]{display:none}
-#near b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.15rem}
-#near .pbar{height:12px;border:2.5px solid var(--edge);border-radius:9px;background:var(--tile);overflow:hidden;margin:6px 0}
-#near .pbar i{display:block;height:100%;background:repeating-linear-gradient(-45deg,var(--grass) 0 6px,var(--grass2) 6px 12px)}
-#near .new{display:inline-block;background:var(--crane);border:2px solid var(--edge);border-radius:99px;padding:0 8px;font-size:.72rem;font-weight:800;margin-left:6px;vertical-align:3px}
-#near .add{margin-top:8px;font-size:.95rem;padding:7px 14px}
-.bldg{width:112px;height:140px;pointer-events:none}
 .bldg .spark{position:absolute;left:50%;top:-8px;width:18px;height:18px;margin-left:-9px;background:#FFD23F;border:2.5px solid #3A2C26;transform:rotate(45deg);border-radius:4px;box-shadow:0 0 0 4px rgba(255,210,63,.35)}
 .bldg.seen .spark{display:none}
 @media (prefers-reduced-motion:no-preference){.bldg .spark{animation:spark 1.4s ease-in-out infinite alternate}@keyframes spark{to{transform:translateY(-6px) rotate(45deg)}}}
 .bldg .lbl{position:absolute;left:50%;top:138px;transform:translateX(-50%);white-space:nowrap;font:700 11px/1.2 "Nunito",sans-serif;color:#3A2C26;background:rgba(255,253,247,.9);border:2px solid #3A2C26;border-radius:8px;padding:1px 6px}
 .bldg.seen .lbl{background:#FFE08A}
-</style></head>
-<body><div class="wrap">
-<header>
-<h1><svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true"><rect x="9" y="12" width="20" height="28" rx="3" fill="#FFB8A3" stroke="var(--edge)" stroke-width="3"/><rect x="14" y="18" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="21" y="18" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="14" y="26" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="21" y="26" width="4" height="4" rx="1" fill="var(--edge)"/><path d="M35 40V6M24 8h17" stroke="var(--crane)" stroke-width="3.5" stroke-linecap="round"/><path d="M30 8v5" stroke="var(--edge)" stroke-width="2" stroke-linecap="round"/></svg>Storeys</h1>
-<p>Watch your BTO or condo go up, floor by floor. Search a project name, street, block or postal code.</p>
-</header>
-<div id="town" aria-hidden="true"></div>
-<input type="text" id="q" placeholder="e.g. Sembawang Brook, Lentor Mansion, 750437" autocomplete="off" aria-label="Project, address or postal code">
-<ul class="sugg" id="sugg"></ul>
-<p class="hint" id="hint"></p>
-<main id="list"><div class="empty"><p>Loading projects…</p></div></main>
-<section id="mapsec" aria-labelledby="map-h">
-  <h2 id="map-h">The map</h2>
-  <p class="lede">Every BTO and new launch we track. Pinch to zoom, tap a pin to peek, or step inside and walk around.</p>
-  <div class="mapfilters" role="group" aria-label="Show on map">
-    <button type="button" class="chip on" data-filter="all" aria-pressed="true">All</button>
-    <button type="button" class="chip" data-filter="BTO" aria-pressed="false">BTOs</button>
-    <button type="button" class="chip" data-filter="Condo" aria-pressed="false">Condos</button>
-    
+
+/* ---------- App shell ---------- */
+html,body{height:100%;overflow:hidden}
+body{background:var(--sky2)}
+.view{position:fixed;inset:0;bottom:calc(68px + env(safe-area-inset-bottom,0px));overflow-y:auto;-webkit-overflow-scrolling:touch;background:linear-gradient(180deg,var(--sky1) 0,var(--sky2) 420px) var(--sky2);opacity:0;visibility:hidden;transition:opacity .2s}
+.view.on{opacity:1;visibility:visible}
+#v-map{overflow:hidden;background:#F4E9D4}
+.pagewrap{max-width:560px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top,0px)) 16px 40px}
+.pagewrap h1{font-size:2.1rem;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.pagewrap .lede{color:var(--muted);margin:0 0 16px}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:900;display:flex;justify-content:space-around;background:var(--card);border-top:3px solid var(--edge);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+#tabs button{flex:1;max-width:140px;display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:0;font:inherit;font-weight:800;font-size:.78rem;color:var(--muted);padding:6px 0;border-radius:14px;cursor:pointer}
+#tabs button svg{width:26px;height:26px}
+#tabs button[aria-selected=true]{color:var(--ink);background:var(--tile)}
+#tabs .badge{font-size:.7rem;background:var(--crane);color:#3A2C26;border:2px solid var(--edge);border-radius:99px;padding:0 6px;margin-left:4px}
+/* map view */
+#map{position:absolute;inset:0}
+#map .maplibregl-ctrl-attrib{font-size:10px}
+.mtop{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));left:10px;right:10px;z-index:20;display:flex;gap:8px;align-items:flex-start}
+.searchbox{position:relative;flex:1}
+.searchbox input[type=text]{padding:11px 14px 11px 40px;box-shadow:0 3px 0 var(--edge)}
+.searchbox>svg{position:absolute;left:13px;top:13px;width:20px;height:20px;color:var(--muted);pointer-events:none}
+.searchbox .sugg{position:absolute;left:0;right:0;top:100%;max-height:55vh;overflow:auto;z-index:30}
+.found{flex:0 0 auto;background:var(--card);border:3px solid var(--edge);border-radius:14px;padding:8px 10px;font-weight:800;font-size:.8rem;box-shadow:0 3px 0 var(--edge);white-space:nowrap}
+.found b{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1rem}
+#locate{position:absolute;right:10px;bottom:206px;z-index:20;width:48px;height:48px;border-radius:16px;border:3px solid var(--edge);background:var(--card);box-shadow:0 3px 0 var(--edge);display:grid;place-items:center;cursor:pointer;color:var(--ink)}
+#locate svg{width:24px;height:24px}
+.mvignette{position:absolute;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at center,transparent 58%,rgba(58,44,38,.22))}
+/* bird */
+#bird{position:absolute;left:50%;top:50%;z-index:10;pointer-events:none;width:64px;height:64px;margin:-70px 0 0 -32px}
+#bird .shadow{position:absolute;left:14px;top:96px;width:36px;height:10px;border-radius:50%;background:rgba(58,44,38,.22);transition:transform .3s}
+#bird .b{position:absolute;inset:0;transition:transform .25s ease-out;animation:hover 1.6s ease-in-out infinite alternate}
+#bird .wing{transform-origin:30px 30px;animation:flap .5s ease-in-out infinite alternate}
+#bird.moving .wing{animation-duration:.16s}
+#bird.left .flip{transform:scaleX(-1);transform-origin:32px 32px}
+@keyframes hover{to{transform:translateY(-6px)}}
+@keyframes flap{from{transform:rotate(-28deg)}to{transform:rotate(18deg)}}
+@media (prefers-reduced-motion:reduce){#bird .b,#bird .wing{animation:none}}
+/* site sprites scale with zoom */
+.bldg{width:112px;height:140px;cursor:pointer}
+.bldg .inner{position:absolute;inset:0;transform:scale(var(--s,1));transform-origin:50% 100%;transition:transform .2s}
+.bldg .lbl{display:var(--lbl,block)}
+/* edge arrows */
+#edges{position:absolute;inset:0;pointer-events:none;z-index:15}
+.edge{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);display:flex;align-items:center;gap:4px;background:var(--card);border:2.5px solid var(--edge);border-radius:99px;padding:4px 9px 4px 5px;font:800 .72rem/1.2 "Nunito",sans-serif;color:var(--ink);box-shadow:0 2px 0 var(--edge);cursor:pointer;white-space:nowrap}
+.edge i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--crane);border:2px solid var(--edge);font-style:normal}
+.edge i svg{width:12px;height:12px}
+/* nearby strip */
+.nearwrap{position:absolute;left:0;right:0;bottom:10px;z-index:20}
+.nearwrap h3{margin:0 0 6px 14px;font-size:.95rem;display:inline-block;background:var(--card);border:2.5px solid var(--edge);border-radius:99px;padding:2px 12px;box-shadow:0 2px 0 var(--edge)}
+#nearby{display:flex;flex-wrap:nowrap;gap:10px;overflow-x:auto;padding:4px 14px 8px;scroll-snap-type:x mandatory;scrollbar-width:none}
+#nearby::-webkit-scrollbar{display:none}
+.ncard{flex:0 0 76%;max-width:300px;scroll-snap-align:center;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:3px solid var(--edge);border-radius:18px;box-shadow:0 4px 0 var(--edge);padding:10px 12px;cursor:pointer}
+.ncard.here{background:#FFF6D9}
+.ncard b{display:block;font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.05rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ncard .meta{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);font-weight:700;margin-top:2px}
+.pbar{display:block;height:10px;border:2px solid var(--edge);border-radius:9px;background:var(--tile);overflow:hidden;margin:6px 0 2px}
+.pbar i{display:block;height:100%;background:repeating-linear-gradient(-45deg,var(--grass) 0 6px,var(--grass2) 6px 12px)}
+.ncard .go{display:inline-block;margin-top:6px;font-weight:800;font-size:.8rem;color:var(--ink);background:var(--crane);border:2px solid var(--edge);border-radius:99px;padding:1px 10px}
+.toast{position:absolute;left:50%;top:calc(70px + env(safe-area-inset-top,0px));transform:translate(-50%,-10px);z-index:40;background:var(--crane);color:#3A2C26;border:3px solid var(--edge);border-radius:99px;padding:6px 14px;font-weight:800;box-shadow:0 3px 0 var(--edge);opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.nomap{position:absolute;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--muted)}
+/* watchlist rows */
+#list{display:grid;gap:12px}
+.wrow{display:grid;grid-template-columns:1fr auto;gap:2px 10px;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:3px solid var(--edge);border-radius:18px;box-shadow:0 4px 0 var(--edge);padding:12px 14px;cursor:pointer;width:100%}
+.wrow .wtop b{font-family:"Fredoka",sans-serif;font-weight:600;font-size:1.1rem}
+.wrow .wpct{font-size:1.5rem;font-weight:700;grid-row:span 2;align-self:center}
+.wrow .pbar{grid-column:1/-1}
+.wrow .wsub{grid-column:1/-1;font-size:.85rem;color:var(--muted)}
+.wrow .wsub.behind{color:var(--bad)}
+/* bottom sheet */
+#sheet{position:fixed;inset:0;z-index:1500}
+#sheet[hidden]{display:none}
+#sheet .back{position:absolute;inset:0;background:rgba(40,28,22,.45);animation:fadein .2s}
+#sheet .panel{position:absolute;left:0;right:0;bottom:0;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--sky2);border-top:3px solid var(--edge);border-radius:26px 26px 0 0;animation:up .25s cubic-bezier(.2,.9,.3,1.1);padding:10px 12px calc(18px + env(safe-area-inset-bottom,0px));max-width:620px;margin:0 auto}
+#sheet .grab{display:flex;justify-content:center;align-items:center;position:sticky;top:-10px;z-index:3;padding:6px 0 8px;background:var(--sky2)}
+#sheet .grab span{width:44px;height:6px;border-radius:3px;background:color-mix(in srgb,var(--edge) 40%,transparent)}
+#sheet .grab button{position:absolute;right:4px;top:0}
+#sheet .site{margin-bottom:0}
+@keyframes up{from{transform:translateY(40px);opacity:.4}}@keyframes fadein{from{opacity:0}}
+
+#town{margin:6px -16px 14px;line-height:0}
+#town svg{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+<section id="v-map" class="view on" aria-label="Map">
+  <div id="map" role="application" aria-label="Map of Singapore. Drag to fly around."></div>
+  <div class="mvignette" aria-hidden="true"></div>
+  <div id="edges" aria-label="Projects just out of view"></div>
+  <div id="bird" aria-hidden="true"><div class="shadow"></div><div class="b"><svg viewBox="0 0 64 64" width="64" height="64"><g class="flip" stroke="#3A2C26" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"><path d="M50 34l11-4-9 9z" fill="#FF9F7A"/><ellipse cx="32" cy="36" rx="18" ry="15" fill="#FFD23F"/><ellipse cx="34" cy="41" rx="10" ry="7" fill="#FFF1C9" stroke="none"/><circle cx="44" cy="28" r="10" fill="#FFD23F"/><circle cx="47" cy="26" r="2.2" fill="#3A2C26" stroke="none"/><path d="M53 29l7 2-7 3z" fill="#FF9F7A"/><circle cx="44" cy="31.5" r="2" fill="#FFB0A0" stroke="none"/><path class="wing" d="M30 30c-10-12-22-10-24-4 6 0 10 4 14 10z" fill="#FFC21A"/></g></svg></div></div>
+  <div class="mtop">
+    <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search projects"><ul class="sugg" id="sugg"></ul></div>
+    <div class="found" title="Sites you've flown past"><b id="wfound">0</b>/<span id="wtotal">0</span> found</div>
   </div>
-  <div id="bigmap" role="region" aria-label="Map of Singapore with project pins"></div>
-  <button type="button" class="add walkbtn" id="walk"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M9 21l2-6 3 3v3M8 12l3-4 4 1 2 4M11 8l-1 5"/></svg>Walk around Singapore</button>
+  <button type="button" id="locate" aria-label="Fly to where I am"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>
+  <div class="toast" id="toast" role="status"></div>
+  <div class="nearwrap"><h3>Around you</h3><div id="nearby" role="list"></div></div>
 </section>
-<section id="explore" aria-labelledby="ex-h"></section>
-<p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>.</p>
-</div>
-<div id="world" hidden role="dialog" aria-modal="true" aria-label="Walk around Singapore">
-  <div id="wmap"></div>
-  <div class="wvignette" aria-hidden="true"></div>
-  <div id="hero" aria-hidden="true"><div class="hshadow"></div><svg viewBox="0 0 40 52" width="56" height="73"><g stroke="#3A2C26" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><path class="leg l1" d="M15 40v8" /><path class="leg l2" d="M25 40v8"/><rect x="9" y="24" width="22" height="19" rx="9" fill="#FFB020"/><circle cx="20" cy="15" r="11" fill="#FFE3D1"/><path d="M9 13c1-8 21-9 22 0-4-3-9-4-11-1-3-3-8-2-11 1z" fill="#6B4A3A"/><circle cx="16.5" cy="16" r="1.4" fill="#3A2C26" stroke="none"/><circle cx="23.5" cy="16" r="1.4" fill="#3A2C26" stroke="none"/><path d="M18 20q2 1.6 4 0" fill="none" stroke-width="1.8"/></g></svg></div>
-  <div class="hud">
-    <div class="hudchip"><b id="wfound">0</b> of <span id="wtotal">0</span> sites found</div>
-    <div class="hudchip"><b id="wsteps">0 m</b> walked</div>
-    <button type="button" class="ghost" id="wclose" aria-label="Leave the walk">Exit</button>
-  </div>
-  <div id="near" hidden></div>
-  <div id="joy" aria-label="Move: drag the stick, or use arrow keys"><div id="knob"></div></div>
-  <div class="whint" id="whint">Drag the stick or use arrow keys to walk. Get close to a building to see how it's doing.</div>
-</div>
+
+<section id="v-watch" class="view" aria-label="Watchlist"><div class="pagewrap">
+  <h1>Watchlist <small class="tag" id="wcount" style="font-size:.8rem"></small></h1>
+  <p class="lede">The projects you're keeping an eye on. Tap one for the full story.</p>
+  <div id="list"><div class="empty"><p>Loading projects…</p></div></div>
+</div></section>
+
+<section id="v-disc" class="view" aria-label="Discover"><div class="pagewrap">
+  <h1><svg width="40" height="40" viewBox="0 0 44 44" aria-hidden="true"><rect x="9" y="12" width="20" height="28" rx="3" fill="#FFB8A3" stroke="var(--edge)" stroke-width="3"/><rect x="14" y="18" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="21" y="18" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="14" y="26" width="4" height="4" rx="1" fill="var(--edge)"/><rect x="21" y="26" width="4" height="4" rx="1" fill="var(--edge)"/><path d="M35 40V6M24 8h17" stroke="var(--crane)" stroke-width="3.5" stroke-linecap="round"/></svg>Discover</h1>
+  <div id="town" aria-hidden="true"></div>
+  <section id="explore" aria-label="Project shelves"></section>
+  <p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Map: OpenFreeMap, OpenMapTiles and OpenStreetMap contributors. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>.</p>
+</div></section>
+
+<nav id="tabs" role="tablist" aria-label="Sections">
+  <button type="button" role="tab" data-tab="map" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Map</button>
+  <button type="button" role="tab" data-tab="watch" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M12 20s-8-4.6-8-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 2.5C20 15.4 12 20 12 20z"/></svg><span>Watchlist<span class="badge" id="tbadge" hidden></span></span></button>
+  <button type="button" role="tab" data-tab="disc" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Discover</button>
+</nav>
+
+<div id="sheet" hidden role="dialog" aria-modal="true" aria-label="Project details"><div class="back" data-close></div><div class="panel"><div class="grab"><span></span><button type="button" class="ghost" data-close>Close</button></div><div id="sheetbody"></div></div></div>
 <dialog id="sharebox" aria-labelledby="sb-h">
   <h2 id="sb-h">Your progress card</h2>
   <img id="sb-img" alt="Progress card preview">
@@ -226,7 +246,7 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
   </div>
   <p class="note" id="sb-note"></p>
 </dialog>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js"></script>
 <script>
 const SB="https://dykbqyaftkeiroyfzoqb.supabase.co", SBK="sb_publishable_6zJTBBa74WI7IueK3xdaUg_cvfxMSp2";
 const RADIUS=800, MAXAGE_DAYS=14;
@@ -334,7 +354,7 @@ function explore(){
     ["Running late","🐢","HDB has pushed back the date.",withK.filter(x=>x.k.delay>=3&&x.k.pct<100).sort((a,b)=>b.k.delay-a.k.delay)]
   ];
   const chip=x=>`<button type="button" class="chip" data-i="${x.p.i}">${esc(x.p.name.replace(/ \((\w+ \d{4}) launch\)$/," ($1)"))}<small>${x.k.pct==null?"soon":Math.round(x.k.pct)+"%"}</small></button>`;
-  $("#explore").innerHTML=`<h2 id="ex-h">Explore</h2><p class="lede">Watching ${nb} BTOs and ${nc} condos across Singapore. Swipe the rows, tap one to add it.</p>`+
+  $("#explore").innerHTML=`<p class="lede">${nb} BTOs and ${nc} condos across Singapore. Tap one to fly there.</p>`+
     shelves.filter(s=>s[3].length).map(([t,ic,sub,list])=>`<div class="shelf"><h3><i aria-hidden="true">${ic}</i>${t}</h3><p>${sub}</p><div class="chips">${list.slice(0,6).map(chip).join("")}</div></div>`).join("");
 }
 
@@ -366,11 +386,6 @@ function card(p){
     </div>
     <button type="button" class="add sharebtn" data-share="${esc(p.key)}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Share progress card</button>
     <p class="note" style="margin-top:14px">Percentage is time elapsed from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"}.</p>
-    ${p.ll?`<div class="mapbox">
-      <h3>Where it is</h3>
-      <button type="button" class="mapjump" data-focus="${p.i}" aria-label="Show ${esc(p.name)} on the big map"><img loading="lazy" width="512" height="300" src="${siteMap(p.ll)}" alt="Map of the area around ${esc(p.name)}, with the site marked"></button>
-      <p class="note">Live map from OneMap. New blocks show up once they're mapped, marked (U/C) while under construction. Tap to see it on the big map with everything nearby.</p>
-    </div>`:""}
     <div class="photos">
       <h3>Site photos</h3>
       <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes.</p>
@@ -379,20 +394,20 @@ function card(p){
       <p class="status" role="status"></p>
     </div>
     <div class="row">
-      <button class="ghost" type="button" data-del="${esc(p.key)}">Remove</button>
+      ${p.ll?`<button class="maplink" type="button" data-fly="${p.i}">Fly there on the map</button>`:""}
+      <button class="ghost" type="button" data-watch-toggle="${p.i}">${tracked.includes(p.key)?"Stop watching":"Watch this"}</button>
     </div>
   </div></section>`;
 }
 function render(){
   const items=tracked.map(key=>P.find(p=>p.key===key)).filter(Boolean);
-  $("#list").innerHTML=items.length?items.map(card).join(""):`<div class="empty"><p><b class="fredoka" style="font-size:1.15rem;color:var(--ink)">Your watchlist is empty</b><br>Search above, or tap a project below to start watching it grow.</p></div>`;
-  items.forEach(p=>loadPhotos(p.key));
-}
-function pick(i){
-  const p=P[i];if(!p)return;
-  tracked=[p.key,...tracked.filter(x=>x!==p.key)];saveTracked();render();
-  $("#q").value="";$("#sugg").innerHTML="";$("#hint").textContent="";
-  $("#list").scrollIntoView({behavior:"smooth",block:"start"});
+  $("#wcount").textContent=items.length?`${items.length} project${items.length>1?"s":""}`:"";
+  $("#list").innerHTML=items.length?items.map(p=>{const k=stats(p),v=verdict(p,k);return `<button type="button" class="wrow" data-open="${p.i}">
+    <span class="wtop"><b>${esc(p.name)}</b><span class="tag ${p.kind}">${p.kind}</span></span>
+    <span class="wpct fredoka">${k.pct==null?"Soon":Math.round(k.pct)+"%"}</span>
+    <span class="pbar"><i style="width:${k.pct||0}%"></i></span>
+    <span class="wsub ${v.cls}">${esc(v.t)}. ${p.kind==="BTO"?"Completion":"TOP"} ${fmtYM(k.T)}</span></button>`}).join(""):
+    `<div class="empty"><p><b class="fredoka" style="font-size:1.15rem;color:var(--ink)">Nothing here yet</b><br>Fly around the map and tap a building, then press Watch this. It'll live here so you can check on it anytime.</p><button type="button" class="add" data-tab="map">Go to the map</button></div>`;
 }
 
 /* ---------- Photos: read ---------- */
@@ -595,41 +610,6 @@ $("#sb-close").addEventListener("click",()=>$("#sharebox").close());
 $("#sharebox").addEventListener("click",e=>{if(e.target.id==="sharebox")$("#sharebox").close()});
 
 
-/* ---------- Big map ---------- */
-let MAP=null,PINS=[],FILTER="all";
-function pinIcon(p,pct){
-  const c=p.kind==="BTO"?"#7CC8E8":"#F4A77E",done=pct!=null&&pct>=100,h=Math.round(3+6*Math.min(1,(pct||0)/100));
-  return L.divIcon({className:"pin",iconSize:[18,24],iconAnchor:[9,23],popupAnchor:[0,-20],html:
-   `<svg width="18" height="24" viewBox="0 0 18 24"><path d="M9 23 C9 23 1.5 14.5 1.5 9 a7.5 7.5 0 0 1 15 0 c0 5.5-7.5 14-7.5 14z" fill="${c}" stroke="#3A2C26" stroke-width="1.4"/><rect x="6" y="${13-h}" width="6" height="${h}" rx="1" fill="${done?"#62C07A":"#FFFDF7"}" stroke="#3A2C26" stroke-width="1"/></svg>`});
-}
-function popupHtml(p){
-  const k=stats(p);
-  return `<b>${esc(p.name)}</b>${p.kind}${k.pct!=null?`, ${Math.round(k.pct)}% there`:", not launched yet"}<div class="pbar"><i style="width:${k.pct||0}%"></i></div>${p.kind==="BTO"?"Completion":"Expected TOP"} ${fmtYM(k.T)}<br><button type="button" class="add" data-watch="${p.i}">${tracked.includes(p.key)?"Watching":"Watch this"}</button>`;
-}
-function initMap(){
-  if(!window.L||MAP)return;
-  const sg=L.latLngBounds([1.16,103.58],[1.48,104.1]);
-  MAP=L.map("bigmap",{zoomControl:true,attributionControl:true,minZoom:11,maxZoom:18,maxBounds:sg.pad(.05),scrollWheelZoom:false}).fitBounds(sg);
-  const layer=()=>darkMode()?"Night":"Default";
-  L.tileLayer("https://www.onemap.gov.sg/maps/tiles/"+layer()+"/{z}/{x}/{y}.png",{detectRetina:true,maxZoom:18,minZoom:11,
-    attribution:'<img src="https://www.onemap.gov.sg/web-assets/images/logo/om_logo.png" style="height:14px;width:14px;vertical-align:-2px" alt=""> <a href="https://www.onemap.gov.sg/" target="_blank" rel="noopener">OneMap</a> &copy; contributors | <a href="https://www.sla.gov.sg/" target="_blank" rel="noopener">Singapore Land Authority</a>'}).addTo(MAP);
-  PINS=P.filter(p=>p.ll).map(p=>{const m=L.marker(p.ll,{icon:pinIcon(p,stats(p).pct),title:p.name,keyboard:true});m.bindPopup(()=>popupHtml(p));m.p=p;return m});
-  drawPins();
-  MAP.on("popupopen",e=>{const b=e.popup.getElement().querySelector("[data-watch]");if(b)b.onclick=()=>{const p=P[+b.dataset.watch];if(!tracked.includes(p.key)){tracked=[p.key,...tracked];saveTracked();render()}b.textContent="Watching"}});
-}
-function drawPins(){if(!MAP)return;PINS.forEach(m=>{const show=FILTER==="all"||m.p.kind===FILTER;if(show&&!MAP.hasLayer(m))m.addTo(MAP);if(!show&&MAP.hasLayer(m))MAP.removeLayer(m)})}
-function focusOn(i){
-  const m=PINS.find(x=>x.p.i===i);if(!MAP||!m)return;
-  if(!MAP.hasLayer(m)){FILTER="all";setFilterUI();drawPins()}
-  $("#mapsec").scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>{MAP.flyTo(m.getLatLng(),16,{duration:1.2});MAP.once("moveend",()=>m.openPopup())},350);
-}
-function setFilterUI(){document.querySelectorAll("[data-filter]").forEach(b=>{const on=b.dataset.filter===FILTER;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)})}
-document.querySelector(".mapfilters").addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;FILTER=b.dataset.filter;setFilterUI();drawPins();});
-
-
-/* ---------- Walk-around world ---------- */
-let W=null;
 const FOUND_KEY="storeys.found.v1";
 function bldgSvg(p){
   const k=stats(p),pct=k.pct||0,floors=6,built=Math.max(1,Math.round(floors*pct/100)),c=PASTELS[hash(p.name)%PASTELS.length],E="#3A2C26";
@@ -653,106 +633,119 @@ const WORLD_STYLE={version:8,sources:{o:{type:"vector",url:"https://tiles.openfr
  {id:"path",type:"line",source:"o","source-layer":"transportation",filter:["==","class","path"],paint:{"line-color":"#E2C79A","line-width":2,"line-dasharray":[2,1.5]}},
  {id:"bld",type:"fill-extrusion",source:"o","source-layer":"building",paint:{"fill-extrusion-color":["match",["%",["to-number",["coalesce",["get","render_height"],10]],5],0,"#FFD3C2",1,"#FFF1C9",2,"#D7EEF9",3,"#E2F2D2",4,"#F9E0EC","#FFF1C9"],"fill-extrusion-height":["min",["*",["coalesce",["get","render_height"],10],0.55],26],"fill-extrusion-base":["min",["*",["coalesce",["get","render_min_height"],0],0.55],26],"fill-extrusion-opacity":0.95,"fill-extrusion-vertical-gradient":true}}
 ]};
-function loadWorldLib(){
-  if(window.maplibregl)return Promise.resolve();
-  return new Promise((res,rej)=>{
-    const l=document.createElement("link");l.rel="stylesheet";l.href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.css";document.head.appendChild(l);
-    const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.min.js";sc.onload=res;sc.onerror=rej;document.head.appendChild(sc);
+
+/* ---------- Tabs ---------- */
+function setTab(t){
+  document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
+  for(const [id,name] of [["v-map","map"],["v-watch","watch"],["v-disc","disc"]])$("#"+id).classList.toggle("on",name===t);
+  if(t==="map"&&MAP)setTimeout(()=>MAP.resize(),50);
+  if(t==="watch")render();
+}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-tab]");if(t)setTab(t.dataset.tab)});
+function badge(){const n=tracked.length;$("#tbadge").hidden=!n;$("#tbadge").textContent=n}
+
+/* ---------- Project sheet ---------- */
+let SHEETKEY=null;
+function openSheet(i){
+  const p=P[i];if(!p)return;SHEETKEY=p.key;
+  $("#sheetbody").innerHTML=card(p);$("#sheet").hidden=false;$("#sheet .panel").scrollTop=0;loadPhotos(p.key);
+}
+function closeSheet(){$("#sheet").hidden=true;$("#sheetbody").innerHTML="";SHEETKEY=null}
+$("#sheet").addEventListener("click",e=>{
+  if(e.target.closest("[data-close]"))return closeSheet();
+  const f=e.target.closest("[data-fly]");if(f){closeSheet();setTab("map");flyTo(+f.dataset.fly);return}
+  const w=e.target.closest("[data-watch-toggle]");
+  if(w){const p=P[+w.dataset.watchToggle];if(tracked.includes(p.key)){tracked=tracked.filter(x=>x!==p.key);w.textContent="Watch this"}else{tracked=[p.key,...tracked];w.textContent="Stop watching";toast("Added to your watchlist")}saveTracked();badge();render();return}
+  const sh=e.target.closest("[data-share]");if(sh)return openShare(sh.dataset.share,sh);
+  const s=e.target.closest("[data-show]");if(s)return showPhotos(s.dataset.k,+s.dataset.show);
+  const rp=e.target.closest("[data-report]");if(rp)report(rp.dataset.report,rp.dataset.k,rp);
+});
+$("#sheet").addEventListener("change",e=>{if(e.target.matches("[data-up]"))upload(e.target)});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)closeSheet()});
+$("#list").addEventListener("click",e=>{const r=e.target.closest("[data-open]");if(r)openSheet(+r.dataset.open)});
+$("#explore").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;const p=P[+c.dataset.i];setTab("map");if(p.ll)flyTo(p.i,true);else openSheet(p.i)});
+
+/* ---------- Map home ---------- */
+let MAP=null,MARKS=[],LASTNEAR="";
+const found=new Set(store(FOUND_KEY)||[]);
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),2200)}
+function distTxt(m){return m<1000?Math.round(m/10)*10+" m":(m/1000).toFixed(m<10000?1:0)+" km"}
+function centre(){const c=MAP.getCenter();return [c.lat,c.lng]}
+function initMap(){
+  if(!window.maplibregl){$("#map").innerHTML=`<div class="nomap"><p>The map couldn't load. Check your connection, or browse projects in Discover.</p></div>`;return}
+  try{
+    const startP=tracked.map(k=>P.find(p=>p.key===k)).find(p=>p&&p.ll);
+    MAP=new maplibregl.Map({container:"map",style:WORLD_STYLE,center:startP?[startP.ll[1],startP.ll[0]-0.002]:[103.8198,1.3521],zoom:startP?16.2:13.2,pitch:48,bearing:-12,minZoom:11,maxZoom:18.5,maxPitch:60,dragRotate:false,attributionControl:false,maxBounds:[[103.5,1.12],[104.15,1.52]]});
+  }catch(e){$("#map").innerHTML=`<div class="nomap"><p>Your browser can't show the 3D map. Try Safari or Chrome on a newer phone, or browse projects in Discover.</p></div>`;return}
+  MAP.touchZoomRotate.disableRotation();
+  MAP.addControl(new maplibregl.AttributionControl({compact:true}),"bottom-right");
+  MAP.once("idle",()=>{const a=document.querySelector("#map .maplibregl-ctrl-attrib");if(a)a.classList.remove("maplibregl-compact-show")});
+  MAP.on("load",()=>MAP.setLight({anchor:"map",color:"#FFF6E6",intensity:0.18,position:[1.3,200,40]}));
+  const here=P.filter(p=>p.ll);$("#wtotal").textContent=here.length;
+  MARKS=here.map(p=>{const el=document.createElement("div");el.className="bldg"+(found.has(p.key)?" seen":"");el.innerHTML=`<div class="inner">${bldgSvg(p)}</div>`;el.setAttribute("role","button");el.setAttribute("aria-label",p.name);
+    el.addEventListener("click",e=>{e.stopPropagation();openSheet(p.i)});
+    const mk=new maplibregl.Marker({element:el,anchor:"bottom",offset:[0,8]}).setLngLat([p.ll[1],p.ll[0]]).addTo(MAP);mk.p=p;mk.el=el;return mk});
+  updFound();scaleSprites();nearby();requestAnimationFrame(edges);
+  let lastC=MAP.project(MAP.getCenter()),stopT=0;
+  MAP.on("zoom",scaleSprites);
+  MAP.on("move",()=>{
+    const bird=$("#bird");bird.classList.add("moving");
+    const c=MAP.getCenter(),pt=MAP.project(c);
+    const m=MAP.unproject([MAP.getContainer().clientWidth/2,MAP.getContainer().clientHeight/2]);
+    if(bird._last){const dx=m.lng-bird._last.lng;if(Math.abs(dx)>1e-6)bird.classList.toggle("left",dx<0)}bird._last=m;
+    clearTimeout(stopT);stopT=setTimeout(()=>bird.classList.remove("moving"),160);
+    if(!MAP._raf)MAP._raf=requestAnimationFrame(()=>{MAP._raf=0;edges();discover()});
   });
+  MAP.on("moveend",()=>{nearby();edges();discover()});
+  MAP.on("load",()=>{nearby();edges()});
 }
-function bldgEl(p,found){const d=document.createElement("div");d.className="bldg"+(found?" seen":"");d.innerHTML=bldgSvg(p);return d}
-function openWorld(start){
-  const found=new Set(store(FOUND_KEY)||[]);
-  $("#world").hidden=false;document.body.style.overflow="hidden";
-  const m=new maplibregl.Map({container:"wmap",style:WORLD_STYLE,center:[start[1],start[0]],zoom:17.3,pitch:50,bearing:-18,interactive:false,attributionControl:false,maxBounds:[[103.55,1.15],[104.1,1.5]]});
-  m.addControl(new maplibregl.AttributionControl({compact:true}),"bottom-right");
-  m.once("idle",()=>{const a=document.querySelector("#wmap .maplibregl-ctrl-attrib");if(a)a.classList.remove("maplibregl-compact-show")});
-  m.on("load",()=>m.setLight({anchor:"map",color:"#FFF6E6",intensity:0.18,position:[1.3,200,40]}));
-  const here=P.filter(p=>p.ll);
-  const marks=here.map(p=>{const el=bldgEl(p,found.has(p.key));const mk=new maplibregl.Marker({element:el,anchor:"bottom",offset:[0,8]}).setLngLat([p.ll[1],p.ll[0]]).addTo(m);mk.p=p;mk.el=el;return mk});
-  $("#wtotal").textContent=here.length;$("#wfound").textContent=[...found].filter(k=>here.some(p=>p.key===k)).length;
-  $("#wsteps").textContent="0 m";
-  W={m,marks,found,vx:0,vy:0,keys:{},steps:0,dist:0,raf:0,last:0,nearKey:null};
-  $("#whint").style.opacity=1;setTimeout(()=>{if(W)$("#whint").style.opacity=0},6000);
-  W.last=performance.now();W.raf=requestAnimationFrame(tick);
-  m.once("load",checkNear);
+function scaleSprites(){if(!MAP)return;const z=MAP.getZoom(),s=Math.max(.32,Math.min(1,(z-12.5)/3.5));const box=MAP.getContainer();box.style.setProperty("--s",s.toFixed(2));box.style.setProperty("--lbl",z>=15?"block":"none")}
+function updFound(){$("#wfound").textContent=[...found].filter(k=>MARKS.some(m=>m.p.key===k)).length}
+function discover(){
+  if(!MAP||MAP.getZoom()<14.5)return;const c=centre();
+  for(const mk of MARKS){if(found.has(mk.p.key))continue;if(metres(c,mk.p.ll)<160){found.add(mk.p.key);store(FOUND_KEY,[...found]);mk.el.classList.add("seen");updFound();toast("New find! "+mk.p.name.replace(/\s*\(.*?\)/,""))}}
 }
-function closeWorld(){if(!W)return;cancelAnimationFrame(W.raf);W.m.remove();W=null;$("#world").hidden=true;document.body.style.overflow="";$("#near").hidden=true;render()}
-function tick(t){
-  if(!W)return;const dt=Math.min(.05,(t-W.last)/1000);W.last=t;
-  let vx=W.vx,vy=W.vy;const K=W.keys;
-  if(K.ArrowLeft||K.a)vx=-1;if(K.ArrowRight||K.d)vx=1;if(K.ArrowUp||K.w)vy=-1;if(K.ArrowDown||K.s)vy=1;
-  const len=Math.hypot(vx,vy);const hero=$("#hero");
-  if(len>.08){
-    const sp=190*Math.min(1,len)/len;const dx=vx*sp*dt,dy=vy*sp*dt;
-    const before=W.m.getCenter();W.m.panBy([dx,dy],{duration:0});const after=W.m.getCenter();
-    const metres=before.distanceTo(after);W.dist+=metres;const st=Math.floor(W.dist/10);
-    if(st!==W.steps){W.steps=st;$("#wsteps").textContent=W.dist<1000?Math.round(W.dist/10)*10+" m":(W.dist/1000).toFixed(1)+" km"}
-    hero.classList.add("walking");if(Math.abs(vx)>.2)hero.classList.toggle("left",vx<0);
-    if(!W.nc||t-W.nc>250){W.nc=t;checkNear()}
-  }else hero.classList.remove("walking");
-  W.raf=requestAnimationFrame(tick);
+function nearest(n){const c=centre();return MARKS.map(m=>({p:m.p,d:metres(c,m.p.ll)})).sort((a,b)=>a.d-b.d).slice(0,n)}
+function nearby(){
+  if(!MAP)return;const list=nearest(8),sig=list.map(x=>x.p.i).join(",");
+  const html=list.map((x,j)=>{const k=stats(x.p);const at=x.d<160;return `<button type="button" class="ncard${at?" here":""}" role="listitem" data-near="${x.p.i}">
+    <b>${esc(x.p.name)}</b><span class="meta"><span>${x.p.kind}, ${at?"right here":distTxt(x.d)+" away"}</span><span>${k.pct==null?"soon":Math.round(k.pct)+"%"}</span></span>
+    <span class="pbar"><i style="width:${k.pct||0}%"></i></span>${at?`<span class="go">See details</span>`:`<span class="go">Fly there</span>`}</button>`}).join("");
+  const box=$("#nearby");box.innerHTML=html;if(sig!==LASTNEAR){box.scrollLeft=0;LASTNEAR=sig}
 }
-function checkNear(){
-  if(!W)return;const c=W.m.getCenter();let best=null,bd=1e9;
-  for(const mk of W.marks){const d=c.distanceTo(mk.getLngLat());if(d<bd){bd=d;best=mk}}
-  const box=$("#near");
-  if(!best||bd>150){if(W.nearKey){box.hidden=true;W.nearKey=null}return}
-  const p=best.p;if(W.nearKey===p.key)return;W.nearKey=p.key;
-  const isNew=!W.found.has(p.key);
-  if(isNew){W.found.add(p.key);store(FOUND_KEY,[...W.found]);best.el.classList.add("seen");$("#wfound").textContent=[...W.found].filter(k=>W.marks.some(mk=>mk.p.key===k)).length}
-  const k=stats(p);
-  box.innerHTML=`<b>${esc(p.name)}${isNew?'<span class="new">New find!</span>':""}</b>${p.kind}${k.pct!=null?`, ${Math.round(k.pct)}% of the way there`:", not launched yet"}<div class="pbar"><i style="width:${k.pct||0}%"></i></div>${esc(verdict(p,k).t)}. ${p.kind==="BTO"?"Completion":"Expected TOP"} ${fmtYM(k.T)}.<br><button type="button" class="add" data-wwatch="${p.i}">${tracked.includes(p.key)?"Watching":"Watch this"}</button>`;
-  box.hidden=false;
+$("#nearby").addEventListener("click",e=>{const b=e.target.closest("[data-near]");if(!b)return;const i=+b.dataset.near;if(b.classList.contains("here"))openSheet(i);else flyTo(i)});
+function edges(){
+  if(!MAP)return;const box=$("#edges"),W=box.clientWidth,H=box.clientHeight,pad=56,top=86,bot=220;
+  const c=centre();const out=[];
+  for(const x of MARKS.map(m=>({m,d:metres(c,m.p.ll)})).sort((a,b)=>a.d-b.d)){
+    if(out.length>=4||x.d>6000)break;
+    const pt=MAP.project([x.m.p.ll[1],x.m.p.ll[0]]);
+    if(pt.x>0&&pt.x<W&&pt.y>top&&pt.y<H-bot)continue;
+    const cx=W/2,cy=H/2,dx=pt.x-cx,dy=pt.y-cy;const sx=dx?((dx>0?W-pad:pad)-cx)/dx:1e9,sy=dy?((dy>0?H-bot:top+20)-cy)/dy:1e9;const t=Math.min(Math.abs(sx),Math.abs(sy));
+    out.push({p:x.m.p,d:x.d,x:cx+dx*t,y:cy+dy*t,a:Math.atan2(dy,dx)*180/Math.PI});
+  }
+  box.innerHTML=out.map(o=>`<button type="button" class="edge" style="left:${o.x.toFixed(0)}px;top:${o.y.toFixed(0)}px" data-near="${o.p.i}" aria-label="${esc(o.p.name)}, ${distTxt(o.d)} away"><i><svg viewBox="0 0 12 12" style="transform:rotate(${o.a.toFixed(0)}deg)"><path d="M2 6h8M7 3l3 3-3 3" fill="none" stroke="#3A2C26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>${distTxt(o.d)}</button>`).join("");
 }
-/* joystick + keys */
-(function(){
-  const joy=$("#joy"),knob=$("#knob");let id=null;
-  const move=e=>{const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let dx=e.clientX-cx,dy=e.clientY-cy;const max=r.width/2-12,l=Math.hypot(dx,dy);if(l>max){dx*=max/l;dy*=max/l}knob.style.transform=`translate(${dx}px,${dy}px)`;if(W){W.vx=dx/max;W.vy=dy/max}};
-  joy.addEventListener("pointerdown",e=>{id=e.pointerId;joy.setPointerCapture(id);move(e);$("#whint").style.opacity=0});
-  joy.addEventListener("pointermove",e=>{if(e.pointerId===id)move(e)});
-  const end=e=>{if(e.pointerId!==id)return;id=null;knob.style.transform="";if(W){W.vx=0;W.vy=0}};
-  joy.addEventListener("pointerup",end);joy.addEventListener("pointercancel",end);
-  addEventListener("keydown",e=>{if(!W)return;if(e.key==="Escape")return closeWorld();if(/^Arrow|^[wasd]$/.test(e.key)){W.keys[e.key]=true;e.preventDefault();$("#whint").style.opacity=0}});
-  addEventListener("keyup",e=>{if(W)W.keys[e.key]=false});
-})();
-$("#wclose").addEventListener("click",closeWorld);
-$("#near").addEventListener("click",e=>{const b=e.target.closest("[data-wwatch]");if(!b)return;const p=P[+b.dataset.wwatch];if(!tracked.includes(p.key)){tracked=[p.key,...tracked];saveTracked()}b.textContent="Watching"});
-$("#walk").addEventListener("click",async()=>{
-  const btn=$("#walk"),lbl=btn.lastChild,orig=lbl.textContent;btn.setAttribute("aria-disabled","true");lbl.textContent=" Getting the world ready…";
-  const inSG=ll=>ll&&ll[0]>1.15&&ll[0]<1.5&&ll[1]>103.55&&ll[1]<104.1;
-  let start=null;
-  try{const pos=await Promise.race([here(),new Promise((_,r)=>setTimeout(()=>r(0),6000))]);if(inSG(pos))start=pos}catch(e){}
-  if(!start){const w=tracked.map(k=>P.find(p=>p.key===k)).find(p=>p&&p.ll);start=w?[w.ll[0]-0.0012,w.ll[1]-0.0012]:[1.3521,103.8198]}
-  try{await loadWorldLib();if(!maplibregl.supported||maplibregl.supported())openWorld(start);else throw 0}
-  catch(e){alert("Your browser can't show the 3D world. Try Safari or Chrome on a newer phone.")}
-  finally{btn.removeAttribute("aria-disabled");lbl.textContent=orig}
+$("#edges").addEventListener("click",e=>{const b=e.target.closest("[data-near]");if(b)flyTo(+b.dataset.near)});
+function flyTo(i,open){
+  const p=P[i];if(!MAP||!p||!p.ll)return open&&openSheet(i);
+  MAP.flyTo({center:[p.ll[1],p.ll[0]],zoom:Math.max(16.2,MAP.getZoom()),pitch:50,speed:1.1,curve:1.5,essential:true});
+  if(open)MAP.once("moveend",()=>openSheet(i));
+}
+$("#locate").addEventListener("click",async()=>{
+  try{const pos=await here();if(!(pos[0]>1.12&&pos[0]<1.52&&pos[1]>103.5&&pos[1]<104.15))return toast("You seem to be outside Singapore");MAP&&MAP.flyTo({center:[pos[1],pos[0]],zoom:16.4,speed:1.2})}
+  catch(e){toast("Allow location to fly to where you are")}
 });
 
-
-/* ---------- Events ---------- */
+/* ---------- Search ---------- */
 const q=$("#q"),sug=$("#sugg");
+function choose(i){q.value="";sug.innerHTML="";q.blur();const p=P[i];if(p.ll)flyTo(i,true);else openSheet(i)}
 q.addEventListener("input",()=>{
   const r=search(q.value);
-  sug.innerHTML=r.map(p=>`<li><button type="button" class="pick" data-i="${p.i}">${esc(p.name)}<span class="tag ${p.kind}">${p.kind}</span><small>${esc(p.kind==="BTO"?(p.roads.map(title).join(" / ")||"Completion "+fmtYM(ym(p.delayed||p.ecd))):(p.addr?p.addr.slice(0,60):"Expected TOP "+fmtYM(ym(p.ecd))))}</small></button></li>`).join("");
-  $("#hint").textContent=q.value.trim().length>3&&!r.length?"No match. Try the project name. Covers BTOs launched since Nov 2020 and condos with a published expected TOP.":"";
+  sug.innerHTML=r.length?r.map(p=>`<li><button type="button" class="pick" data-i="${p.i}">${esc(p.name)}<span class="tag ${p.kind}">${p.kind}</span><small>${esc(p.kind==="BTO"?(p.roads.map(title).join(" / ")||"Completion "+fmtYM(ym(p.delayed||p.ecd))):(p.addr?p.addr.slice(0,60):"Expected TOP "+fmtYM(ym(p.ecd))))}</small></button></li>`).join(""):(q.value.trim().length>3?`<li><span class="pick" style="cursor:default">No match. Try the project name.<small>Covers BTOs launched since Nov 2020 and condos with a published TOP.</small></span></li>`:"");
 });
-q.addEventListener("keydown",e=>{if(e.key==="Enter"){const b=sug.querySelector(".pick");if(b)pick(+b.dataset.i);}});
-sug.addEventListener("click",e=>{const b=e.target.closest(".pick");if(b)pick(+b.dataset.i);});
-$("#list").addEventListener("click",e=>{
-  const d=e.target.closest("[data-del]");
-  if(d){tracked=tracked.filter(x=>x!==d.dataset.del);saveTracked();render();return}
-  const fo=e.target.closest("[data-focus]");
-  if(fo){focusOn(+fo.dataset.focus);return}
-  const sh=e.target.closest("[data-share]");
-  if(sh){openShare(sh.dataset.share,sh);return}
-  const s=e.target.closest("[data-show]");
-  if(s){showPhotos(s.dataset.k,+s.dataset.show);return}
-  const rp=e.target.closest("[data-report]");
-  if(rp)report(rp.dataset.report,rp.dataset.k,rp);
-});
-$("#explore").addEventListener("click",e=>{const c=e.target.closest(".chip");if(c)pick(+c.dataset.i)});
-$("#list").addEventListener("change",e=>{if(e.target.matches("[data-up]"))upload(e.target)});
+q.addEventListener("keydown",e=>{if(e.key==="Enter"){const b=sug.querySelector("[data-i]");if(b)choose(+b.dataset.i)}if(e.key==="Escape"){q.value="";sug.innerHTML=""}});
+sug.addEventListener("click",e=>{const b=e.target.closest("[data-i]");if(b)choose(+b.dataset.i)});
 
 /* ---------- Load data ---------- */
 town();
@@ -761,6 +754,6 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   D.bto.forEach(r=>P.push({kind:"BTO",name:r[0],launch:r[2],ecd:r[3],delayed:r[4],remark:r[5],roads:r[6]?r[6].split("|"):[],blks:r[7]?r[7].split(" "):[],postals:r[8]?r[8].split(" "):[],ll:r[9]||null,addr:""}));
   D.condo.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3],ll:r[4]||null}));
   P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch;p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
-  render();explore();initMap();
+  render();explore();badge();initMap();
 }).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
 </script></body></html>
