@@ -316,6 +316,7 @@ html[data-ph=night] .nearlabel{color:#F7EFE2;text-shadow:0 1px 6px rgba(10,12,40
 html[data-ph=night] #bird .shadow{background:rgba(0,0,0,.35)}
 html[data-ph=night] .bldg .lbl{background:rgba(38,44,82,.92);color:#F7EFE2;border-color:#F7EFE2}
 html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
+.note a,.src a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .scene:not(.photo){padding:0;background:none}
 .scene svg{width:100%}
 @media (prefers-reduced-motion:no-preference){
@@ -368,7 +369,7 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
   <div class="feed" id="feed"><p class="note">Loading photos…</p></div>
   <h2 class="sect">Worth a look</h2>
   <section id="explore" aria-label="Project shelves"></section>
-  <p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Map: OpenFreeMap, OpenMapTiles and OpenStreetMap contributors. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>.</p>
+  <p class="src">BTO dates and announced delays: BTO HQ TOP tracker. BTO blocks and postal codes: OneMap. Condo launch and expected TOP: EdgeProp developer listings. Map: OpenFreeMap, OpenMapTiles and OpenStreetMap contributors. Site photos: uploaded by people within 800 m of the site. Data refreshed automatically every day, last at <span id="upd">…</span>. <a href="privacy.html">Privacy, terms and how the numbers work</a>.</p>
 </div></section>
 
 <nav id="tabs" role="tablist" aria-label="Sections">
@@ -392,6 +393,7 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
   <div class="sb-actions">
     <button type="button" class="add" id="sb-share">Share</button>
     <a class="maplink" id="sb-save" download="storeys-progress.png">Save image</a>
+    <button type="button" class="ghost" id="sb-copy">Copy link</button>
     <button type="button" class="ghost" id="sb-close">Close</button>
   </div>
   <p class="note" id="sb-note"></p>
@@ -508,7 +510,7 @@ function verdict(p,k){
     const why=p.remark?p.remark.replace(/\s*\d{4}-\d{2}-\d{2}$/,"").replace("Covid19:","Covid-19:").replace(/month(s)?\(s\)/,"months")+".":"";
     return{cls:"behind",t:`About ${k.delay} months behind the original date`,d:`Launched with completion in ${fmtYM(k.E)}, now ${fmtYM(k.T)}. ${why}`};
   }
-  return{cls:"ahead",t:"On schedule",d:p.kind==="BTO"?`No delay announced by HDB. Completion expected ${fmtYM(k.T)}.`:`Developer's expected TOP is ${fmtYM(k.T)}.`};
+  return{cls:"ahead",t:"No delay announced",d:p.kind==="BTO"?`HDB still estimates completion in ${fmtYM(k.T)}.`:`Developer's expected TOP is ${fmtYM(k.T)}. Developers don't always announce delays.`};
 }
 
 /* ---------- Illustration ---------- */
@@ -669,7 +671,7 @@ function card(p){
   <div class="scene" data-pct="${k.pct||0}">${building(k.pct,p.name)}</div>
   <div class="body">
     <h2>${esc(p.name)}<span class="tag ${p.kind}">${p.kind}</span></h2><p class="addr">${esc(where)}</p>
-    <div class="storey"><span class="num">${k.pct==null?"—":Math.round(k.pct)+"%"}</span><span>of the way to completion</span></div>
+    <div class="storey"><span class="num">${k.pct==null?"—":Math.round(k.pct)+"%"}</span><span>of the wait to keys is over</span></div>
     <div class="bar"><i style="width:${k.pct||0}%"></i></div>
     <div class="verdict ${v.cls}"><b>${esc(v.t)}</b>${esc(v.d)}</div>
     <div class="facts">
@@ -677,19 +679,20 @@ function card(p){
       <div>Time left<b>${k.left?k.left+" months":"—"}</b></div>
       <div>Launched<b>${fmtYM(k.L)}</b></div>
       <div>${p.kind==="BTO"?"Completion":"Expected TOP"}<b>${fmtYM(k.T)}</b></div>
-      <div>Stage now<b>${stageFor(k.pct)}</b></div>
+      <div>Likely stage<b>${stageFor(k.pct)}</b></div>
     </div>
     <button type="button" class="add sharebtn" data-share="${esc(p.key)}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Share progress card</button>
-    <p class="note" style="margin-top:14px">Percentage is time elapsed from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"}.</p>
+    <p class="note" style="margin-top:14px">This is a time-based estimate: how much of the time from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"} has passed. It doesn't measure the work on site, so check recent site photos below for the real picture.</p>
     <div class="photos">
       <h3>Site photos</h3>
-      <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes.</p>
+      <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes. <a href="privacy.html">Photo rules</a></p>
       <div class="strip" aria-label="Photo timeline, newest first"></div>
       ${p.ll?`<label class="add">Add a site photo<input type="file" accept="image/*" data-up="${esc(p.key)}"></label>`:`<p class="note">Photo uploads open once this site is on the map.</p>`}
       <p class="status" role="status"></p>
     </div>
     <div class="row">
       ${p.ll?`<button class="maplink" type="button" data-fly="${p.i}">Fly there on the map</button>`:""}
+      <button class="ghost" type="button" data-copy="${p.i}">Copy link</button>
       <button class="ghost" type="button" data-watch-toggle="${p.i}">${tracked.includes(p.key)?"Stop watching":"Watch this"}</button>
     </div>
   </div></section>`;
@@ -707,6 +710,11 @@ function render(){
 
 /* ---------- Photos: read ---------- */
 const H={apikey:SBK,Authorization:"Bearer "+SBK};
+/* ---------- Links and anonymous counts ---------- */
+const BASE=location.origin+location.pathname.replace(/[^/]*$/,"");
+function pageUrl(p){return BASE+"p/"+slug(p.name)+"/"}
+function track(kind,key){try{fetch(`${SB}/rest/v1/events`,{method:"POST",keepalive:true,headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({kind,project_key:key||null})}).catch(()=>{})}catch(e){}}
+async function copyLink(p,btn){const u=pageUrl(p);try{await navigator.clipboard.writeText(u);toast("Link copied")}catch(e){prompt("Copy this link:",u)}track("share",p.key)}
 const pub=path=>`${SB}/storage/v1/object/public/photos/${path}`;
 const thumb=path=>pub(path.replace(/\.jpg$/,"_t.jpg"));
 const cache={};
@@ -802,7 +810,8 @@ async function uploadFile(key,file){
     }
     const taken=(ex.date||new Date()).toISOString();
     const r=await fetch(`${SB}/rest/v1/photos`,{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({project_key:key,path,taken_at:taken,distance_m:d})});
-    if(!r.ok)throw new Error("row "+r.status);
+    if(!r.ok){let m="";try{m=(await r.json()).message||""}catch(_){}if(/Too many|Lots of uploads/.test(m))return say(m,"err");throw new Error("row "+r.status)}
+    track("upload",key);
     say("Photo added. Thanks for keeping this site up to date.","ok");
     await loadPhotos(key);
   }catch(e){
@@ -812,11 +821,11 @@ async function uploadFile(key,file){
 async function report(id,key,btn){
   const done=store("storeys.reported")||[];
   if(done.includes(id)){btn.textContent="Reported";return}
-  if(!confirm("Report this photo as wrong, old or inappropriate? Photos hide after a few reports."))return;
+  if(!confirm("Report this photo as wrong, old or inappropriate? It will be hidden straight away while it's checked."))return;
   try{
     const r=await fetch(`${SB}/rest/v1/rpc/report_photo`,{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({photo_id:id})});
     if(!r.ok)throw 0;
-    store("storeys.reported",[...done,id]);btn.textContent="Reported";
+    store("storeys.reported",[...done,id]);btn.textContent="Reported";toast("Thanks. The photo is hidden while it's checked.");
   }catch(e){btn.textContent="Couldn't report, try again"}
 }
 
@@ -861,7 +870,7 @@ async function makeCard(p){
   // big percent
   c.font="500 200px Fraunces, Georgia, serif";const pct=k.pct==null?"Soon":Math.round(k.pct)+"%";c.fillText(pct,px+56,y);
   const pw2=c.measureText(pct).width;c.font="600 40px Figtree, sans-serif";c.fillStyle=muted;
-  if(k.pct!=null){c.fillText("of the way",px+80+pw2,y-80);c.fillText("to completion",px+80+pw2,y-30)}
+  if(k.pct!=null){c.fillText("of the wait",px+80+pw2,y-80);c.fillText("is over",px+80+pw2,y-30)}
   y+=50;
   // bar
   const bx=px+60,bw=pw-120,bh=64;c.fillStyle="#F3EEE6";rrect(c,bx,y,bw,bh,32);c.fill();
@@ -891,15 +900,18 @@ async function openShare(key,btn){
     const can=navigator.canShare&&navigator.canShare({files:[shareFile]});
     $("#sb-share").hidden=!can;
     $("#sb-note").textContent=can?"":"Save the image, then post it from your photos.";
-    $("#sb-share").dataset.name=p.name;
+    $("#sb-share").dataset.name=p.name;$("#sb-share").dataset.url=pageUrl(p);$("#sb-share").dataset.key=p.key;
     $("#sharebox").showModal();
   }catch(e){alert("Couldn't draw the card. Try again.")}
   finally{btn.lastChild.textContent=label;btn.removeAttribute("aria-disabled")}
 }
 $("#sb-share").addEventListener("click",async()=>{
-  try{await navigator.share({files:[shareFile],text:`${$("#sb-share").dataset.name} on Storeys: ${location.href.split("?")[0]}`})}catch(e){}
+  const d=$("#sb-share").dataset;track("share",d.key);
+  try{await navigator.share({files:[shareFile],text:`${d.name}: see how far along it is on Storeys ${d.url}`})}catch(e){}
 });
 $("#sb-close").addEventListener("click",()=>$("#sharebox").close());
+$("#sb-save").addEventListener("click",()=>track("share",$("#sb-share").dataset.key));
+$("#sb-copy").addEventListener("click",e=>{const p=P.find(q=>q.key===$("#sb-share").dataset.key);if(p)copyLink(p,e.currentTarget)});
 $("#sharebox").addEventListener("click",e=>{if(e.target.id==="sharebox")$("#sharebox").close()});
 
 
@@ -1014,14 +1026,16 @@ function badge(){const n=tracked.length;$("#tbadge").hidden=!n;$("#tbadge").text
 let SHEETKEY=null;
 function openSheet(i){
   const p=P[i];if(!p)return;SHEETKEY=p.key;
+  track("open",p.key);try{history.replaceState(null,"","?p="+slug(p.name))}catch(e){}
   $("#sheetbody").innerHTML=card(p);$("#sheet").hidden=false;$("#sheet .panel").scrollTop=0;loadPhotos(p.key);
 }
-function closeSheet(){$("#sheet").hidden=true;$("#sheetbody").innerHTML="";SHEETKEY=null}
+function closeSheet(){$("#sheet").hidden=true;$("#sheetbody").innerHTML="";SHEETKEY=null;try{history.replaceState(null,"",location.pathname)}catch(e){}}
 $("#sheet").addEventListener("click",e=>{
   if(e.target.closest("[data-close]"))return closeSheet();
   const f=e.target.closest("[data-fly]");if(f){closeSheet();setTab("map");flyTo(+f.dataset.fly);return}
   const w=e.target.closest("[data-watch-toggle]");
   if(w){const p=P[+w.dataset.watchToggle];if(tracked.includes(p.key)){tracked=tracked.filter(x=>x!==p.key);w.textContent="Watch this"}else{tracked=[p.key,...tracked];w.textContent="Stop watching";toast("Added to your watchlist")}saveTracked();badge();render();return}
+  const cp=e.target.closest("[data-copy]");if(cp)return copyLink(P[+cp.dataset.copy],cp);
   const sh=e.target.closest("[data-share]");if(sh)return openShare(sh.dataset.share,sh);
   const lb=e.target.closest("[data-lb]");if(lb){const k=lb.dataset.k;const list=(cache[k]||[]).map(x=>({...x,key:k}));return openLightbox(list,+lb.dataset.lb,false)}
   const s=e.target.closest("[data-show]");if(s)return showPhotos(s.dataset.k,+s.dataset.show);
@@ -1142,5 +1156,8 @@ fetch("data.json?"+Date.now()).then(r=>r.json()).then(D=>{
   D.condo.forEach(r=>P.push({kind:"Condo",name:r[0],launch:r[1],ecd:r[2],delayed:"",remark:"",roads:[],blks:[],postals:(r[3].match(/\b\d{6}\b/g)||[]),addr:r[3],ll:r[4]||null}));
   P.forEach((p,i)=>{p.i=i;p.key=p.kind+":"+p.name+":"+p.launch;p.nn=norm(p.name);p.na=norm(p.addr+" "+p.roads.join(" "))});
   render();explore();badge();initMap();applyLight(false);loadFeed();
+  try{if(!sessionStorage.getItem("storeys.v")){sessionStorage.setItem("storeys.v","1");track("visit")}}catch(e){track("visit")}
+  const want=new URLSearchParams(location.search).get("p"),wp=want&&P.find(q=>slug(q.name)===want);
+  if(wp){track("link",wp.key);setTab("map");if(wp.ll&&MAP)flyTo(wp.i,true);else openSheet(wp.i)}
 }).catch(()=>{$("#list").innerHTML=`<div class="empty"><p>Couldn't load the latest data. Refresh the page to try again.</p></div>`});
 </script></body></html>
