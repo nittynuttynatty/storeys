@@ -284,6 +284,27 @@ input[type=text]{font-weight:400;border-radius:999px}
 .nearlabel{color:#2B2420;text-shadow:0 0 6px rgba(255,253,248,.95),0 1px 1px rgba(255,253,248,.9)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ncard .go{color:var(--accent)}}
 :root[data-theme="dark"] .ncard .go{color:var(--accent)}
+
+/* photo viewer */
+.phopen{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:zoom-in}
+.phopen img{width:100%;height:100%;object-fit:cover;display:block}
+#lb{position:fixed;inset:0;z-index:2500;background:#0E0A08;color:#fff}
+#lb[hidden]{display:none}
+.lbimgs{position:absolute;inset:0;overflow:auto;display:grid;place-items:center;touch-action:pan-x pan-y pinch-zoom}
+#lbimg{max-width:100vw;max-height:100vh;object-fit:contain;display:block;transition:opacity .2s}
+.lbbtn{position:absolute;z-index:2;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center;cursor:pointer;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.lbclose{top:calc(12px + env(safe-area-inset-top,0px));right:12px}
+.lbprev{left:10px;top:50%;margin-top:-21px}.lbnext{right:10px;top:50%;margin-top:-21px}
+.lbbtn[disabled]{opacity:0;pointer-events:none}
+.lbcap{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;gap:12px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;padding:40px 16px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,rgba(14,10,8,.85));font-size:.88rem}
+.lbcap b{display:block;font-family:"Fraunces",Georgia,serif;font-weight:500;font-size:1.15rem}
+.lbcap span{color:rgba(255,255,255,.75)}
+.lbacts{display:flex;gap:14px;align-items:center}
+.lbacts .add{padding:8px 14px;font-size:.88rem}
+#lbcount{position:absolute;z-index:2;top:calc(22px + env(safe-area-inset-top,0px));left:16px;font-size:.85rem;color:rgba(255,255,255,.7)}
+.nearhead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:0 14px 6px 16px}
+.nearhead .nearlabel{margin:0}
+#locate{position:static;right:auto;bottom:auto}
 </style>
 </head>
 <body>
@@ -308,9 +329,8 @@ input[type=text]{font-weight:400;border-radius:999px}
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search projects"><ul class="sugg" id="sugg"></ul></div>
     <div class="found" title="Sites you've flown past"><b id="wfound">0</b>/<span id="wtotal">0</span> found</div>
   </div>
-  <button type="button" id="locate" aria-label="See what's around me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Around me</button>
   <div class="toast" id="toast" role="status"></div>
-  <div class="nearwrap"><p class="nearlabel">Around you</p><div id="nearby" role="list"></div></div>
+  <div class="nearwrap"><div class="nearhead"><p class="nearlabel" id="nearlabel">Near here</p><button type="button" id="locate" aria-label="See what's around me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Around me</button></div><div id="nearby" role="list"></div></div>
 </section>
 
 <section id="v-watch" class="view" aria-label="Watchlist"><div class="pagewrap">
@@ -336,6 +356,14 @@ input[type=text]{font-weight:400;border-radius:999px}
   <button type="button" role="tab" data-tab="disc" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="15" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 5l1.5-2h5L16 5"/></svg>Community</button>
 </nav>
 
+<div id="lb" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lbimgs" id="lbwrap"><img id="lbimg" alt=""></div>
+  <button type="button" class="lbbtn lbclose" id="lbclose" aria-label="Close photo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button type="button" class="lbbtn lbprev" id="lbprev" aria-label="Previous photo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <button type="button" class="lbbtn lbnext" id="lbnext" aria-label="Next photo"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+  <div class="lbcap"><div><b id="lbtitle"></b><span id="lbmeta"></span></div><div class="lbacts"><button type="button" class="add" id="lbproj">See project</button><button type="button" class="linkbtn" id="lbreport">Report</button></div></div>
+  <span id="lbcount"></span>
+</div>
 <div id="sheet" hidden role="dialog" aria-modal="true" aria-label="Project details"><div class="back" data-close></div><div class="panel"><div class="grab"><span></span><button type="button" class="xbtn" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div id="sheetbody"></div></div></div>
 <dialog id="sharebox" aria-labelledby="sb-h">
   <h2 id="sb-h">Your progress card</h2>
@@ -370,17 +398,18 @@ const saveTracked=()=>store("storeys.tracked.v4",tracked);
 
 
 /* ---------- Community feed ---------- */
+let FEED=[];
 async function loadFeed(){
   const box=$("#feed");
   try{
     const r=await fetch(`${SB}/rest/v1/photos?select=id,path,taken_at,project_key&order=taken_at.desc&limit=40`,{headers:H});
     if(!r.ok)throw 0;
-    const rows=(await r.json()).map(x=>({...x,p:P.find(p=>p.key===x.project_key)})).filter(x=>x.p);
-    box.innerHTML=rows.length?rows.map(x=>`<button type="button" class="ph" data-open="${x.p.i}"><img loading="lazy" src="${thumb(x.path)}" alt="${esc(x.p.name)}, ${esc(fmtDay(new Date(x.taken_at)))}"><span><b>${esc(x.p.name.replace(/\s*\(.*?\)/,""))}</b>${esc(ago(new Date(x.taken_at)))}</span></button>`).join(""):
+    const rows=(await r.json()).map(x=>({...x,p:P.find(p=>p.key===x.project_key)})).filter(x=>x.p);FEED=rows;
+    box.innerHTML=rows.length?rows.map((x,j)=>`<button type="button" class="ph" data-feed="${j}"><img loading="lazy" src="${thumb(x.path)}" alt="${esc(x.p.name)}, ${esc(fmtDay(new Date(x.taken_at)))}"><span><b>${esc(x.p.name.replace(/\s*\(.*?\)/,""))}</b>${esc(ago(new Date(x.taken_at)))}</span></button>`).join(""):
       `<p class="note" style="grid-column:1/-1">No photos yet. The first one shows up here the moment someone snaps a site.</p>`;
   }catch(e){box.innerHTML=`<p class="note" style="grid-column:1/-1">Photos couldn't load right now.</p>`}
 }
-$("#feed").addEventListener("click",e=>{const b=e.target.closest("[data-open]");if(b)openSheet(+b.dataset.open)});
+$("#feed").addEventListener("click",e=>{const b=e.target.closest("[data-feed]");if(b)openLightbox(FEED,+b.dataset.feed,true)});
 
 let SNAPFILE=null;
 async function matchPhoto(file){
@@ -422,7 +451,7 @@ $("#snapbtn").addEventListener("click",()=>{
    .catch(()=>{const w=tracked.map(k=>P.find(p=>p.key===k)).filter(Boolean).slice(0,5).map(p=>({p,d:null}));nearHTML=w.length?snapList(w,"From your watchlist"):`<li><span class="pick" style="cursor:default">Search for the project you're at.</span></li>`;nearDefault()});
 });
 $("#sheet").addEventListener("click",e=>{const b=e.target.closest("[data-snap]");if(!b)return;openSheet(+b.dataset.snap);setTimeout(()=>{const ph=$("#sheet .photos");if(ph)ph.scrollIntoView({behavior:"smooth",block:"start"})},250)});
-let ME=null;
+let ME=null,MYPOS=null;
 function showMe(pos){if(!MAP)return;if(!ME){const el=document.createElement("div");el.className="me";el.setAttribute("aria-label","You are here");ME=new maplibregl.Marker({element:el}).setLngLat([pos[1],pos[0]]).addTo(MAP)}else ME.setLngLat([pos[1],pos[0]])}
 
 /* ---------- Search ---------- */
@@ -593,7 +622,7 @@ function showPhotos(key,idx){
   }
   const ph=list[idx],when=new Date(ph.taken_at);
   scene.className="scene photo";
-  scene.innerHTML=`<img src="${pub(ph.path)}" alt="Site photo taken ${esc(fmtDay(when))}"><div class="cap"><div><b>Taken ${esc(ago(when))}</b>${ph.distance_m} m from the site</div><button class="linkbtn" type="button" data-report="${ph.id}" data-k="${esc(key)}">Report photo</button></div>`;
+  scene.innerHTML=`<button type="button" class="phopen" data-lb="${idx}" data-k="${esc(key)}" aria-label="View photo full screen"><img src="${pub(ph.path)}" alt="Site photo taken ${esc(fmtDay(when))}"></button><div class="cap"><div><b>Taken ${esc(ago(when))}</b>${ph.distance_m} m from the site</div><button class="linkbtn" type="button" data-report="${ph.id}" data-k="${esc(key)}">Report photo</button></div>`;
   strip.innerHTML=list.map((x,i)=>`<button type="button" aria-pressed="${i===idx}" data-show="${i}" data-k="${esc(key)}"><img loading="lazy" src="${thumb(x.path)}" alt="">${esc(fmtDay(new Date(x.taken_at)).replace(/ \d{4}$/,""))}</button>`).join("");
 }
 
@@ -793,6 +822,36 @@ const WORLD_STYLE={version:8,sources:{o:{type:"vector",url:"https://tiles.openfr
  {id:"bld",type:"fill-extrusion",source:"o","source-layer":"building",paint:{"fill-extrusion-color":["match",["%",["to-number",["coalesce",["get","render_height"],10]],5],0,"#FFD3C2",1,"#FFF1C9",2,"#D7EEF9",3,"#E2F2D2",4,"#F9E0EC","#FFF1C9"],"fill-extrusion-height":["min",["*",["coalesce",["get","render_height"],10],0.55],26],"fill-extrusion-base":["min",["*",["coalesce",["get","render_min_height"],0],0.55],26],"fill-extrusion-opacity":0.95,"fill-extrusion-vertical-gradient":true}}
 ]};
 
+
+/* ---------- Photo viewer ---------- */
+let LB=null;
+function openLightbox(list,idx,fromFeed){if(!list||!list.length)return;LB={list,idx,fromFeed};$("#lb").hidden=false;lbShow();$("#lbclose").focus()}
+function lbShow(){
+  const x=LB.list[LB.idx],key=x.project_key||x.key||LB.key,p=x.p||P.find(q=>q.key===key),when=new Date(x.taken_at),img=$("#lbimg");
+  img.style.opacity=.3;img.onload=()=>img.style.opacity=1;img.src=pub(x.path);img.alt=`${p?p.name:"Site"} photo, ${fmtDay(when)}`;
+  $("#lbtitle").textContent=p?p.name:"Site photo";
+  $("#lbmeta").textContent=`Taken ${ago(when)}`+(x.distance_m!=null?`, ${x.distance_m} m from the site`:"");
+  $("#lbcount").textContent=LB.list.length>1?`${LB.idx+1} of ${LB.list.length}`:"";
+  $("#lbprev").disabled=LB.idx===0;$("#lbnext").disabled=LB.idx===LB.list.length-1;
+  $("#lbproj").hidden=!LB.fromFeed||!p;$("#lbproj").dataset.i=p?p.i:"";
+  $("#lbreport").textContent=(store("storeys.reported")||[]).includes(x.id)?"Reported":"Report";$("#lbreport").dataset.id=x.id;$("#lbreport").dataset.k=key||"";
+  $("#lbwrap").scrollTo(0,0);
+}
+function lbGo(d){if(!LB)return;const n=LB.idx+d;if(n<0||n>=LB.list.length)return;LB.idx=n;lbShow()}
+function closeLb(){$("#lb").hidden=true;$("#lbimg").removeAttribute("src");LB=null}
+$("#lbclose").addEventListener("click",closeLb);
+$("#lbprev").addEventListener("click",()=>lbGo(-1));$("#lbnext").addEventListener("click",()=>lbGo(1));
+$("#lbproj").addEventListener("click",()=>{const i=+$("#lbproj").dataset.i;closeLb();openSheet(i)});
+$("#lbreport").addEventListener("click",e=>{const b=e.currentTarget;report(b.dataset.id,b.dataset.k,b)});
+addEventListener("keydown",e=>{if(!LB)return;if(e.key==="Escape")closeLb();if(e.key==="ArrowLeft")lbGo(-1);if(e.key==="ArrowRight")lbGo(1)});
+(function(){let x0=null,y0=null,multi=false;const w=$("#lbwrap");
+  w.addEventListener("touchstart",e=>{multi=e.touches.length>1;if(!multi){x0=e.touches[0].clientX;y0=e.touches[0].clientY}},{passive:true});
+  w.addEventListener("touchend",e=>{if(multi||x0==null)return;const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;x0=null;
+    if(window.visualViewport&&visualViewport.scale>1.05)return;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)lbGo(dx<0?1:-1);else if(dy>90&&Math.abs(dy)>Math.abs(dx)*1.5)closeLb()},{passive:true});
+  w.addEventListener("click",e=>{if(e.target===w)closeLb()});
+})();
+
 /* ---------- Tabs ---------- */
 function setTab(t){
   document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===t));
@@ -816,6 +875,7 @@ $("#sheet").addEventListener("click",e=>{
   const w=e.target.closest("[data-watch-toggle]");
   if(w){const p=P[+w.dataset.watchToggle];if(tracked.includes(p.key)){tracked=tracked.filter(x=>x!==p.key);w.textContent="Watch this"}else{tracked=[p.key,...tracked];w.textContent="Stop watching";toast("Added to your watchlist")}saveTracked();badge();render();return}
   const sh=e.target.closest("[data-share]");if(sh)return openShare(sh.dataset.share,sh);
+  const lb=e.target.closest("[data-lb]");if(lb){const k=lb.dataset.k;const list=(cache[k]||[]).map(x=>({...x,key:k}));return openLightbox(list,+lb.dataset.lb,false)}
   const s=e.target.closest("[data-show]");if(s)return showPhotos(s.dataset.k,+s.dataset.show);
   const rp=e.target.closest("[data-report]");if(rp)report(rp.dataset.report,rp.dataset.k,rp);
 });
@@ -866,7 +926,7 @@ function discover(){
 }
 function nearest(n){const c=centre();return MARKS.map(m=>({p:m.p,d:metres(c,m.p.ll)})).sort((a,b)=>a.d-b.d).slice(0,n)}
 function nearby(){
-  if(!MAP)return;const list=nearest(8),sig=list.map(x=>x.p.i).join(",");
+  if(!MAP)return;$("#nearlabel").textContent=MYPOS&&metres(centre(),MYPOS)<800?"Around you":"Near here";const list=nearest(8),sig=list.map(x=>x.p.i).join(",");
   const html=list.map((x,j)=>{const k=stats(x.p);const at=x.d<160;return `<button type="button" class="ncard${at?" here":""}" role="listitem" data-near="${x.p.i}">
     <b>${esc(x.p.name)}</b><span class="meta"><span>${x.p.kind}, ${at?"right here":distTxt(x.d)+" away"}</span><span>${k.pct==null?"soon":Math.round(k.pct)+"%"}</span></span>
     <span class="pbar"><i style="width:${k.pct||0}%"></i></span>${at?`<span class="go">See details</span>`:`<span class="go">Fly there</span>`}</button>`}).join("");
@@ -894,7 +954,7 @@ function flyTo(i,open){
   if(open)MAP.once("moveend",()=>openSheet(i));
 }
 $("#locate").addEventListener("click",async()=>{
-  try{const pos=await here();if(!(pos[0]>1.12&&pos[0]<1.52&&pos[1]>103.5&&pos[1]<104.15))return toast("You seem to be outside Singapore");showMe(pos);MAP&&MAP.flyTo({center:[pos[1],pos[0]],zoom:16.4,speed:1.2})}
+  try{const pos=await here();if(!(pos[0]>1.12&&pos[0]<1.52&&pos[1]>103.5&&pos[1]<104.15))return toast("You seem to be outside Singapore");MYPOS=pos;showMe(pos);MAP&&MAP.flyTo({center:[pos[1],pos[0]],zoom:16.4,speed:1.2})}
   catch(e){toast("Allow location to fly to where you are")}
 });
 
