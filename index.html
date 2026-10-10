@@ -367,6 +367,21 @@ input[type=text]{font-weight:400;border-radius:999px}
 .confetti i{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;animation:fall 2s ease-in forwards}
 @keyframes fall{to{top:105%;transform:rotate(540deg) translateX(30px)}}
 @media (prefers-reduced-motion:reduce){.confetti{display:none}.cheercard{animation:none}}
+.colbar{width:100%!important;margin:0 0 12px!important;height:10px!important}
+.colbar i{background:linear-gradient(90deg,#FFB86B,#F59BB0)!important}
+.colgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.coltile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;aspect-ratio:1;border-radius:14px;border:1.5px dashed rgba(58,44,38,.25);background:var(--tile);font:inherit;color:var(--muted);padding:6px;overflow:hidden;cursor:pointer;text-align:center}
+.coltile b{flex:1;display:grid;place-items:center;font-family:"Fraunces",Georgia,serif;font-size:1.8rem;color:rgba(58,44,38,.3)}
+.coltile span{font-size:.7rem;font-weight:600;line-height:1.15;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.coltile small{font-size:.65rem}
+.coltile.got{border:0;padding:0;background:#000}
+.coltile.got img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.coltile.got span{position:relative;width:100%;padding:14px 6px 6px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.65))}
+.coltile.got i{position:absolute;top:6px;right:6px;font-style:normal;font-size:.7rem;font-weight:700;background:#FFD36E;color:#4A3410;border-radius:99px;padding:1px 7px}
+.bldg .stamp{display:none;position:absolute;left:50%;top:-12px;margin-left:-30px;width:20px;height:20px;border-radius:50%;background:#62C07A;color:#fff;font:700 12px/20px "Figtree",system-ui,sans-serif;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.bldg.got .stamp{display:block}
+.bldg.got .spark{display:none}
+#colchip{cursor:pointer;font:inherit;font-weight:600;font-size:.8rem;color:var(--ink)}
 /* light switch + night skin */
 .lightbtn{flex:0 0 auto;position:relative;display:grid;place-items:center;width:40px;height:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0;font:600 .78rem/1 "Figtree",system-ui,sans-serif;color:var(--ink);box-shadow:var(--sh);cursor:pointer}
 .lightbtn svg{width:22px;height:22px}
@@ -410,7 +425,7 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
 </g></svg></div></div>
   <div class="mtop">
     <div class="searchbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="text" id="q" placeholder="Search a BTO, condo or postal code" autocomplete="off" aria-label="Search projects"><ul class="sugg" id="sugg"></ul></div>
-    <div class="found" title="Sites you've flown past"><b id="wfound">0</b>/<span id="wtotal">0</span> found</div>
+    <button type="button" class="found" id="colchip" title="Sites you've photographed"><span aria-hidden="true">📸</span> <b id="wfound">0</b>/<span id="wtotal">0</span></button>
     <button type="button" id="lightbtn" class="lightbtn" aria-label="Day or night"></button>
   </div>
   <div class="welcome" id="welcome" hidden><b>Welcome to TOP Already?</b><p>Search your BTO or condo to see how far along it is, or drag the map to fly around. Tap any building for its progress and fresh site photos.</p><button type="button" id="welcomeok">Got it</button></div>
@@ -427,7 +442,7 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
 <section id="v-disc" class="view" aria-label="Discover"><div class="pagewrap">
   <h1><img src="icon-192.png" width="36" height="36" alt="" style="border-radius:10px">Community</h1>
   <p class="lede">Fresh photos from building sites around Singapore, shared by people passing by.</p>
-  <div class="snap"><p><b>Passing a site?</b>Snap it and help everyone watching it grow.</p><button type="button" class="add" id="snapbtn">Snap a site</button></div>
+  <div class="snap"><p><b>Passing a site? Collect it!</b>Snap any BTO or condo under construction to add it to your collection and help everyone watching it grow.</p><button type="button" class="add" id="snapbtn">Snap a site</button></div>
   <div id="reporter"></div>
   <h2 class="sect">Wanted: fresh photos</h2>
   <p class="note" style="margin:-4px 0 10px">These sites haven't had a photo in a while. Passing by one? Be its reporter.</p>
@@ -455,19 +470,6 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
   <span id="lbcount"></span>
 </div>
 <div id="sheet" hidden role="dialog" aria-modal="true" aria-label="Project details"><div class="back" data-close></div><div class="panel"><div class="grab"><span></span><button type="button" class="xbtn" data-close aria-label="Close"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div><div id="sheetbody"></div></div></div>
-<dialog id="storeybox" aria-labelledby="st-h">
-  <h2 id="st-h">How many storeys are up?</h2>
-  <p class="note">Count the floors you can see built, roughly is fine. Your count turns this photo into real progress for everyone watching.</p>
-  <div class="stwrap">
-    <div class="stviz" aria-hidden="true"><div class="stghost" id="stghost"></div><div class="stbuilt" id="stbuilt"></div><i class="stcrane"></i></div>
-    <div class="stctl">
-      <div class="stpick"><button type="button" class="stbtn" data-std="-1" aria-label="One storey fewer">−</button><div class="stnum"><b id="stval">10</b><span>storeys up</span></div><button type="button" class="stbtn" data-std="1" aria-label="One storey more">+</button></div>
-      <input type="range" id="strange" min="0" max="50" value="10" aria-label="Storeys up">
-      <label class="sttotal">Total when finished <small>(if you know)</small><input type="number" id="sttotal" min="1" max="80" inputmode="numeric" placeholder="e.g. 18"></label>
-    </div>
-  </div>
-  <div class="sb-actions"><button type="button" class="add" id="st-ok">Add photo</button><button type="button" class="ghost" id="st-skip">Can't tell, just add it</button></div>
-</dialog>
 <div id="cheer" hidden aria-live="polite"><div class="confetti" aria-hidden="true"></div><div class="cheercard"><div class="cheericon">📸</div><b id="cheerh">Site reported!</b><p id="cheerp"></p><div id="cheerbadge"></div><button type="button" class="add" id="cheerok">Nice!</button></div></div>
 <dialog id="sharebox" aria-labelledby="sb-h">
   <h2 id="sb-h">Your progress card</h2>
@@ -851,11 +853,11 @@ function builtHTML(p){
     if(list.length>1){const a=list[list.length-1],b=list[0],dd=b.storeys-a.storeys;if(dd>0)trend=`<span class="up">+${dd} since ${esc(fmtDay(new Date(a.taken_at)).replace(/ \d{4}$/,""))}</span>`}
     return `<div class="builtrow"><span class="bico" aria-hidden="true">🏗️</span><div><b>Built so far: ~${s.storeys}${tot?` of ${tot}`:""} storeys</b><span>From a site photo ${esc(ago(s.at))}${trend?" · ":""}${trend}</span>${tot?`<span class="bbar"><i style="width:${Math.min(100,s.storeys/tot*100)}%"></i></span>`:""}</div></div>`;
   }
-  if(!p.ll)return "";
+  return "";
   return `<div class="builtrow empty"><span class="bico" aria-hidden="true">📸</span><div><b>How far is it really built?</b><span>No storey count yet. Add a site photo and tell us how many floors are up.</span></div></div>`;
 }
 function refreshStatusUI(){
-  MARKS.forEach(m=>m.el.classList.toggle("fresh",isFresh(m.p.key)));
+  MARKS.forEach(m=>{m.el.classList.toggle("fresh",isFresh(m.p.key));m.el.classList.toggle("got",isCollected(m.p.key))});updFound();
   document.querySelectorAll("[data-built]").forEach(el=>{const p=P.find(q=>q.key===el.dataset.built);if(p)el.innerHTML=builtHTML(p)});
   renderWanted();renderReporter();
 }
@@ -868,50 +870,48 @@ function renderWanted(){
 }
 $("#wanted").addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;const p=P[+c.dataset.i];setTab("map");if(p.ll)flyTo(p.i,true);else openSheet(p.i)});
 
-/* storey picker */
-let STRES=null;
-function stDraw(){
-  const v=+$("#strange").value,t=+$("#sttotal").value||0,top=Math.max(v,t,12);
-  $("#stval").textContent=v;
-  $("#stbuilt").style.height=(v/top*100)+"%";$("#stghost").style.height=(t?t/top*100:0)+"%";
-}
-function askStoreys(p){
-  const s=STATUS[p.key]||{};
-  $("#strange").value=s.storeys!=null?s.storeys:6;$("#sttotal").value=s.total||"";
-  $("#st-h").textContent=`How many storeys are up at ${p.name.replace(/\s*\(.*?\)/,"")}?`;
-  stDraw();$("#storeybox").showModal();
-  return new Promise(res=>{STRES=res});
-}
-function stDone(skip){
-  const box=$("#storeybox");if(!STRES)return;
-  const t=parseInt($("#sttotal").value,10);
-  const out=skip?{storeys:null,total:null}:{storeys:+$("#strange").value,total:t>=1&&t<=80?t:null};
-  const r=STRES;STRES=null;if(box.open)box.close();r(out);
-}
-$("#strange").addEventListener("input",stDraw);$("#sttotal").addEventListener("input",stDraw);
-$("#storeybox").addEventListener("click",e=>{const b=e.target.closest("[data-std]");if(b){const r=$("#strange");r.value=Math.max(0,Math.min(50,+r.value+ +b.dataset.std));stDraw()}});
-$("#st-ok").addEventListener("click",()=>stDone(false));$("#st-skip").addEventListener("click",()=>stDone(true));
-$("#storeybox").addEventListener("close",()=>stDone(true));
-
-/* reporter card + badges (kept on this phone only) */
-const BADGES=[["first","🐣","First snap","Your first site photo",r=>r.photos>=1],["count","🔢","Storey counter","Counted the floors on a photo",r=>r.counted>=1],["explorer","🧭","Explorer","Photos of 3 different sites",r=>r.sites.length>=3],["regular","⭐","Regular","10 photos added",r=>r.photos>=10],["night","🌙","Night owl","A photo after 7pm",r=>r.night>=1],["legend","🏆","Site legend","25 photos added",r=>r.photos>=25]];
-const myRep=()=>({photos:0,sites:[],counted:0,night:0,...(store("storeys.reporter")||{})});
+/* ---------- Collect them all: your photographed sites, kept on this phone ---------- */
+const myCol=()=>store("storeys.collection")||{};
+const isCollected=key=>!!myCol()[key];
+const myRep=()=>({photos:0,night:0,early:0,pioneer:0,revisit:0,...(store("storeys.reporter")||{})});
+function colStats(){const c=myCol(),keys=Object.keys(c).filter(k=>P.some(p=>p.key===k)),ps=keys.map(k=>P.find(p=>p.key===k));
+  return{n:keys.length,bto:ps.filter(p=>p.kind==="BTO").length,condo:ps.filter(p=>p.kind!=="BTO").length,...myRep()}}
+const BADGES=[
+ ["first","🐣","First stamp","Collect your first site",r=>r.n>=1],
+ ["five","🧺","Collector","Collect 5 sites",r=>r.n>=5],
+ ["pioneer","🚩","Pioneer","Be the first ever to photograph a site",r=>r.pioneer>=1],
+ ["hdb","🏢","HDB hero","Collect 5 BTOs",r=>r.bto>=5],
+ ["condo","🏙️","Condo spotter","Collect 3 condos",r=>r.condo>=3],
+ ["tracker","🔁","Progress tracker","Photograph the same site again a week later",r=>r.revisit>=1],
+ ["night","🌙","Night owl","Snap a site after 7pm",r=>r.night>=1],
+ ["early","🌅","Early bird","Snap a site before 8am",r=>r.early>=1],
+ ["ten","🎯","Site hunter","Collect 10 sites",r=>r.n>=10],
+ ["legend","🏆","Legend","Collect 25 sites",r=>r.n>=25]];
 function renderReporter(){
-  const box=$("#reporter");if(!box)return;const r=myRep();
-  if(!r.photos){box.innerHTML="";return}
-  box.innerHTML=`<div class="repcard"><div class="rephead"><b>Your reporter card</b><span>${r.photos} photo${r.photos>1?"s":""} · ${r.sites.length} site${r.sites.length>1?"s":""}</span></div><div class="badges">${BADGES.map(([id,ic,name,desc,ok])=>`<span class="bdg${ok(r)?" on":""}" title="${esc(desc)}"><i>${ic}</i>${esc(name)}</span>`).join("")}</div></div>`;
+  const box=$("#reporter");if(!box)return;const r=colStats(),c=myCol(),total=P.filter(p=>p.ll).length;
+  const mine=Object.entries(c).map(([k,v])=>({p:P.find(q=>q.key===k),v})).filter(x=>x.p).sort((a,b)=>new Date(b.v.at)-new Date(a.v.at));
+  const ref=MYPOS||(MAP?centre():null);
+  const next=P.filter(p=>p.ll&&!c[p.key]&&stats(p).pct!=null&&stats(p).pct<100).map(p=>({p,d:ref?metres(ref,p.ll):0})).sort((a,b)=>a.d-b.d).slice(0,mine.length?3:6);
+  box.innerHTML=`<div class="repcard"><div class="rephead"><b>Your collection</b><span>${r.n} of ${total} sites</span></div>
+   <span class="bbar colbar"><i style="width:${Math.max(r.n?3:0,r.n/total*100)}%"></i></span>
+   <div class="colgrid">${mine.map(({p,v})=>`<button type="button" class="coltile got" data-i="${p.i}"><img loading="lazy" src="${thumb(v.path)}" alt=""><span>${esc(p.name.replace(/\s*\(.*?\)/,""))}</span><i>${v.n>1?"×"+v.n:"✓"}</i></button>`).join("")}${next.map(({p,d})=>`<button type="button" class="coltile" data-i="${p.i}"><b>?</b><span>${esc(p.name.replace(/\s*\(.*?\)/,""))}</span><small>${ref?distTxt(d)+" away":"Not yet"}</small></button>`).join("")}</div>
+   <p class="note" style="margin:10px 0 8px">${r.n?"Pass by any BTO or condo site, snap it, and it's added to your collection.":"Pass by any BTO or condo site and snap it to start your collection. Every site you photograph is yours to keep."}</p>
+   <div class="badges">${BADGES.map(([id,ic,name,desc,ok])=>`<span class="bdg${ok(r)?" on":""}" title="${esc(desc)}"><i>${ic}</i>${esc(name)}</span>`).join("")}</div></div>`;
 }
-function celebrate(p,sc){
-  const before=myRep(),r=myRep();
-  r.photos++;if(!r.sites.includes(p.key))r.sites.push(p.key);if(sc.storeys!=null)r.counted++;if(new Date().getHours()>=19||new Date().getHours()<6)r.night++;
-  store("storeys.reporter",r);
-  const fresh=BADGES.filter(b=>b[4](r)&&!b[4](before));
-  const name=p.name.replace(/\s*\(.*?\)/,"");
-  $("#cheerh").textContent=r.photos===1?"You're a site reporter!":"Site reported!";
-  $("#cheerp").textContent=sc.storeys!=null?`${name} now shows ~${sc.storeys} storeys up, thanks to you. Everyone watching this site can see it.`:`Everyone watching ${name} can now see how it looks today.`;
+$("#reporter").addEventListener("click",e=>{const t=e.target.closest(".coltile");if(!t)return;const p=P[+t.dataset.i];setTab("map");if(p.ll)flyTo(p.i,true);else openSheet(p.i)});
+$("#colchip").addEventListener("click",()=>{setTab("disc");setTimeout(()=>$("#reporter").scrollIntoView({behavior:"smooth",block:"start"}),60)});
+function collect(p,path,wasNew){
+  const before=colStats(),c=myCol(),r=myRep(),now=new Date(),h=now.getHours(),prev=c[p.key];
+  r.photos++;if(h>=19||h<5)r.night++;if(h>=5&&h<8)r.early++;if(wasNew)r.pioneer++;
+  if(prev&&now-new Date(prev.at)>7*864e5)r.revisit++;
+  c[p.key]={path,at:now.toISOString(),n:(prev?prev.n:0)+1};store("storeys.collection",c);store("storeys.reporter",r);
+  const after=colStats(),fresh=BADGES.filter(b=>b[4](after)&&!b[4](before)),name=p.name.replace(/\s*\(.*?\)/,""),total=P.filter(q=>q.ll).length;
+  $("#cheerh").textContent=prev?`${name}, updated!`:`${name} collected!`;
+  $("#cheerp").textContent=(wasNew?`You're the first person ever to photograph this site. `:"")+(prev?`Nice, you're tracking how it changes. `:"")+`That's ${after.n} of ${total} sites in your collection.`;
   $("#cheerbadge").innerHTML=fresh.map(b=>`<div class="newbdg"><i>${b[1]}</i><div><small>Badge unlocked</small><b>${esc(b[2])}</b></div></div>`).join("");
   const cf=$("#cheer .confetti");cf.innerHTML=Array.from({length:36},(_,i)=>`<i style="left:${Math.random()*100}%;background:${["#FFB8A3","#FFD36E","#9FD0EE","#B9E6C6","#F59BB0","#C9B8F5"][i%6]};animation-delay:${(Math.random()*.4).toFixed(2)}s;animation-duration:${(1.4+Math.random()*1.2).toFixed(2)}s;transform:rotate(${Math.random()*360}deg)"></i>`).join("");
   $("#cheer").hidden=false;$("#cheerok").focus();
+  updFound();MARKS.forEach(m=>m.el.classList.toggle("got",isCollected(m.p.key)));
 }
 $("#cheerok").addEventListener("click",()=>{$("#cheer").hidden=true});
 $("#cheer").addEventListener("click",e=>{if(e.target.id==="cheer")$("#cheer").hidden=true});
@@ -975,8 +975,7 @@ async function uploadFile(key,file){
     }
     const d=metres(spot,p.ll);
     if(d>RADIUS)return say(`You're about ${d>=1000?(d/1000).toFixed(1)+" km":d+" m"} from ${p.name}. Photos need to be taken within ${RADIUS} m of the site.`,"err");
-    say("Nearly there…");
-    const sc=await askStoreys(p);
+    const sc={storeys:null,total:null},wasNew=!(STATUS[key]&&STATUS[key].last);
     say("Uploading…");
     const [full,small]=await Promise.all([shrink(file,1600,.82),shrink(file,360,.7)]);
     const path=`${slug(key)}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.jpg`;
@@ -990,7 +989,7 @@ async function uploadFile(key,file){
     track("upload",key);
     say("Photo added. Thanks for keeping this site up to date.","ok");
     const prev=STATUS[key];STATUS[key]={...(prev||{}),last:new Date(taken),photos30:((prev&&prev.photos30)||0)+1,...(sc.storeys!=null?{storeys:sc.storeys,at:new Date(taken)}:{}),...(sc.total?{total:(prev&&prev.total)||sc.total}:{})};
-    celebrate(p,sc);refreshStatusUI();
+    collect(p,path,wasNew);refreshStatusUI();
     await loadPhotos(key);
   }catch(e){
     say("The upload didn't go through. Check your connection and try again.","err");
@@ -1104,7 +1103,7 @@ function bldgSvg(p){
   g+=`<path d="M${fx} ${yb}l${dx} ${dy}h${fw}l${-dx} ${-dy}Z" fill="${done?mix(F[0],"#fff",.4):"#E3DCD0"}"/>`;
   if(!done){const cx=fx+fw+dx+6,mt=Math.max(4,yb-16);g+=`<g stroke="#C98F1E" stroke-width="1.6" fill="none"><path d="M${cx} ${G-2}V${mt}M${cx-30} ${mt}H${cx+8}"/><path d="M${cx-18} ${mt}V${yb-4}" stroke-width=".8"/></g><rect x="${cx-21}" y="${yb-5}" width="7" height="3" fill="#F29AAE"/><rect x="${fx-1}" y="${yb}" width="${fw+2}" height="${Math.min(2,built)*fh}" fill="#5FB27C" opacity=".65"/>`}
   const short=p.name.replace(/\s*\(.*?\)/,"");
-  return `<svg width="112" height="140" viewBox="0 0 56 70" style="overflow:visible">${g}</svg><span class="spark" aria-hidden="true"></span><span class="cam" title="Fresh site photo">📷</span><span class="lbl">${esc(short.length>22?short.slice(0,21)+"…":short)}</span>`;
+  return `<svg width="112" height="140" viewBox="0 0 56 70" style="overflow:visible">${g}</svg><span class="spark" aria-hidden="true"></span><span class="cam" title="Fresh site photo">📷</span><span class="stamp" title="In your collection">✓</span><span class="lbl">${esc(short.length>22?short.slice(0,21)+"…":short)}</span>`;
 }
 /* ---------- Map world: day, golden hour and night ---------- */
 function worldStyle(ph){
@@ -1280,10 +1279,10 @@ function initMap(){
   MAP.on("load",()=>{nearby();edges()});
 }
 function scaleSprites(){if(!MAP)return;const z=MAP.getZoom(),s=Math.max(.32,Math.min(1,(z-12.5)/3.5));const box=MAP.getContainer();box.style.setProperty("--s",s.toFixed(2));box.style.setProperty("--lbl",z>=15?"block":"none")}
-function updFound(){$("#wfound").textContent=[...found].filter(k=>MARKS.some(m=>m.p.key===k)).length}
+function updFound(){$("#wfound").textContent=Object.keys(myCol()).filter(k=>P.some(p=>p.key===k)).length}
 function discover(){
   if(!MAP||MAP.getZoom()<14.5)return;const c=centre();
-  for(const mk of MARKS){if(found.has(mk.p.key))continue;if(metres(c,mk.p.ll)<160){found.add(mk.p.key);store(FOUND_KEY,[...found]);mk.el.classList.add("seen");updFound();toast("New find! "+mk.p.name.replace(/\s*\(.*?\)/,""))}}
+  for(const mk of MARKS){if(found.has(mk.p.key))continue;if(metres(c,mk.p.ll)<160){found.add(mk.p.key);store(FOUND_KEY,[...found]);mk.el.classList.add("seen");updFound();toast(isCollected(mk.p.key)?"Back at "+mk.p.name.replace(/\s*\(.*?\)/,""):"Spotted "+mk.p.name.replace(/\s*\(.*?\)/,"")+"! Snap it to collect 📸")}}
 }
 function nearest(n){const c=centre();return MARKS.map(m=>({p:m.p,d:metres(c,m.p.ll)})).sort((a,b)=>a.d-b.d).slice(0,n)}
 function nearby(){
