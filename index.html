@@ -407,6 +407,7 @@ input[type=text]{font-weight:400;border-radius:999px}
 @media (prefers-reduced-motion:reduce){#sheet .panel,#sheet .back,.toast,.view{animation:none!important;transition:none!important}.bldg .spark{animation:none}}
 #map .maplibregl-ctrl-bottom-right{bottom:var(--nearh,200px)}
 #map .maplibregl-ctrl-attrib{font-size:11px}
+.savenote{margin:10px 0 10px;font-size:.8rem;color:var(--muted);background:var(--tile);border-radius:12px;padding:8px 10px}
 /* light switch + night skin */
 .lightbtn{flex:0 0 auto;position:relative;display:grid;place-items:center;width:40px;height:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0;font:600 .78rem/1 "Figtree",system-ui,sans-serif;color:var(--ink);box-shadow:var(--sh);cursor:pointer}
 .lightbtn svg{width:22px;height:22px}
@@ -461,7 +462,7 @@ html[data-ph=night] .bldg.seen .lbl{background:#6B5A2A}
 <section id="v-watch" class="view" aria-label="Watchlist"><div class="pagewrap">
   <h1>Watchlist <small class="tag" id="wcount" style="font-size:.8rem"></small></h1>
   <p class="lede">The projects you're keeping an eye on. Tap one for the full story.</p>
-  <p class="note" style="margin:-8px 0 14px">Saved on this phone and browser only, with no account needed. Clearing your browser data or switching phones starts a fresh list.</p>
+  <p class="note" style="margin:-8px 0 14px">🔒 Saved in this browser on this device, with no account. It can be lost if you clear this browser's data, use private browsing, or switch phone or browser.</p>
   <div id="list"><div class="empty"><p>Loading projects…</p></div></div>
 </div></section>
 
@@ -525,10 +526,11 @@ const PASTELS=["#FFB8A3","#B9E6C6","#FFE08A","#FFD3B5","#CFE8A6","#C9E9F6"];
 const hash=s=>[...s].reduce((h,c)=>(h*31+c.charCodeAt(0))>>>0,7);
 const norm=s=>s.toUpperCase().replace(/[’']/g,"").replace(/\b(BLK|BLOCK)\b/g," ").replace(/\bAVE\b/g,"AVENUE").replace(/\bST\b/g,"STREET").replace(/\bRD\b/g,"ROAD").replace(/\bDR\b/g,"DRIVE").replace(/\bCRES\b/g,"CRESCENT").replace(/[^A-Z0-9@ ]/g," ").replace(/\s+/g," ").trim();
 function ago(d){const days=Math.floor((Date.now()-d)/864e5);return days<=0?"today":days===1?"yesterday":days<31?days+" days ago":fmtDay(d)}
+function keepSafe(){try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(()=>{})}catch(e){}}
 function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||"null");localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
 
 let P=[],tracked=store("storeys.tracked.v4")||[];
-const saveTracked=()=>store("storeys.tracked.v4",tracked);
+const saveTracked=()=>{store("storeys.tracked.v4",tracked);keepSafe()};
 
 
 /* ---------- Community feed ---------- */
@@ -941,10 +943,11 @@ function renderReporter(){
   const mine=Object.entries(c).map(([k,v])=>({p:P.find(q=>q.key===k),v})).filter(x=>x.p).sort((a,b)=>new Date(b.v.at)-new Date(a.v.at));
   const ref=MYPOS||(MAP?centre():null);
   const next=P.filter(p=>p.ll&&!c[p.key]&&stats(p).pct!=null&&stats(p).pct<100).map(p=>({p,d:ref?metres(ref,p.ll):0})).sort((a,b)=>a.d-b.d).slice(0,mine.length?3:6);
-  box.innerHTML=`<div class="repcard"><div class="rephead"><b>${r.n} of ${total} sites collected</b><span>Saved on this device</span></div>
+  box.innerHTML=`<div class="repcard"><div class="rephead"><b>${r.n} of ${total} sites collected</b></div>
    <span class="bbar colbar"><i style="width:${Math.max(r.n?3:0,r.n/total*100)}%"></i></span>
    <div class="colgrid">${mine.map(({p,v})=>`<button type="button" class="coltile got" data-i="${p.i}"><img loading="lazy" src="${thumb(v.path)}" alt=""><span>${esc(p.name.replace(/\s*\(.*?\)/,""))}</span><i>${v.n>1?"×"+v.n:"✓"}</i></button>`).join("")}${next.map(({p,d})=>`<button type="button" class="coltile" data-i="${p.i}"><b>?</b><span>${esc(p.name.replace(/\s*\(.*?\)/,""))}</span><small>${ref?distTxt(d)+" away":"Not yet"}</small></button>`).join("")}</div>
    <p class="note" style="margin:10px 0 8px">${r.n?"Pass by any BTO or condo site, snap it, and it's added to your collection.":"Pass by any BTO or condo site and snap it to start your collection. Every site you photograph is yours to keep."}</p>
+   <p class="savenote">🔒 Your collection, badges and watchlist are saved in this browser on this device, with no account. They can be lost if you clear this browser's data, use private browsing, or switch phone or browser. On iPhone, add TOP Already? to your Home Screen so Safari doesn't clear it after a week away.</p>
    <div class="badges">${BADGES.map(([id,ic,name,desc,ok])=>`<span class="bdg${ok(r)?" on":""}" title="${esc(desc)}"><i>${ic}</i>${esc(name)}</span>`).join("")}</div></div>`;
 }
 $("#reporter").addEventListener("click",e=>{const t=e.target.closest(".coltile");if(!t)return;const p=P[+t.dataset.i];setTab("map");if(p.ll)flyTo(p.i,true);else openSheet(p.i)});
@@ -953,7 +956,7 @@ function collect(p,path,wasNew){
   const before=colStats(),c=myCol(),r=myRep(),now=new Date(),h=now.getHours(),prev=c[p.key];
   r.photos++;if(h>=19||h<5)r.night++;if(h>=5&&h<8)r.early++;if(wasNew)r.pioneer++;
   if(prev&&now-new Date(prev.at)>7*864e5)r.revisit++;
-  c[p.key]={path,at:now.toISOString(),n:(prev?prev.n:0)+1};store("storeys.collection",c);store("storeys.reporter",r);
+  c[p.key]={path,at:now.toISOString(),n:(prev?prev.n:0)+1};store("storeys.collection",c);store("storeys.reporter",r);keepSafe();
   const after=colStats(),fresh=BADGES.filter(b=>b[4](after)&&!b[4](before)),name=p.name.replace(/\s*\(.*?\)/,""),total=P.filter(q=>q.ll).length;
   $("#cheerh").textContent=prev?`${name}, updated!`:`${name} collected!`;
   $("#cheerp").textContent=(wasNew?`You're the first person ever to photograph this site. `:"")+(prev?`Nice, you're tracking how it changes. `:"")+`That's ${after.n} of ${total} sites in your collection.`;
