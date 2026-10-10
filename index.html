@@ -147,6 +147,7 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 #world[hidden]{display:none}
 #wmap{position:absolute;inset:0}
 #wmap .maplibregl-ctrl-attrib{font-size:10px}
+#wmap .maplibregl-ctrl-bottom-right{bottom:env(safe-area-inset-bottom,0px)}
 .wvignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(58,44,38,.28));z-index:500}
 #hero{position:absolute;left:50%;top:50%;width:56px;height:73px;margin:-66px 0 0 -28px;z-index:600;pointer-events:none}
 #hero svg{position:relative;display:block}
@@ -170,8 +171,11 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 #near .pbar i{display:block;height:100%;background:repeating-linear-gradient(-45deg,var(--grass) 0 6px,var(--grass2) 6px 12px)}
 #near .new{display:inline-block;background:var(--crane);border:2px solid var(--edge);border-radius:99px;padding:0 8px;font-size:.72rem;font-weight:800;margin-left:6px;vertical-align:3px}
 #near .add{margin-top:8px;font-size:.95rem;padding:7px 14px}
-.bldg{width:84px;height:105px;pointer-events:none}
-.bldg .lbl{position:absolute;left:50%;top:104px;transform:translateX(-50%);white-space:nowrap;font:700 11px/1.2 "Nunito",sans-serif;color:#3A2C26;background:rgba(255,253,247,.9);border:2px solid #3A2C26;border-radius:8px;padding:1px 6px}
+.bldg{width:112px;height:140px;pointer-events:none}
+.bldg .spark{position:absolute;left:50%;top:-8px;width:18px;height:18px;margin-left:-9px;background:#FFD23F;border:2.5px solid #3A2C26;transform:rotate(45deg);border-radius:4px;box-shadow:0 0 0 4px rgba(255,210,63,.35)}
+.bldg.seen .spark{display:none}
+@media (prefers-reduced-motion:no-preference){.bldg .spark{animation:spark 1.4s ease-in-out infinite alternate}@keyframes spark{to{transform:translateY(-6px) rotate(45deg)}}}
+.bldg .lbl{position:absolute;left:50%;top:138px;transform:translateX(-50%);white-space:nowrap;font:700 11px/1.2 "Nunito",sans-serif;color:#3A2C26;background:rgba(255,253,247,.9);border:2px solid #3A2C26;border-radius:8px;padding:1px 6px}
 .bldg.seen .lbl{background:#FFE08A}
 </style></head>
 <body><div class="wrap">
@@ -635,7 +639,7 @@ function bldgSvg(p){
   if(pct<100){const top=64-built*8;g+=`<g stroke="${E}" stroke-width="1.6"><rect x="45" y="${top-16}" width="3.5" height="${80-top}" fill="#FFB020"/><rect x="24" y="${top-18}" width="30" height="4" rx="1.5" fill="#FFB020"/></g>`}
   else g+=`<rect x="12" y="${64-floors*8-4}" width="32" height="5" rx="2" fill="${c}" stroke="${E}" stroke-width="1.6"/>`;
   const short=p.name.replace(/\s*\(.*?\)/,"");
-  return `<svg width="84" height="105" viewBox="0 0 56 70" style="overflow:visible">${g}</svg><span class="lbl">${esc(short.length>22?short.slice(0,21)+"…":short)}</span>`;
+  return `<svg width="112" height="140" viewBox="0 0 56 70" style="overflow:visible">${g}</svg><span class="spark" aria-hidden="true"></span><span class="lbl">${esc(short.length>22?short.slice(0,21)+"…":short)}</span>`;
 }
 const WORLD_STYLE={version:8,sources:{o:{type:"vector",url:"https://tiles.openfreemap.org/planet"}},layers:[
  {id:"bg",type:"background",paint:{"background-color":"#F4E9D4"}},
@@ -661,10 +665,11 @@ function openWorld(start){
   const found=new Set(store(FOUND_KEY)||[]);
   $("#world").hidden=false;document.body.style.overflow="hidden";
   const m=new maplibregl.Map({container:"wmap",style:WORLD_STYLE,center:[start[1],start[0]],zoom:17.3,pitch:50,bearing:-18,interactive:false,attributionControl:false,maxBounds:[[103.55,1.15],[104.1,1.5]]});
-  m.addControl(new maplibregl.AttributionControl({compact:true,customAttribution:'<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank" rel="noopener">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}),"bottom-right");
+  m.addControl(new maplibregl.AttributionControl({compact:true}),"bottom-right");
+  m.once("idle",()=>{const a=document.querySelector("#wmap .maplibregl-ctrl-attrib");if(a)a.classList.remove("maplibregl-compact-show")});
   m.on("load",()=>m.setLight({anchor:"map",color:"#FFF6E6",intensity:0.18,position:[1.3,200,40]}));
   const here=P.filter(p=>p.ll);
-  const marks=here.map(p=>{const el=bldgEl(p,found.has(p.key));const mk=new maplibregl.Marker({element:el,anchor:"bottom",offset:[0,6]}).setLngLat([p.ll[1],p.ll[0]]).addTo(m);mk.p=p;mk.el=el;return mk});
+  const marks=here.map(p=>{const el=bldgEl(p,found.has(p.key));const mk=new maplibregl.Marker({element:el,anchor:"bottom",offset:[0,8]}).setLngLat([p.ll[1],p.ll[0]]).addTo(m);mk.p=p;mk.el=el;return mk});
   $("#wtotal").textContent=here.length;$("#wfound").textContent=[...found].filter(k=>here.some(p=>p.key===k)).length;
   $("#wsteps").textContent="0 m";
   W={m,marks,found,vx:0,vy:0,keys:{},steps:0,dist:0,raf:0,last:0,nearKey:null};
@@ -692,7 +697,7 @@ function checkNear(){
   if(!W)return;const c=W.m.getCenter();let best=null,bd=1e9;
   for(const mk of W.marks){const d=c.distanceTo(mk.getLngLat());if(d<bd){bd=d;best=mk}}
   const box=$("#near");
-  if(!best||bd>220){if(W.nearKey){box.hidden=true;W.nearKey=null}return}
+  if(!best||bd>150){if(W.nearKey){box.hidden=true;W.nearKey=null}return}
   const p=best.p;if(W.nearKey===p.key)return;W.nearKey=p.key;
   const isNew=!W.found.has(p.key);
   if(isNew){W.found.add(p.key);store(FOUND_KEY,[...W.found]);best.el.classList.add("seen");$("#wfound").textContent=[...W.found].filter(k=>W.marks.some(mk=>mk.p.key===k)).length}
