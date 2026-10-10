@@ -408,6 +408,16 @@ input[type=text]{font-weight:400;border-radius:999px}
 #map .maplibregl-ctrl-bottom-right{bottom:var(--nearh,200px)}
 #map .maplibregl-ctrl-attrib{font-size:11px}
 .savenote{margin:10px 0 10px;font-size:.8rem;color:var(--muted);background:var(--tile);border-radius:12px;padding:8px 10px}
+/* highlighted surfaces that stay readable in dark mode */
+:root{--hl:#FFF6D9;--hlink:#3A2C26;--hlline:#F2D49A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--hl:#4A3F22;--hlink:#FFF3D9;--hlline:#8A7340}}
+:root[data-theme="dark"]{--hl:#4A3F22;--hlink:#FFF3D9;--hlline:#8A7340}
+.ncard.here{background:var(--hl);color:var(--hlink)}
+.ncard.here .meta,.ncard.here .go{color:var(--hlink)}
+.bdg.on{background:var(--hl);color:var(--hlink);border-color:var(--hlline)}
+.newbdg{background:var(--hl);border-color:var(--hlline);color:var(--hlink)}
+.newbdg small{color:var(--hlink);opacity:.8}
+.nudge{background:var(--hl);color:var(--hlink)}
 /* light switch + night skin */
 .lightbtn{flex:0 0 auto;position:relative;display:grid;place-items:center;width:40px;height:40px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0;font:600 .78rem/1 "Figtree",system-ui,sans-serif;color:var(--ink);box-shadow:var(--sh);cursor:pointer}
 .lightbtn svg{width:22px;height:22px}
