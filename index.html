@@ -724,6 +724,8 @@ function edges(){
     const cx=W/2,cy=H/2,dx=pt.x-cx,dy=pt.y-cy;const sx=dx?((dx>0?W-pad:pad)-cx)/dx:1e9,sy=dy?((dy>0?H-bot:top+20)-cy)/dy:1e9;const t=Math.min(Math.abs(sx),Math.abs(sy));
     out.push({p:x.m.p,d:x.d,x:cx+dx*t,y:cy+dy*t,a:Math.atan2(dy,dx)*180/Math.PI});
   }
+  out.sort((a,b)=>a.y-b.y);for(let i=1;i<out.length;i++)for(let j=0;j<i;j++){const a=out[j],b=out[i];if(Math.abs(a.x-b.x)<110&&b.y-a.y<36)b.y=a.y+36}
+  for(const o of out){o.y=Math.min(o.y,H-bot);o.x=Math.max(pad,Math.min(W-pad,o.x))}
   box.innerHTML=out.map(o=>`<button type="button" class="edge" style="left:${o.x.toFixed(0)}px;top:${o.y.toFixed(0)}px" data-near="${o.p.i}" aria-label="${esc(o.p.name)}, ${distTxt(o.d)} away"><i><svg viewBox="0 0 12 12" style="transform:rotate(${o.a.toFixed(0)}deg)"><path d="M2 6h8M7 3l3 3-3 3" fill="none" stroke="#3A2C26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>${distTxt(o.d)}</button>`).join("");
 }
 $("#edges").addEventListener("click",e=>{const b=e.target.closest("[data-near]");if(b)flyTo(+b.dataset.near)});
