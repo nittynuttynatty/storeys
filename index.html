@@ -2,6 +2,15 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Storeys</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Storeys">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#BFE6FB" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12302D" media="(prefers-color-scheme: dark)">
 <meta name="description" content="See how far along your BTO or new-launch condo is, with site photos from people nearby.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,6 +114,12 @@ input:focus-visible,button:focus-visible,a:focus-visible,label:focus-within{outl
 .sb-actions .add{margin:0}
 .sb-actions .ghost{margin-left:auto}
 [hidden]{display:none!important}
+.mapbox{margin-top:18px}
+.mapbox h3{font-size:1.2rem;margin:0 0 8px}
+.mapbox a{display:block;border:3px solid var(--edge);border-radius:16px;overflow:hidden;box-shadow:0 4px 0 var(--edge);background:var(--tile)}
+.mapbox img{display:block;width:100%;height:auto;aspect-ratio:512/300}
+.mapbox .note{margin-top:10px}
+.impress{display:inline-block;margin-top:12px}
 </style></head>
 <body><div class="wrap">
 <header>
@@ -240,6 +255,17 @@ function explore(){
     shelves.filter(s=>s[3].length).map(([t,ic,sub,list])=>`<div class="shelf"><h3><i aria-hidden="true">${ic}</i>${t}</h3><p>${sub}</p><div class="chips">${list.slice(0,6).map(chip).join("")}</div></div>`).join("");
 }
 
+/* ---------- Site map + official images ---------- */
+const darkMode=()=>window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches;
+function siteMap(ll){
+  const pin=encodeURIComponent(`[${ll[0]},${ll[1]},"255,176,32"]`);
+  return `https://www.onemap.gov.sg/api/staticmap/getStaticImage?layerchosen=${darkMode()?"night":"default"}&latitude=${ll[0]}&longitude=${ll[1]}&zoom=17&width=512&height=300&points=${pin}`;
+}
+function impressions(p){
+  const name=p.name.replace(/\s*\(.*?\)\s*/g," ").trim();
+  return "https://www.google.com/search?tbm=isch&q="+encodeURIComponent(p.kind==="BTO"?`"${name}" HDB BTO artist impression`:`"${name}" condo artist impression`);
+}
+
 /* ---------- Cards ---------- */
 function card(p){
   const k=stats(p),v=verdict(p,k),id=slug(p.key);
@@ -261,6 +287,12 @@ function card(p){
     </div>
     <button type="button" class="add sharebtn" data-share="${esc(p.key)}"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>Share progress card</button>
     <p class="note" style="margin-top:14px">Percentage is time elapsed from launch to ${p.kind==="BTO"?"HDB's estimated completion date":"the developer's expected TOP"}.</p>
+    ${p.ll?`<div class="mapbox">
+      <h3>Where it is</h3>
+      <a href="https://www.google.com/maps/search/?api=1&query=${p.ll.join(",")}" target="_blank" rel="noopener" aria-label="Open ${esc(p.name)} in Google Maps"><img loading="lazy" width="512" height="300" src="${siteMap(p.ll)}" alt="Map of the area around ${esc(p.name)}, with the site marked"></a>
+      <p class="note">Live map from OneMap. New blocks show up once they're mapped, marked (U/C) while under construction. Tap to open in Google Maps.</p>
+    </div>`:""}
+    <a class="maplink impress" target="_blank" rel="noopener" href="${impressions(p)}">Find official artist impressions</a>
     <div class="photos">
       <h3>Site photos</h3>
       <p class="note">From people within 800 m of the site. Shoot the building, not people's faces or homes.</p>
